@@ -1,13 +1,31 @@
 # Skene
 
-The single space where every entity of an agentic system is drawn, read and commanded. Agents,
-machines, the people who run them and the record they leave stand in one place, and each domain
-brings its own way of reading that place as a pack.
+The single space where every fact, intent and hint of an agentic system is drawn, read and
+commanded. Agents, machines, the people who run them and the record they leave stand in one place,
+and each domain brings its own way of reading that place as a pack.
 
 It is the open surface beneath the products built on it. A deployment supplies a brand and a board
 and does not supply a frame, which is what lets one surface serve a fleet, a verification corpus or a
-codebase without any of them forking it. The record underneath is the same in every case: facts,
-intents and hints, addressed so that the space can be read without an index.
+codebase without any of them forking it.
+
+## Where it sits
+
+The record this surface draws is the substrate's own vocabulary, not a format invented for a screen.
+
+| The substrate | The record | The surface |
+|:---|:---|:---|
+| a Segment is a coordinate with an identity derived from it | the address of a fact | the coordinate a reading is asked for |
+| an Observation projects a Field and produces a projection | a **fact** | a row, a mark, a point |
+| a Field is the predicate that says what is admissible | a **hint**, the bound a judgement was made under | what a member was not allowed to do |
+| an act is a declaration that binds an observation to work | an **intent**, taken by one member and concluded in a fact | the chain, and the queue of work not yet taken |
+
+So the three kinds are not decoration. A hint *bounds*, and a panel can say what a machine was kept
+from doing because of it. An intent is *taken*, and the record shows who took it and what came of it.
+An observation is *addressed*, and the address is computed from its fields rather than found through
+an index. A surface that gave those three up would be a log viewer, which is the commodity this
+exists against.
+
+A domain may rename the three in its own bundle. It may not change what they mean.
 
 The name is the Greek stage building: the structure the scene is hung on, which stays while the
 scene changes.
