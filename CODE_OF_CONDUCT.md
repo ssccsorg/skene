@@ -10,7 +10,7 @@ someone's private information, and sustained disruption of a discussion.
 
 ## Enforcement
 
-Report a problem to **lee@ssccs.org**. Reports are read by the maintainer, kept confidential, and
+Report a problem to **oss@ssccs.org **. Reports are read by the maintainer, kept confidential, and
 answered. The maintainer may edit or remove a contribution, or exclude a participant from the
 project's spaces, and will say which of these it is doing and why.
 

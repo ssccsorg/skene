@@ -7,7 +7,7 @@ branches to patch.
 
 ## Reporting a vulnerability
 
-Write to **lee@ssccs.org** with `skene security` in the subject. Do not open a public issue, and do
+Write to **oss@ssccs.org ** with `skene security` in the subject. Do not open a public issue, and do
 not include a working exploit in a pull request.
 
 What to include:
