@@ -116,7 +116,7 @@ test('before its start a campaign is pending, and every objective waits', () => 
   const progress = campaignAt(
     campaign({ id: 'late', start: { fact: 'reading-2' } }),
     model.events,
-    1800,
+    600,
   );
   expect(progress.state).toBe('pending');
   expect(progress.startedAt).toBeNull();
@@ -168,9 +168,9 @@ test('a threshold is read at the second it names, even when no record stands the
 
 test('a count is read over what arrived, so it cannot be met before the run writes it', () => {
   const counted = campaign({
-    start: { count: { kind: 'fact', atLeast: 8 } },
+    start: { count: { kind: 'fact', atLeast: 12 } },
     end: { fact: 'work-done' },
   });
   expect(campaignAt(counted, model.events, 0).state).toBe('pending');
-  expect(campaignAt(counted, model.events, 3600).startedAt).toBe(3600);
+  expect(campaignAt(counted, model.events, 900).startedAt).toBe(900);
 });

@@ -1,5 +1,5 @@
 {
-  "note": "One project, one run, one place. A deployment brings its own board; this is the smallest one that draws.",
+  "note": "One project, one run, one place: a blackboard, two workers, a machine, a sensor, a rover, a camera and a reader, and three chains in the three states a queue has. A deployment brings its own board; this is the smallest one that draws all of it.",
   "projects": [
     {
       "id": "example",
@@ -21,6 +21,24 @@
             ],
             "reader": [
               "person"
+            ],
+            "machine": [
+              "reads",
+              "writes",
+              "holds"
+            ],
+            "sensor": [
+              "emits"
+            ],
+            "rover": [
+              "reads",
+              "writes",
+              "emits",
+              "holds"
+            ],
+            "camera": [
+              "shows",
+              "emits"
             ]
           }
         },
@@ -42,7 +60,7 @@
             "notice": "10:00, the first reading",
             "declare": "10:00, the work declared",
             "act": "10:04, taken",
-            "resume": "11:00, the record reads back"
+            "resume": "10:20, the yard work"
           }
         },
         {
@@ -55,44 +73,36 @@
             "view": [
               0,
               0,
-              520,
-              176
+              640,
+              360
             ],
             "sector": [
-              48,
-              48
+              64,
+              40
             ],
             "store": {
               "label": "Blackboard"
             },
-            "areas": [
-              {
-                "x": 16,
-                "y": 20,
-                "w": 488,
-                "h": 136,
-                "label": "one space"
-              }
-            ],
             "units": {
               "blackboard": {
                 "icon": "store",
                 "at": {
                   "record": [
-                    260,
-                    88
+                    320,
+                    180
                   ]
                 }
               },
               "worker-1": {
                 "icon": "worker",
                 "abilities": [
-                  "take-work"
+                  "take-work",
+                  "answer"
                 ],
                 "at": {
                   "record": [
-                    110,
-                    56
+                    150,
+                    90
                   ]
                 }
               },
@@ -103,8 +113,58 @@
                 ],
                 "at": {
                   "record": [
-                    110,
-                    120
+                    150,
+                    270
+                  ]
+                }
+              },
+              "machine-3": {
+                "icon": "machine",
+                "abilities": [
+                  "hold",
+                  "check"
+                ],
+                "at": {
+                  "record": [
+                    320,
+                    70
+                  ]
+                }
+              },
+              "sensor-1": {
+                "icon": "sensor",
+                "abilities": [
+                  "emit"
+                ],
+                "at": {
+                  "record": [
+                    80,
+                    180
+                  ]
+                }
+              },
+              "rover-1": {
+                "icon": "rover",
+                "abilities": [
+                  "drive",
+                  "report"
+                ],
+                "at": {
+                  "record": [
+                    470,
+                    90
+                  ]
+                }
+              },
+              "camera-1": {
+                "icon": "camera",
+                "abilities": [
+                  "capture"
+                ],
+                "at": {
+                  "record": [
+                    470,
+                    270
                   ]
                 }
               },
@@ -113,8 +173,8 @@
                 "role": "member",
                 "at": {
                   "record": [
-                    410,
-                    88
+                    600,
+                    190
                   ]
                 }
               }

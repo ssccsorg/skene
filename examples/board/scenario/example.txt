@@ -1,39 +1,54 @@
 # Skene example
 #
-# The smallest run that draws: a place, a store, two workers and a reader. It carries one chain,
-# a fact, a declaration that starts from it, the worker that took it, and the fact it produced.
+# One place, one run: a store, two workers, a machine, a sensor, a rover, a camera and a reader.
+# It carries three chains, which is what a queue can be in: one closed in the fact it produced, one
+# taken and not yet concluded, and one nobody has taken.
 #
 #   ktema-sim scenario/example.txt /tmp/example-volume --reset
 
 seed 7
 
 tick 0
-position blackboard 260,88
-position worker-1 110,56
-position worker-2 110,120
-position reader-1 410,88
-count 4
+position blackboard 320,180
+position worker-1 150,90
+position worker-2 150,270
+position machine-3 320,70
+position sensor-1 80,180
+position rover-1 470,90
+position camera-1 470,270
+position reader-1 600,190
+count 8
 
-# The reading the work starts from.
-fact reading-1 48 worker-1/observation
-count 5
-
-# What bounded the judgement.
+# The reading the work starts from, and what bounded the judgement.
+fact reading-1 48 sensor-1/observation
 hint bound ceiling=one,floor=zero
+count 9
 
 # The declaration, the taker and the outcome.
 intent answer reading-1 take-the-work
 claim answer worker-1
 fact answered 48 worker-1/result
-count 6
+count 10
 conclude answer work-done
-count 7
+count 11
+
+# A second piece of work, taken and not yet concluded.
+intent inspect answered check-the-tolerance
+claim inspect machine-3
+
+# A third, declared over the camera's reading, that nobody has taken.
+tick 900
+fact reading-2 48 camera-1/observation
+intent audit reading-2 write-the-report
+count 12
+
+# The rover crosses the yard, which is the trail the map draws rather than a jump.
+tick 30
+path rover-1 470,90 500,250 6 30
+
+# A worker picks up the work nobody had taken.
+tick 300
+position worker-2 200,300
+count 19
 
 flush
-
-# A second worker reads the same record and takes nothing.
-tick 3600
-fact reading-2 48 worker-2/observation
-count 8
-
-query 0 15540 * 8

@@ -75,9 +75,15 @@ test('a declaration with no name still stands in the queue by the second it was 
   expect(unnamed.declaredBy).toBe('');
 });
 
-test('the example\'s run declares one piece of work, and the bounds over it are the hints', () => {
+test('the example\'s run holds three declarations, in the three states a queue has', () => {
   const queue = intentsOf(model.events);
-  expect(queue).toHaveLength(1);
-  expect(queue[0]).toMatchObject({ id: 'answer', state: 'closed', worker: 'worker-1', produced: 'work-done' });
+  expect(queue.map((each) => [each.id, each.state])).toEqual([
+    ['audit', 'open'],
+    ['inspect', 'claimed'],
+    ['answer', 'closed'],
+  ]);
+  expect(queue.map((each) => each.worker)).toEqual([null, 'machine-3', 'worker-1']);
+  // The queue reads in the order work can be taken, not the order the file declares it.
+  expect(queue.map((each) => each.declaredBy)).toEqual(['camera-1', 'worker-1', 'sensor-1']);
   expect(boundsOf(model.records).map((hint) => hint.label)).toEqual(['bound']);
 });

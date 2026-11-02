@@ -37,5 +37,5 @@ test('what a fact led to is the work declared from it, which only the run can sa
   expect(declared.record).toBe(intent);
   // The same fact with the declaration left out of the run led to nothing, because the link is not on the record.
   expect(effectsOf(reading, [reading])).toEqual([]);
-  expect(effectsOf(produced, model.records), 'a produced fact is where the work ended').toEqual([]);
+  expect(effectsOf(produced, model.records), 'the work that ended there is not declared again').toEqual([]);
 });

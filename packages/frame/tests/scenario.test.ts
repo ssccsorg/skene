@@ -15,19 +15,20 @@ const parsed = parseScenario(scenario());
 test('a run is a title, a record, and the checks the file makes about itself', () => {
   expect(titleOf(scenario()), 'the first line names the run').toBe('Skene example');
   expect(parsed.unknown, 'every verb the example uses is one this build reads').toEqual([]);
-  expect(parsed.records).toHaveLength(10);
-  // A claim is a step of the stream and writes nothing, so the timeline carries one entry the volume does not.
-  expect(parsed.events).toHaveLength(11);
-  expect(parsed.events.filter((entry) => entry.kind === 'claim')).toHaveLength(1);
+  expect(parsed.records).toHaveLength(23);
+  // A claim is a step of the stream and writes nothing, so the timeline carries the entries the volume does not.
+  expect(parsed.events).toHaveLength(25);
+  expect(parsed.events.filter((entry) => entry.kind === 'claim')).toHaveLength(2);
 });
 
 test('every count the file declares is a count the parser derives', () => {
   expect(parsed.checks.map((check) => [check.at, check.expected, check.derived])).toEqual([
-    [0, 4, 4],
-    [0, 5, 5],
-    [0, 6, 6],
-    [0, 7, 7],
-    [3600, 8, 8],
+    [0, 8, 8],
+    [0, 9, 9],
+    [0, 10, 10],
+    [0, 11, 11],
+    [900, 12, 12],
+    [1380, 19, 19],
   ]);
 });
 
@@ -54,10 +55,15 @@ test('a hint is a bound and nothing else, so it belongs to no entity', () => {
 test('a record is named by its writer and its chain by its declaration', () => {
   expect(actors(parsed.records)).toEqual([
     { id: 'blackboard', role: 'writes', records: 1 },
-    { id: 'worker-1', role: 'acts', records: 3 },
+    { id: 'worker-1', role: 'acts', records: 2 },
     { id: 'worker-2', role: 'writes', records: 2 },
+    { id: 'machine-3', role: 'acts', records: 1 },
+    { id: 'sensor-1', role: 'writes', records: 2 },
+    { id: 'rover-1', role: 'writes', records: 7 },
+    { id: 'camera-1', role: 'writes', records: 2 },
     { id: 'reader-1', role: 'writes', records: 1 },
   ]);
+  expect(chainFor(parsed.records).map((chain) => chain.label)).toEqual(['answer', 'inspect', 'audit']);
   const [chain] = chainFor(parsed.records);
   expect(chain).toMatchObject({
     label: 'answer',
@@ -69,9 +75,9 @@ test('a record is named by its writer and its chain by its declaration', () => {
 
 test('the clock moves by ticks, and a position is a fact written where it happened', () => {
   const positions = parsed.records.filter((entry) => entry.origin?.endsWith('/position'));
-  expect(positions).toHaveLength(4);
-  expect(positions[0]).toMatchObject({ origin: 'blackboard/position', content: '260,88', at: 0, bytes: 16 });
-  expect(parsed.records[parsed.records.length - 1].at, 'the tick before the last reading').toBe(3600);
+  expect(positions).toHaveLength(15);
+  expect(positions[0]).toMatchObject({ origin: 'blackboard/position', content: '320,180', at: 0, bytes: 16 });
+  expect(parsed.records[parsed.records.length - 1].at, 'the tick before the last reading').toBe(1380);
 });
 
 test('a bulk write places its readings at the interval it is given and leaves the clock on the last', () => {

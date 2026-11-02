@@ -23,18 +23,18 @@ const close = (pair: [number, number] | undefined) => ({
 
 test('the run is cut into the scenes the project names, in the order it names them', () => {
   expect(cut.map((scene) => [scene.key, scene.events.length])).toEqual([
-    ['record', 4],
+    ['record', 8],
     ['notice', 2],
     ['declare', 1],
     ['act', 3],
-    ['resume', 1],
+    ['resume', 11],
   ]);
   expect(cut.map((scene) => scene.clock)).toEqual([
     'the run',
     '10:00, the first reading',
     '10:00, the work declared',
     '10:04, taken',
-    '11:00, the record reads back',
+    '10:20, the yard work',
   ]);
   // The cuts are found in the timeline, so the scenes are contiguous and cover it rather than overlapping it.
   expect(cut[0].from).toBe(0);
@@ -50,7 +50,7 @@ test('a step reveals the scenes up to it, and a cursor reveals what arrived', ()
   expect(revealedCount(cut, { cursor: 5 })).toBe(5);
   expect(revealedCount(cut, { cursor: 999 }), 'a cursor is held to the run').toBe(cut[cut.length - 1].to);
   // The step names the scene the cursor is inside, which is the one happening now.
-  expect(sceneStep(cut, 5)).toBe(2);
+  expect(sceneStep(cut, 9)).toBe(2);
   expect(sceneStep(cut, 0)).toBe(0);
 });
 
@@ -60,12 +60,12 @@ test('the interface stands a unit in its own cell, and the record puts it on its
   expect(world.entries).toBe(model.events.length);
 
   const worker = world.standing.find((unit) => unit.id === 'worker-1');
-  close(worker?.ground).toBe([110, 56]);
+  close(worker?.ground).toBe([150, 90]);
   expect(worker?.path.length, 'the declared cell and the reading it wrote').toBe(2);
-  expect(worker?.written, 'a reading, the declaration, the claim and both facts').toBe(5);
+  expect(worker?.written, 'a reading, the answer, the fact it produced and the declaration after it').toBe(4);
 
   const board = world.standing.find((unit) => unit.id === 'blackboard');
-  close(board?.ground).toBe([260, 88]);
+  close(board?.ground).toBe([320, 180]);
   expect(world.storeLabel).toBe('Blackboard');
 
   // The interface's own positions are a layout of the place, not a reading of the run: two units are two cells.
@@ -121,10 +121,10 @@ test('a record is its writer, in the run\'s own words', () => {
   const produced = model.records.find((entry) => entry.label === 'work-done');
   const reading = model.records.find((entry) => entry.label === 'reading-1');
 
-  expect(writerOf(intent!)).toBe('worker-1');
+  expect(writerOf(intent!), 'the declaration belongs to the reading it started from').toBe('sensor-1');
   expect(writerOf(produced!), 'the produced fact is the taker\'s own account').toBe('worker-1');
   expect(whoOf(hint!), 'a hint belongs to the layer that set the bounds').toBe(POLICY);
-  expect(whoOf(intent!)).toBe('worker-1');
+  expect(whoOf(intent!)).toBe('sensor-1');
   expect(lineOf(intent!)).toBe('take-the-work');
   expect(lineOf(claim!)).toBe('taken by worker-1');
   expect(lineOf(hint!)).toBe('ceiling=one,floor=zero');
@@ -135,8 +135,8 @@ test('a model is the declaration and the record read together', () => {
   const built = buildModel(bundle.text ?? '', bundle);
   expect(built.title).toBe('Skene example');
   expect(built.unknown).toEqual([]);
-  expect(built.intents).toHaveLength(1);
+  expect(built.intents).toHaveLength(3);
   expect(built.hints).toHaveLength(1);
-  expect(built.chain).toHaveLength(1);
+  expect(built.chain).toHaveLength(3);
   expect(built.project.id).toBe('example');
 });
