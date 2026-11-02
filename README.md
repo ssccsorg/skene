@@ -1,16 +1,20 @@
 # Skene
 
-The single space where every fact, intent and hint of an agentic system is drawn, read and
-commanded. Agents, machines, the people who run them and the record they leave stand in one place,
-and each domain brings its own way of reading that place as a pack.
+Universal control surface for FIH state chains.
 
-It is the open surface beneath the products built on it. A deployment supplies a brand and a board
-and does not supply a frame, which is what lets one surface serve a fleet, a verification corpus or a
-codebase without any of them forking it.
+A single open layer where every fact, intent, and hint is made visible, verifiable, and
+controllable. It sits beneath your products, adapting to any domain through modular packs.
+
+![The example board: eight members, three chains, and the record they are read from](docs/skene-example.png)
+
+A deployment supplies a brand and a board and does not supply a frame, which is what lets one surface
+serve a fleet, a verification corpus or a codebase without any of them forking it.
 
 ## Where it sits
 
 The record this surface draws is the substrate's own vocabulary, not a format invented for a screen.
+The three kinds are a chain: a fact is observed, an intent is declared over it, and a hint bounds the
+judgement that took it. That chain is what the surface controls, and FIH is its short name.
 
 | The substrate | The record | The surface |
 |:---|:---|:---|
@@ -98,8 +102,9 @@ npm install
 npm run dev          # http://localhost:5290
 ```
 
-The example is one project, one run, one place: a blackboard, two workers, a reader, and the chain
-from a reading to the work it produced.
+The example is one project, one run, one place: a blackboard, two workers, a machine, a sensor, a
+rover, a camera and a reader. It carries three chains, which is what a queue can be in: one closed,
+one taken and not yet concluded, and one nobody has taken. The screenshot above is that board.
 
 ```bash
 npm run build        # typecheck and a production bundle
