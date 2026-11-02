@@ -11,7 +11,7 @@
 //
 // What is not here is the conversation. A turn, a note and a decision are a different axis from the record, which is
 // the room in `lib/channel.ts`, and the two meet in a deployment rather than in this file. The live arrival of a run is
-// a seam of its own (`lib/ktema-client.ts`); the two meet when a window short of the cursor's end has to be extended,
+// a seam of its own (`lib/record-client.ts`); the two meet when a window short of the cursor's end has to be extended,
 // which is the step after this one.
 
 import type { Entry } from './types';

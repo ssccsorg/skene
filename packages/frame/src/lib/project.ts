@@ -11,6 +11,15 @@ import { campaignsNamed } from './campaign';
 import { kindsNamed } from './kinds';
 import type { Bundle, Clock, Layout, Place, ProjectStatus, SourceSpec, Views } from './types';
 
+/**
+ * The document format this build reads.
+ *
+ * A bundle that states a format is held to it, because a document from another build is a document whose resources may
+ * mean something else. A bundle that states none is this build's own, which is what every project written before the
+ * field existed is.
+ */
+export const PROJECT_FORMAT = 'project/1';
+
 export interface ProjectDocument {
   /** The declaration's own version, when it carries one. A document without one is read as this build's format. */
   format?: string;
@@ -121,6 +130,12 @@ export function bundleOf(project: ProjectDocument, projects: ProjectDocument[] =
     sources: [] as SourceSpec[],
     resources: [] as string[],
   } as Bundle;
+
+  if (project.format !== undefined && project.format !== PROJECT_FORMAT) {
+    throw new Error(
+      `project ${project.id}: is written in ${project.format}, and this build reads ${PROJECT_FORMAT}`,
+    );
+  }
 
   for (const resource of project.resources ?? []) {
     const read = READERS[resource.kind] ?? EXTRA.get(resource.kind);

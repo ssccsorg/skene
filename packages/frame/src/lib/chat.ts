@@ -24,11 +24,12 @@ import type {
   ThreadSummary,
   Written,
 } from './channel';
+import { host } from './host';
 
 export const CHAT_PORT = 8790;
 
 function base(): string {
-  return import.meta.env?.VITE_CHAT_URL ?? `http://127.0.0.1:${CHAT_PORT}`;
+  return host().endpoints?.chat ?? import.meta.env?.VITE_CHAT_URL ?? `http://127.0.0.1:${CHAT_PORT}`;
 }
 
 async function ask<T>(

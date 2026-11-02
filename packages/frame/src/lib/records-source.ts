@@ -5,7 +5,7 @@
 // answer and one linking function. What is not here is the engine's envelope: the volume's path, its binary and its
 // line format belong to the shell, which answers `/records` with records and a length.
 
-import { linkRecord, links, type WireRecord } from './ktema-client';
+import { linkRecord, links, type WireRecord } from './record-client';
 import { windowOf, type RunSource } from './source';
 import type { Entry } from './types';
 

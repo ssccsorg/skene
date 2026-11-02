@@ -6,7 +6,7 @@
 // business, so the frame never names one.
 
 import type { ComponentType } from 'react';
-import type { Prove, Room } from './channel';
+import type { Prove } from './channel';
 
 export interface Host {
   /** Whether this window has a shell to reach. */
@@ -15,8 +15,6 @@ export interface Host {
   ask<T>(command: string, args?: Record<string, unknown>): Promise<T>;
   /** Watch one of the shell's events, and answer how to stop watching. */
   listen<T>(event: string, handler: (payload: T) => void): Promise<() => void>;
-  /** The rooms this deployment answers a project with, beside the frame's sim. */
-  rooms?: Record<string, (prove: Prove) => Room>;
   /** The room a project that names none is answered by. Absent means the frame's sim. */
   roomByDefault?: () => string;
   /** The proof a deployment's room asks for, when it holds a credential. */
@@ -25,6 +23,13 @@ export interface Host {
   everConnected?: () => boolean;
   /** The connection form, when the deployment has one. */
   connect?: ComponentType;
+  /**
+   * Where this deployment's record stream and chat answer, when they are not the frame's own defaults.
+   *
+   * The frame's defaults are the demonstration's, on loopback, because that is what an example needs. A deployment
+   * that serves them elsewhere says so here rather than in a build-time variable.
+   */
+  endpoints?: { stream?: string; chat?: string };
   /** Work to do once, when the frame mounts. Returns how to stop. */
   start?: () => (() => void) | void;
 }

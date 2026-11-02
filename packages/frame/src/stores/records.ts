@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { StreamState } from '../lib/ktema-client';
+import type { StreamState } from '../lib/record-client';
 import type { Entry } from '../lib/types';
 
 // The records a project's own blackboard has delivered, and how far the pilot has walked them.

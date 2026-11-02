@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
-import { linkRecord, links, type Links, type WireRecord } from '@/lib/ktema-client';
+import { linkRecord, links, type Links, type WireRecord } from '@/lib/record-client';
 import type { Entry } from '@/lib/types';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));

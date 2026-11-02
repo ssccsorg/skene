@@ -9,6 +9,7 @@
 // scenario, so the records on the wire are the records the engine writes; a real one would read them
 // out of the volume or subscribe to the store that holds it.
 
+import { host } from './host';
 import type { Entry, NodeKind } from './types';
 
 export interface WireRecord {
@@ -37,7 +38,8 @@ export interface StreamHandlers {
 export const DEFAULT_STREAM_PORT = 8790;
 
 export function streamUrl(projectId: string, pace?: number, at?: number): string {
-  const base = import.meta.env?.VITE_STREAM_URL ?? `ws://127.0.0.1:${DEFAULT_STREAM_PORT}`;
+  const base =
+    host().endpoints?.stream ?? import.meta.env?.VITE_STREAM_URL ?? `ws://127.0.0.1:${DEFAULT_STREAM_PORT}`;
   const url = new URL(`${base.replace(/\/$/, '')}/stream`);
   url.searchParams.set('project', projectId);
   if (typeof pace === 'number') url.searchParams.set('pace', String(pace));
@@ -122,7 +124,7 @@ export function linkRecord({ named, waiting }: Links, wire: WireRecord): Entry |
  * declaration it took, and a conclusion attaches the fact it produced, so the store ends up holding
  * the same graph the file would have produced.
  */
-export class KtemaStream {
+export class RecordStream {
   private socket: WebSocket | null = null;
   private reading: Links = links();
 

@@ -4,7 +4,7 @@ import { PROJECT_STATE } from '../lib/chrome';
 import { useVolume } from '../hooks/useVolume';
 import { useWorld } from '../hooks/useWorld';
 import { useScenario } from '../stores/scenario';
-import type { StreamState } from '../lib/ktema-client';
+import type { StreamState } from '../lib/record-client';
 import { cn } from '../lib/utils';
 
 /**

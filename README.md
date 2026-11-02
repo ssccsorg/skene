@@ -72,6 +72,21 @@ A project names what it wants in its bundle:
 The board hands every reading the open project's whole bundle, so a pack's reading reads what its
 project declared and the frame never learns what it is called.
 
+## What a deployment may reach
+
+Three entries are the contract, and they are what a product's own code uses:
+
+| Entry | What it is |
+|:---|:---|
+| `@ssccs/skene-frame` | the frame, the brand, the registers, the host type |
+| `@ssccs/skene-frame/ui` | the buttons, the row and label tokens and `cn`, for the one form a deployment draws itself |
+| `@ssccs/skene-frame/tokens.css` | the palette, with `--mark` as the token a product overrides |
+
+The layers below them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are exported on purpose and are
+not the frame's whole point of contact. They exist for a deployment's tests and tools, which read that deployment's
+board and parse its runs, and they carry the same compatibility promise as the module in them. A product's runtime
+code that reaches into `stores/*` is reaching past the contract, and it is the change that will be asked to move.
+
 ## Running the example
 
 ```bash

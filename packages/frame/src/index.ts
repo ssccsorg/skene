@@ -9,7 +9,7 @@ export type { Host } from './lib/host';
 
 export { NATIVE, registerPack, registerReading, standing } from './lib/readings';
 export type { Board, Pack, Reading, Want } from './lib/readings';
-export { bundleOf, registerResource } from './lib/project';
+export { bundleOf, PROJECT_FORMAT, registerResource } from './lib/project';
 export type { BoardDocument, ProjectDocument } from './lib/project';
 export { actors, chainFor, entityOf, INTENT, parseScenario, titleOf } from './lib/scenario';
 export { registerPanel } from './lib/panels';

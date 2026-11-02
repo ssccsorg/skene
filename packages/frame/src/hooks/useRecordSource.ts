@@ -38,7 +38,7 @@ export function frameFromQuery(search: string): Frame {
   };
 }
 
-export function useKtema(): Frame {
+export function useRecordSource(): Frame {
   const search = typeof window === 'undefined' ? '' : window.location.search;
   const frame = useMemo(() => frameFromQuery(search), [search]);
 

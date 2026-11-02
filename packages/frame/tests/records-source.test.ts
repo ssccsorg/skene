@@ -13,7 +13,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
 import { entriesOf, recordsSource, type Records } from '@/lib/records-source';
-import type { WireRecord } from '@/lib/ktema-client';
+import type { WireRecord } from '@/lib/record-client';
 
 const klet = process.env.KLET_BIN ?? '';
 const kleis = process.env.KLEIS_BIN ?? '';

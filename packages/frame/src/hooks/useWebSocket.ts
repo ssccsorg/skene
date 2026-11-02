@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { KtemaStream, streamUrl, type StreamState } from '../lib/ktema-client';
+import { RecordStream, streamUrl, type StreamState } from '../lib/record-client';
 import type { Entry } from '../lib/types';
 
 /**
@@ -47,7 +47,7 @@ export function useWebSocket(
   handlers.current = options;
   // The sockets are held so a change of list can close exactly the ones that left, and so a re-render of
   // another kind cannot open a second socket for a project that already has one.
-  const open = useRef(new Map<string, KtemaStream>());
+  const open = useRef(new Map<string, RecordStream>());
   // Records are held for a moment before they are handed over, one list per project. The timer is the burst's own, so
   // a run that arrives as a thousand messages is one change at its end rather than a thousand frames of its history.
   const held = useRef(new Map<string, { records: Entry[]; timer: ReturnType<typeof setTimeout> }>());
@@ -90,7 +90,7 @@ export function useWebSocket(
     for (const project of wanted) {
       if (open.current.has(project)) continue;
       handlers.current.onOpen?.(project);
-      const stream = new KtemaStream(streamUrl(project, options.pace, options.at), {
+      const stream = new RecordStream(streamUrl(project, options.pace, options.at), {
         onRecord: (record) => take(project, record),
         onState: (state, detail) => handlers.current.onState(project, state, detail),
       });

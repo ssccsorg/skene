@@ -6,7 +6,7 @@ import { Header } from './components/Header';
 import { Panes } from './components/Panes';
 import { useRoom } from './hooks/useRoom';
 import { host } from './lib/host';
-import { useKtema } from './hooks/useKtema';
+import { useRecordSource } from './hooks/useRecordSource';
 import { declaredIn, declaredPanels } from './lib/panels';
 import { useReadings } from './lib/readings';
 import { Space } from './views/Space';
@@ -25,7 +25,7 @@ import { useSelection } from './stores/selection';
  * at the left, what the space is, and what stands at the right. Which panels those are is the register's answer.
  */
 export function App() {
-  useKtema();
+  useRecordSource();
   // Once, for the frame: the work a deployment does when a window opens, which is the subscription and the bootstrap
   // behind whatever the panels read. The host declares it, so a window with no server does nothing here.
   const start = host().start;

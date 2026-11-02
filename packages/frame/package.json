@@ -7,9 +7,16 @@
   "description": "The single space where every fact, intent and hint of an agentic system is drawn, read and commanded: the open surface beneath the products, with each domain's readings plugged in as a pack.",
   "exports": {
     ".": "./src/index.ts",
+    "./ui": "./src/ui.ts",
     "./tokens.css": "./tokens.css",
     "./components/*": "./src/components/*.tsx",
-    "./*": "./src/*.ts"
+    "./hooks/*": "./src/hooks/*.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./stores/*": "./src/stores/*.ts",
+    "./views/*": [
+      "./src/views/*.ts",
+      "./src/views/*.tsx"
+    ]
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
