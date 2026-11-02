@@ -883,7 +883,7 @@ export function kindInk(): Record<NodeKind, string> {
  * kind is read from and is not a kind of its own.
  */
 export function blackboardInk(): string {
-  return readableColour(cssVar('--ktema', '#93aac9'), '#93aac9');
+  return readableColour(cssVar('--board', '#93aac9'), '#93aac9');
 }
 
 /**

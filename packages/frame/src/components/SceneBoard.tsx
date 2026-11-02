@@ -519,7 +519,7 @@ export function SceneBoard({
             point as a unit and is drawn in the ink the records themselves are drawn in. What makes it the
             middle is that the publications reach it, and not that it is drawn larger than they are. */}
         <Unit
-          id="ktema"
+          id="store"
           at={geometry.blackboard}
           tint={board}
           working={false}

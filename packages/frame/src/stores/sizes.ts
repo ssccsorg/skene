@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { storageName } from '../lib/persist';
 
 // How much of the frame each panel takes.
 //
@@ -79,7 +80,7 @@ export const useSizes = create<SizesState>()(
       forget: () => set({ ...DEFAULTS }),
     }),
     {
-      name: 'exaspec.sizes',
+      name: storageName('sizes'),
       version: 1,
       // The transport's measure used to be a height the panel was given whole. It is now the pilot's from the panel's
       // own content upward, so a height kept from before that is larger than that content is room nobody asked for:

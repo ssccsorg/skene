@@ -34,6 +34,9 @@
   --intent: oklch(0.66 0.1 285);
   --hint: oklch(0.74 0.1 78);
   --claim: oklch(0.7 0.09 165);
+  /* The composition's own ink: the one colour that belongs to the record rather than to what a record says. A
+     blackboard is what every kind is read from and is not a fifth kind, so it is a token of its own. */
+  --board: oklch(0.731 0.052 256);
   /* What a thing is doing, which is the one reading the rail carries and the one place the palette spends
      its chroma: a unit at work is a bright green however quiet the rest of the frame is, a unit between
      records is a bright amber, and a unit that wrote nothing in the run is a bright cold blue rather than
@@ -83,6 +86,7 @@
   --color-intent: var(--intent);
   --color-hint: var(--hint);
   --color-claim: var(--claim);
+  --color-board: var(--board);
   --color-working: var(--working);
   --color-idle: var(--idle);
   --color-offline: var(--offline);

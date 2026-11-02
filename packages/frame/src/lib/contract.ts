@@ -54,6 +54,9 @@ const KINDS = new Set([
   'policy',
   'sources',
   'layout',
+  // The project's own declaration of how the board is read: the pack it brings, the reading it opens on, and the readings
+  // it stands. It is proved here because `bundleOf` reads it, and a list of the kinds this build reads cannot refuse one.
+  'views',
   'record',
   'status',
   'clock',
@@ -70,6 +73,7 @@ const ONCE = new Set([
   'policy',
   'sources',
   'layout',
+  'views',
   'record',
   'status',
   'clock',
@@ -313,6 +317,11 @@ export function validateProject(input: unknown, taken: string[] = []): ProjectPr
       case 'layout':
         if (!isRecord(resource.at)) {
           issues.push({ path: `${path}.at`, message: 'is an object of readings to true or false' });
+        }
+        break;
+      case 'views':
+        if (!isRecord(resource.at)) {
+          issues.push({ path: `${path}.at`, message: 'is an object naming the pack and the reading it opens on' });
         }
         break;
     }

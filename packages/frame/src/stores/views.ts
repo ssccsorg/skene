@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Bearing } from '../lib/board';
 import type { WindowKind } from '../lib/windows';
+import { storageName } from '../lib/persist';
 
 // The windows the space is carrying: the views the place declares (footage and maps), the places and editors the pilot
 // has open, where they have put each one, and which of them is in front.
@@ -75,7 +76,7 @@ interface ViewsState {
  * The key what the pilot has said is remembered under. It is written by the store and cleared by `reset`, so it is
  * one reading read in two places rather than two strings that have to be kept in step.
  */
-const PERSIST_KEY = 'exaspec.windows';
+const PERSIST_KEY = storageName('windows');
 
 export const useViews = create<ViewsState>()(
   persist(

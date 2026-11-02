@@ -9,6 +9,7 @@ import { volumeSource } from '../lib/records-source';
 import { deviceViews, host } from '../lib/host';
 import { buildModel, type Model } from '../lib/world';
 import { titleOf } from '../lib/scenario';
+import { storageName } from '../lib/persist';
 import type { Bundle, Place, SourceSpec } from '../lib/types';
 
 // The board: the projects a record model holds, the texts their records are read from, and the model
@@ -303,7 +304,7 @@ export const useScenario = create<ScenarioState>()(
       },
     }),
     {
-      name: 'exaspec.projects',
+      name: storageName('projects'),
       // Only what the pilot chose: the bundles are read from the board on every load, and a stored copy of a run would be
       // a copy that goes stale against the file the engine wrote, which is the one thing the board is not.
       partialize: (state) => ({ projectId: state.projectId, opened: state.opened }),

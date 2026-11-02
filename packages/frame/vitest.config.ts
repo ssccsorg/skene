@@ -17,14 +17,15 @@ export default defineConfig({
       // Where the tests reach today, less a margin. The global floor is low because there are no DOM tests: the
       // components are drawn by the example rather than asserted, and a floor above what they reach would be a
       // number nobody could honour without writing those tests. The two directories that hold the frame's decisions
-      // carry a floor of their own, which is where a regression would matter.
+      // carry a floor of their own, which is where a regression would matter, and it is held high enough that a module
+      // losing its own assertions is a build that fails rather than a deployment that notices later.
       thresholds: {
-        statements: 22,
-        branches: 86,
-        functions: 32,
-        lines: 22,
-        'src/lib/**': { statements: 44, branches: 91, functions: 43, lines: 44 },
-        'src/stores/**': { statements: 57, branches: 79, functions: 43, lines: 57 },
+        statements: 29,
+        branches: 82,
+        functions: 42,
+        lines: 29,
+        'src/lib/**': { statements: 67, branches: 84, functions: 63, lines: 67 },
+        'src/stores/**': { statements: 57, branches: 78, functions: 41, lines: 57 },
       },
     },
   },

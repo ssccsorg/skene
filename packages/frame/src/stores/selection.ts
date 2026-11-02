@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { writerOf } from '../lib/world';
+import { storageName } from '../lib/persist';
 import type { Entry } from '../lib/types';
 
 // What is picked, and how the space is being shown.
@@ -206,7 +207,7 @@ export const useSelection = create<SelectionState>()(
       remember: (key) => set((state) => (state.reading === key ? {} : { reading: key })),
     }),
     {
-      name: 'exaspec.arrangement',
+      name: storageName('arrangement'),
       // What the pilot said about the frame and where it was left: the pick and the look name a moment in a run that a
       // reload does not carry, and the fold's memory is the arrangement that stood before one press, which the press
       // itself must not outlive.

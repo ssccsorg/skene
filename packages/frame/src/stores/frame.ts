@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { storageName } from '../lib/persist';
 
 // What the frame shows of one project, kept by project.
 //
@@ -127,7 +128,7 @@ export const useFrame = create<FrameState>()(
       reset: () => set({ modes: {}, paths: {}, last: MAP_ON, orbits: {} }),
     }),
     {
-      name: 'exaspec.frame',
+      name: storageName('frame'),
       version: 1,
       migrate: (persisted) => {
         const state = persisted as {

@@ -381,7 +381,7 @@ export function SpaceMap({
               cx={store[0]}
               cy={store[1]}
               r={0.016}
-              className="fill-none stroke-ktema"
+              className="fill-none stroke-board"
               strokeWidth={0.01}
             />
           ) : null}

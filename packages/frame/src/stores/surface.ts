@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { SurfaceMode } from '../lib/surface';
+import { storageName } from '../lib/persist';
 
 // How the shell surface is filled, which is the pilot's viewing choice rather than the place's declaration.
 //
@@ -36,7 +37,7 @@ export const useSurface = create<SurfaceState>()(
       activate: () => set((state) => (state.mode === 'off' ? { mode: state.previous } : state)),
     }),
     {
-      name: 'exaspec.surface',
+      name: storageName('surface'),
       partialize: (state) => ({ mode: state.mode, previous: state.previous }),
     },
   ),
