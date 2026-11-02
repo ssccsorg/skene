@@ -1,0 +1,127 @@
+{
+  "note": "One project, one run, one place. A deployment brings its own board; this is the smallest one that draws.",
+  "projects": [
+    {
+      "id": "example",
+      "resources": [
+        {
+          "kind": "channel",
+          "at": "sim"
+        },
+        {
+          "kind": "kinds",
+          "at": {
+            "store": [
+              "reads"
+            ],
+            "worker": [
+              "reads",
+              "writes",
+              "emits"
+            ],
+            "reader": [
+              "person"
+            ]
+          }
+        },
+        {
+          "kind": "record",
+          "at": "scenario/example.txt"
+        },
+        {
+          "kind": "views",
+          "at": {
+            "pack": "native",
+            "main": "space"
+          }
+        },
+        {
+          "kind": "clock",
+          "at": {
+            "record": "the run",
+            "notice": "10:00, the first reading",
+            "declare": "10:00, the work declared",
+            "act": "10:04, taken",
+            "resume": "11:00, the record reads back"
+          }
+        },
+        {
+          "kind": "status",
+          "at": "running"
+        },
+        {
+          "kind": "place",
+          "at": {
+            "view": [
+              0,
+              0,
+              520,
+              176
+            ],
+            "sector": [
+              48,
+              48
+            ],
+            "store": {
+              "label": "Blackboard"
+            },
+            "areas": [
+              {
+                "x": 16,
+                "y": 20,
+                "w": 488,
+                "h": 136,
+                "label": "one space"
+              }
+            ],
+            "units": {
+              "blackboard": {
+                "icon": "store",
+                "at": {
+                  "record": [
+                    260,
+                    88
+                  ]
+                }
+              },
+              "worker-1": {
+                "icon": "worker",
+                "abilities": [
+                  "take-work"
+                ],
+                "at": {
+                  "record": [
+                    110,
+                    56
+                  ]
+                }
+              },
+              "worker-2": {
+                "icon": "worker",
+                "abilities": [
+                  "take-work"
+                ],
+                "at": {
+                  "record": [
+                    110,
+                    120
+                  ]
+                }
+              },
+              "reader-1": {
+                "icon": "reader",
+                "role": "member",
+                "at": {
+                  "record": [
+                    410,
+                    88
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# One run per ref: a push that supersedes another cancels the older one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frame:
+    name: frame
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      # `ci` and not `install`: the lockfile is the one the suite was run against, and a drift is a failure.
+      - run: npm ci
+      - run: npm --workspace @ssccs/skene-frame run typecheck
+      - run: npm --workspace @ssccs/skene-frame run test:coverage
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: coverage
+          path: packages/frame/coverage
+          retention-days: 7
+
+  example:
+    name: example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm --workspace @ssccs/skene-example run typecheck
+      # The board is copied beside the assets by this build, so a build that succeeds is a build that can be served.
+      - run: npm --workspace @ssccs/skene-example run build
+      - name: the build carries the board
+        run: test -f examples/board/dist/projects.json && test -d examples/board/dist/scenario

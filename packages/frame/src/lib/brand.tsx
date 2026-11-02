@@ -1,0 +1,46 @@
+import { createContext, useContext, type ComponentType, type ReactNode } from 'react';
+
+/**
+ * What the frame is called, and the mark it draws.
+ *
+ * The frame is one product's surface only by the brand it is handed: the name in the bar, the version beside it, the
+ * layers the card under the mark says the surface is over, and the mark itself. Everything else about a deployment is
+ * data, so a second product is a brand and a board rather than a second frame.
+ */
+export interface Brand {
+  /** What the bar carries, as it is drawn. */
+  title: string;
+  /** What the frame is called under the mark, which is what its card is headed. */
+  name: string;
+  version: string;
+  /** The layers the surface is over, read bottom up. */
+  layers: string[];
+  /** The mark, drawn where a place puts one beside a name. */
+  Mark: ComponentType<{ className?: string }>;
+  /**
+   * The same mark as one path in `viewBox` units.
+   *
+   * A reading that draws the mark as geometry rather than as an element needs the path and the box it is in, and
+   * taking them from the brand is what keeps the drawing and the favicon one drawing.
+   */
+  mark: { path: string; viewBox: number };
+}
+
+const Context = createContext<Brand | null>(null);
+
+export function BrandProvider({ brand, children }: { brand: Brand; children: ReactNode }) {
+  return <Context.Provider value={brand}>{children}</Context.Provider>;
+}
+
+/** The brand in force. A frame drawn without one is a frame with no name, which is a mistake rather than a default. */
+export function useBrand(): Brand {
+  const brand = useContext(Context);
+  if (!brand) throw new Error('the frame was drawn without a brand');
+  return brand;
+}
+
+/** The brand's mark, drawn wherever a place wants one and does not want to know which product it is. */
+export function BrandMark({ className }: { className?: string }) {
+  const { Mark } = useBrand();
+  return <Mark className={className} />;
+}

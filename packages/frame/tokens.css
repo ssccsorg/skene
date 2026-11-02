@@ -1,0 +1,182 @@
+
+@custom-variant dark (&:is(.dark *));
+
+/* The palette is a cool neutral surface, the one a monitoring console uses rather than a spacecraft's:
+   low chroma throughout, and the four record kinds carried by hue and by nothing else. Each kind's own
+   colour is the page's token rather than a theme colour, because it says what a kind of record is, which
+   the theme does not know about. */
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.17 0.008 250);
+  --foreground: oklch(0.95 0.004 250);
+  --card: oklch(0.215 0.008 250);
+  --card-foreground: oklch(0.95 0.004 250);
+  --popover: oklch(0.215 0.008 250);
+  --popover-foreground: oklch(0.95 0.004 250);
+  --primary: oklch(0.9 0.004 250);
+  --primary-foreground: oklch(0.215 0.008 250);
+  --secondary: oklch(0.26 0.008 250);
+  --secondary-foreground: oklch(0.95 0.004 250);
+  --muted: oklch(0.26 0.008 250);
+  --muted-foreground: oklch(0.68 0.012 250);
+  --accent: oklch(0.27 0.01 250);
+  --accent-foreground: oklch(0.95 0.004 250);
+  --destructive: oklch(0.62 0.15 25);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.55 0.01 250);
+  --sidebar: oklch(0.2 0.008 250);
+  --sidebar-foreground: oklch(0.95 0.004 250);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  /* The four kinds, at a console's chroma: a fact is the steel blue a reading is drawn in, a declaration
+     an indigo, what bounded it a bronze, and the act that took it a green that is not a signal green. */
+  --fact: oklch(0.7 0.09 240);
+  --intent: oklch(0.66 0.1 285);
+  --hint: oklch(0.74 0.1 78);
+  --claim: oklch(0.7 0.09 165);
+  /* What a thing is doing, which is the one reading the rail carries and the one place the palette spends
+     its chroma: a unit at work is a bright green however quiet the rest of the frame is, a unit between
+     records is a bright amber, and a unit that wrote nothing in the run is a bright cold blue rather than
+     a coloured-down grey, because a state nobody can see is a state nobody has. */
+  --working: oklch(0.84 0.2 149);
+  --idle: oklch(0.86 0.17 84);
+  --offline: oklch(0.74 0.13 235);
+  /* The mark's own ink. A product that wants a different one sets this and nothing else. */
+  --mark: oklch(0.68 0.07 250);
+  /* How a control on a row reads: the ink it rests in, the surface a pointer puts under it, and the ink it is drawn in
+     when it is on. They are three tokens of their own rather than the text tokens, because a control is a surface a
+     pointer lands on: a theme that restyles a sentence should not move every button in the frame, and a theme that
+     wants its controls read another way restyles these three and nothing else. On is an ink and not a fill, so a
+     control that is in force is the same control read brighter rather than a second kind of thing on the row. */
+  --control: oklch(0.68 0.012 250);
+  --control-hover: oklch(0.27 0.01 250);
+  --control-on: oklch(0.95 0.004 250);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-fact: var(--fact);
+  --color-intent: var(--intent);
+  --color-hint: var(--hint);
+  --color-claim: var(--claim);
+  --color-working: var(--working);
+  --color-idle: var(--idle);
+  --color-offline: var(--offline);
+  --color-mark: var(--mark);
+  --color-control: var(--control);
+  --color-control-hover: var(--control-hover);
+  --color-control-on: var(--control-on);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  /* The document is not the scroll area: a page that can move under the dashboard is what leaves a
+     footer below the fold on a phone. */
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  /* The form family is the one place a control decides its own type, and every control in this frame is a row of one
+     line: a button, a field, a select or a text area read at the size a panel's own name is read at. Left to the
+     browser they inherit the document's sixteen points, which is half again the height of the row they stand on and
+     what made a control read as a different instrument from the label beside it. A size set on a control is the
+     standard and nothing else. */
+  button,
+  input,
+  optgroup,
+  select,
+  textarea,
+  ::file-selector-button {
+    font-size: 11.5px;
+  }
+  /* The cockpit is a surface and not a document. A drag across the space is a drag of the space, and a drag that
+     picked out the words under the pointer would leave a band of selection over the board every time the pilot
+     turned it or took a window somewhere. A field a person types in keeps its own selection, because selecting
+     what is in a field is what a field is for. */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  input,
+  textarea,
+  [contenteditable='true'] {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+}
+
+@layer components {
+  /*
+   * What the markdown renderer writes: the least that keeps its markup legible in a panel of this frame.
+   *
+   * Blocks neither collapse into one another nor run off the side, and a fence keeps its own line breaks and scrolls
+   * sideways, because a wrapped command is a command nobody can read. The sizes are the console's own rather than a
+   * document's: a body is read at the size a row is, so a heading is a body read louder and not a heading. The lists are
+   * stated because the reset takes them off every list in the document, and a body that lists things is a body whose
+   * list has to be given back.
+   */
+  .md > :first-child { margin-top: 0; }
+  .md > :last-child { margin-bottom: 0; }
+  .md p, .md ul, .md ol, .md blockquote, .md table, .md pre { margin: 0 0 6px; }
+  .md h1, .md h2, .md h3, .md h4 { margin: 8px 0 4px; line-height: 1.3; color: var(--foreground); }
+  .md h1 { font-size: 13.5px; }
+  .md h2 { font-size: 12.5px; }
+  .md h3, .md h4 { font-size: 12px; }
+  .md ul, .md ol { padding-left: 16px; }
+  .md ul { list-style: disc; }
+  .md ol { list-style: decimal; }
+  .md li { margin: 1px 0; }
+  .md a { text-decoration: underline; text-underline-offset: 2px; }
+  .md code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    background: var(--card);
+    border-radius: 3px;
+    padding: 0 3px;
+  }
+  .md pre {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 8px;
+    overflow-x: auto;
+  }
+  .md pre code { background: none; padding: 0; white-space: pre; }
+  .md blockquote { border-left: 2px solid var(--border); padding-left: 8px; color: var(--muted-foreground); }
+  .md table { border-collapse: collapse; display: block; overflow-x: auto; }
+  .md th, .md td { border: 1px solid var(--border); padding: 3px 6px; text-align: left; }
+  .md hr { border: 0; border-top: 1px solid var(--border); margin: 8px 0; }
+  .md img { max-width: 100%; height: auto; }
+}

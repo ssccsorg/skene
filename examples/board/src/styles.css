@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+/* The frame's palette. A deployment that wants a different ink sets --mark and nothing else. */
+@import '../../../packages/frame/tokens.css';
+
+/* The frame's own source is scanned beside this application's, so a class the frame writes is a class Tailwind kept. */
+@source '../../../packages/frame/src';
+@source './';

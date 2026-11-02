@@ -1,0 +1,26 @@
+{
+  "name": "skene",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "The open frame: a FIH record drawn as a space, with each domain's views plugged in.",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "dev": "npm --workspace @ssccs/skene-example run dev",
+    "build": "npm --workspace @ssccs/skene-example run build",
+    "typecheck": "npm --workspace @ssccs/skene-frame run typecheck && npm --workspace @ssccs/skene-example run typecheck",
+    "test": "npm --workspace @ssccs/skene-frame run test",
+    "test:coverage": "npm --workspace @ssccs/skene-frame run test:coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssccsorg/skene.git"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
