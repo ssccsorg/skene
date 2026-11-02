@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "The open frame: a record drawn as a space, with each domain's views plugged in.",
+  "description": "The single space where every entity of an agentic system is drawn, read and commanded: the open surface beneath the products, with each domain's readings plugged in as a pack.",
   "exports": {
     ".": "./src/index.ts",
     "./tokens.css": "./tokens.css",

@@ -1,8 +1,13 @@
 # Skene
 
-The open frame. A record written as facts, intents and hints is drawn as one space: a place, the
-members standing in it, the run they wrote, and the readings of it. A deployment brings a brand and
-a board; it does not bring a frame.
+The single space where every entity of an agentic system is drawn, read and commanded. Agents,
+machines, the people who run them and the record they leave stand in one place, and each domain
+brings its own way of reading that place as a pack.
+
+It is the open surface beneath the products built on it. A deployment supplies a brand and a board
+and does not supply a frame, which is what lets one surface serve a fleet, a verification corpus or a
+codebase without any of them forking it. The record underneath is the same in every case: facts,
+intents and hints, addressed so that the space can be read without an index.
 
 The name is the Greek stage building: the structure the scene is hung on, which stays while the
 scene changes.
