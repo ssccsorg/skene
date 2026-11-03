@@ -41,8 +41,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm --workspace @ssccs/skene-example run typecheck
+      - run: npm --workspace @ssccsorg/skene-example run typecheck
       # The board is copied beside the assets by this build, so a build that succeeds is a build that can be served.
-      - run: npm --workspace @ssccs/skene-example run build
+      - run: npm --workspace @ssccsorg/skene-example run build
       - name: the build carries the board
         run: test -f examples/board/dist/projects.json && test -d examples/board/dist/scenario

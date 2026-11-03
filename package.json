@@ -10,9 +10,9 @@
     "examples/*"
   ],
   "scripts": {
-    "dev": "npm --workspace @ssccs/skene-example run dev",
-    "build": "npm --workspace @ssccs/skene-example run build",
-    "typecheck": "npm --workspace @ssccsorg/skene-frame run typecheck && npm --workspace @ssccs/skene-example run typecheck",
+    "dev": "npm --workspace @ssccsorg/skene-example run dev",
+    "build": "npm --workspace @ssccsorg/skene-example run build",
+    "typecheck": "npm --workspace @ssccsorg/skene-frame run typecheck && npm --workspace @ssccsorg/skene-example run typecheck",
     "test": "npm --workspace @ssccsorg/skene-frame run test",
     "test:coverage": "npm --workspace @ssccsorg/skene-frame run test:coverage"
   },
