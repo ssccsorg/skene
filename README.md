@@ -119,6 +119,8 @@ npm run build        # typecheck and a production bundle
 ```text
 packages/kernel/      the contracts and the logic that answers without a browser: records, places,
                       scenarios, campaigns, and the pack rule. No React, no DOM, no renderer
+packages/board/       the space's geometry: bearings, the projection onto the shell, the patch a window
+                      covers, the disc a place is read as, and the glyphs a member is drawn by
 packages/ui/          the kit: primitives, chrome vocabulary, colour, and the palette (tokens.css)
 packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel and the kit
 packages/frame/tools/ the board-carrying build plugin a deployment's vite config imports
@@ -137,6 +139,10 @@ record, a place and a scenario without a browser, and a test asserts that nothin
 
 The kit is a package because its consumers are not only the frame: a deployment's own form takes the same primitives,
 and the palette is the kit's, so a deployment that draws one control does not carry a second design system.
+
+The space's geometry is a package because everything that draws on the shell places things the same way: the cockpit,
+the two kind packages and the readings the frame keeps. It holds no run and no store, so it answers a bearing without a
+project being open.
 
 A window kind is a package of its own, and so is every picture the bar offers. The frame ships none of them: footage,
 ground, the space drawn on the shell and the run as a graph are packages, and a deployment imports the pictures it draws.

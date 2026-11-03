@@ -13,7 +13,7 @@ import { MapPatch3D } from './MapPatch3D';
 import { mapWindowOf } from './map-windows';
 import { registerViewKind, type WindowPage, type WindowPaint, type WindowRow } from '@ssccsorg/skene-frame/lib/view-kinds';
 import { statusOf } from '@ssccsorg/skene-frame/lib/windows';
-import type { FrameBox } from '@ssccsorg/skene-frame/lib/views';
+import type { FrameBox } from '@ssccsorg/skene-board';
 import { MAP_SPAN_METRES, nearBounds, type GeoPoint, type OwnView } from '@ssccsorg/skene-frame/lib/world';
 import type { DeclaredView, MapView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
 

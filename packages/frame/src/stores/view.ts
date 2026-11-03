@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FOV_MAX, FOV_MIN, LEVEL, type View } from '../lib/board';
+import { FOV_MAX, FOV_MIN, LEVEL, type View } from '@ssccsorg/skene-board';
 
 // Where the pilot is facing and how much of the space they are taking in. It lives here rather than in the
 // board because it is the pilot's and not the space's: the space does not move, and two views of the same

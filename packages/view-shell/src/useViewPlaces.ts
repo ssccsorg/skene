@@ -12,7 +12,7 @@ import {
   unfold,
   type Bearing,
   type View as Look,
-} from '@ssccsorg/skene-frame/lib/board';
+} from '@ssccsorg/skene-board';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
 import {
   MARGIN,
@@ -26,7 +26,7 @@ import {
   viewBearing,
   type FrameBox,
   type Mark,
-} from '@ssccsorg/skene-frame/lib/views';
+} from '@ssccsorg/skene-board';
 import { viewKindOf } from '@ssccsorg/skene-frame/lib/view-kinds';
 import { useView } from '@ssccsorg/skene-frame/stores/view';
 import { useViews, type WindowView } from '@ssccsorg/skene-frame/stores/views';

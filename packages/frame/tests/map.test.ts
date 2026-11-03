@@ -9,8 +9,8 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
-import { fitView, placed, type View } from '@/lib/board';
-import { DISC, dragTurn, insideDisc, onDisc, onMap, viewRegion, visible } from '@/lib/map';
+import { fitView, placed, type View } from '@ssccsorg/skene-board';
+import { DISC, dragTurn, insideDisc, onDisc, onMap, viewRegion, visible } from '@ssccsorg/skene-board';
 
 /** The frame's own source, read where a drawing has to be held to what it may not draw. */
 const source = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), 'utf8');

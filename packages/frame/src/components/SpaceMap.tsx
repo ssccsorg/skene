@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointer
 import { Crosshair, Minus, Plus } from 'lucide-react';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
-import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '../lib/board';
-import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '../lib/map';
+import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '@ssccsorg/skene-board';
+import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '@ssccsorg/skene-board';
 import { useMapDrag } from '../hooks/useMapDrag';
 import { UNIT_STATE } from '../hooks/useEntityState';
 import { useFrame } from '../stores/frame';

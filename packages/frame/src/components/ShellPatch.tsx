@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { depthFade, framedCells, patchGrid, patchOf, patchRim, shellAt, type Bearing } from '../lib/board';
-import { picture, ring } from '../lib/board-geometry';
-import { leaderPath } from '../lib/views';
+import { depthFade, framedCells, patchGrid, patchOf, patchRim, shellAt, type Bearing } from '@ssccsorg/skene-board';
+import { picture, ring } from '@ssccsorg/skene-board';
+import { leaderPath } from '@ssccsorg/skene-board';
 
 // A window's picture painted on the shell: the patch of surface it stands on, the rim that says where it ends, and the
 // line back to the entity that carries it.

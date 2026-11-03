@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from './geo-map';
-import type { Bearing } from '@ssccsorg/skene-frame/lib/board';
+import type { Bearing } from '@ssccsorg/skene-board';
 import type { Place, World } from '@ssccsorg/skene-kernel';
 import { located, ownView } from '@ssccsorg/skene-frame/lib/world';
 import { bindMapWindow } from './map-windows';

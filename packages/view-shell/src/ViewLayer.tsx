@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { ChevronDown, MoveDiagonal2, X } from 'lucide-react';
-import { aimAt, shellAt, type View as Look } from '@ssccsorg/skene-frame/lib/board';
+import { aimAt, shellAt, type View as Look } from '@ssccsorg/skene-board';
 import { standing, viewsOf } from '@ssccsorg/skene-frame/lib/carried';
 import { kindOf } from '@ssccsorg/skene-frame/lib/windows';
 import { UNKNOWN_KIND, viewKindOf } from '@ssccsorg/skene-frame/lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
-import { MARK, clipped, dragged, gripOf, sized } from '@ssccsorg/skene-frame/lib/views';
+import { MARK, clipped, dragged, gripOf, sized } from '@ssccsorg/skene-board';
 import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
 import { useView } from '@ssccsorg/skene-frame/stores/view';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';

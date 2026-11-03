@@ -13,7 +13,6 @@ const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 /** The frame's own modules: the board, the panel and the window layer, which are the things a kind is drawn by. */
 const CORE = [
   '../src/lib/windows.ts',
-  '../src/lib/views.ts',
   '../src/lib/world.ts',
   '../src/components/EntityPanel.tsx',
   '../src/properties/Shows.tsx',

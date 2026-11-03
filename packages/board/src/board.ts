@@ -13,8 +13,8 @@
 // drawn across the front of a frame.
 
 import type { NodeKind, ProjectStatus } from '@ssccsorg/skene-kernel';
-import { readableColour } from '@ssccsorg/skene-ui';
-import { GLYPHS } from './world';
+import { readableColour } from '@ssccsorg/skene-ui/colour';
+import { GLYPHS } from './glyphs';
 
 /**
  * What the one place in the space that is not a participant is called. A place may name its own label

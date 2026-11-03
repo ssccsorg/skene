@@ -1,4 +1,4 @@
-import { GLYPHS, glyphOf } from '../lib/world';
+import { GLYPHS, glyphOf } from '@ssccsorg/skene-board';
 import { cn } from '@ssccsorg/skene-ui';
 
 /** One unit's glyph, drawn as SVG rather than typed as a character. */

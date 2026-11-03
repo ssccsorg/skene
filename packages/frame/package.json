@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@react-three/fiber": "^9.4.0",
+    "@ssccsorg/skene-board": "0.1.0",
     "@ssccsorg/skene-kernel": "0.1.0",
     "@ssccsorg/skene-ui": "0.1.0",
     "lucide-react": "^0.548.0",

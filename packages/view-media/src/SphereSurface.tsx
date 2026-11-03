@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { SHELL } from '@ssccsorg/skene-frame/lib/board';
+import { SHELL } from '@ssccsorg/skene-board';
 import { FRAME_RATE, feedFrames } from './still';
 import { mediumOf, slotsOf, type SurfaceMode } from './surface';
 import type { Camera } from '@ssccsorg/skene-kernel';

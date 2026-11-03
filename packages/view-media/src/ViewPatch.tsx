@@ -1,7 +1,7 @@
 import { useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
-import type { Bearing } from '@ssccsorg/skene-frame/lib/board';
+import type { Bearing } from '@ssccsorg/skene-board';
 import { FRAME_RATE, feedFrames } from './still';
 import type { Camera } from '@ssccsorg/skene-kernel';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';

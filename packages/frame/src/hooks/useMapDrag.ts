@@ -1,5 +1,5 @@
 import { useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
-import { dragTurn } from '../lib/map';
+import { dragTurn } from '@ssccsorg/skene-board';
 import { useView } from '../stores/view';
 
 // The disc, taken in the hand and pushed.

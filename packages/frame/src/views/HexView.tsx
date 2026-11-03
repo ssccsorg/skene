@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Hexagon } from 'lucide-react';
 import { UNIT_STATE, useEntityState } from '../hooks/useEntityState';
 import { useHolds } from '../hooks/useHolds';
-import { STORE, glyphPath } from '../lib/board';
+import { STORE, glyphPath } from '@ssccsorg/skene-board';
 import { ROW } from '@ssccsorg/skene-ui';
 import { heldUnder, type Held } from '../lib/holds';
 import { useBrand } from '../lib/brand';

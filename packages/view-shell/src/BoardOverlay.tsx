@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
-import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, orbitalAt, placed as onShell, project, spreadOnEdge, unfold } from '@ssccsorg/skene-frame/lib/board';
+import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, orbitalAt, placed as onShell, project, spreadOnEdge, unfold } from '@ssccsorg/skene-board';
 import { fanTree, heldUnder, treeAt } from '@ssccsorg/skene-frame/lib/holds';
 import { useHolds } from '@ssccsorg/skene-frame/hooks/useHolds';
-import { MARK, MARK_INSET } from '@ssccsorg/skene-frame/lib/views';
+import { MARK, MARK_INSET } from '@ssccsorg/skene-board';
 import { BrandMark } from '@ssccsorg/skene-frame/lib/brand';
 import { EdgeMark } from './EdgeMark';
 import { BOARD_NAME, layoutLevels, layoutNames, nameWidth, type Blocker, type NameAt } from '@ssccsorg/skene-ui';

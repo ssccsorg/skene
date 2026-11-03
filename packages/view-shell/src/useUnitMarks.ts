@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { tintOf } from '@ssccsorg/skene-frame/lib/board';
+import { tintOf } from '@ssccsorg/skene-board';
 import { workingSet, writerOf } from '@ssccsorg/skene-frame/lib/world';
 import type { Entry, NodeKind, World } from '@ssccsorg/skene-kernel';
 

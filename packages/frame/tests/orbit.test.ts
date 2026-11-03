@@ -7,7 +7,7 @@
 
 import { expect, test } from 'vitest';
 
-import { ORBIT_LIFT, altitudeOf, liftOf, orbitLift, orbitRing, orbitalAt, ringOf, spaceLift } from '@/lib/board';
+import { ORBIT_LIFT, altitudeOf, liftOf, orbitLift, orbitRing, orbitalAt, ringOf, spaceLift } from '@ssccsorg/skene-board';
 
 /** The length of a point of the shell, which is the radius a lift is added to. */
 const length = ([x, y, z]: [number, number, number]) => Math.hypot(x, y, z);

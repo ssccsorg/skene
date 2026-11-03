@@ -6,7 +6,7 @@ import { kindOf } from '@ssccsorg/skene-frame/lib/windows';
 import { UNKNOWN_KIND, viewKindOf } from '@ssccsorg/skene-frame/lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { CONTROL } from '@ssccsorg/skene-ui';
-import type { FrameBox } from '@ssccsorg/skene-frame/lib/views';
+import type { FrameBox } from '@ssccsorg/skene-board';
 import { cn } from '@ssccsorg/skene-ui';
 import { useViews, type WindowView } from '@ssccsorg/skene-frame/stores/views';
 

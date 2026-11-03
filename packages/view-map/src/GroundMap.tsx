@@ -10,7 +10,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
-import { altitudeOf, spaceLift } from '@ssccsorg/skene-frame/lib/board';
+import { altitudeOf, spaceLift } from '@ssccsorg/skene-board';
 import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from './geo-map';
 import { OVERLAY_PAINT, overlaysOf } from './map-overlays';
 import type { Place, Standing, World } from '@ssccsorg/skene-kernel';

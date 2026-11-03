@@ -1,0 +1,22 @@
+{
+  "name": "@ssccsorg/skene-board",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "The space's geometry: bearings, the projection onto the shell, the patch a window covers, the disc a place is read as, and the glyphs a member is drawn by.",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "test": "vitest run", "typecheck": "tsc --noEmit -p ." },
+  "repository": { "type": "git", "url": "git+https://github.com/ssccsorg/skene.git", "directory": "packages/board" },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": { "url": "https://github.com/ssccsorg/skene/issues" },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" },
+  "dependencies": {
+    "@ssccsorg/skene-kernel": "0.1.0",
+    "@ssccsorg/skene-ui": "0.1.0",
+    "three": "^0.181.0"
+  },
+  "devDependencies": { "@types/three": "^0.181.0", "typescript": "^5.9.3", "vitest": "^3.2.4" }
+}

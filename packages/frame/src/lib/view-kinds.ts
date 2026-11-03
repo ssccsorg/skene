@@ -12,8 +12,8 @@
 
 import type { ComponentType } from 'react';
 import { Frame } from 'lucide-react';
-import type { Bearing } from './board';
-import type { FrameBox } from './views';
+import type { Bearing } from '@ssccsorg/skene-board';
+import type { FrameBox } from '@ssccsorg/skene-board';
 import type { CarriedView, DeclaredView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
 import type { OwnView } from './world';
 

@@ -11,8 +11,8 @@
 
 import { expect, test } from 'vitest';
 
-import { LEVEL, placed, project } from '@/lib/board';
-import { DISC, dragTurn, onDisc } from '@/lib/map';
+import { LEVEL, placed, project } from '@ssccsorg/skene-board';
+import { DISC, dragTurn, onDisc } from '@ssccsorg/skene-board';
 import { perPixel, useView } from '@/stores/view';
 
 const reset = () => useView.setState({ ...LEVEL, frame: [0, 0], held: false, arrival: 1 });

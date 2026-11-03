@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react';
-import { capRim, glyphPath, placed, zoneOf } from '../lib/board';
+import { capRim, glyphPath, placed, zoneOf } from '@ssccsorg/skene-board';
 import { ROW } from '@ssccsorg/skene-ui';
-import { DISC, onDisc, onEdge, onMap, outlineOfPoints } from '../lib/map';
+import { DISC, onDisc, onEdge, onMap, outlineOfPoints } from '@ssccsorg/skene-board';
 import { UNIT_STATE, useEntityState } from '../hooks/useEntityState';
 import { useMapDrag } from '../hooks/useMapDrag';
 import { MinimapMark } from '../components/MinimapMark';

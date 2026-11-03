@@ -6,7 +6,7 @@
 // keeps its proportions.
 
 import { expect, test } from 'vitest';
-import { coverUv, framedCells, patchAspect } from '@/lib/board';
+import { coverUv, framedCells, patchAspect } from '@ssccsorg/skene-board';
 
 test('a patch is as wide as its own cells, narrowed by the parallel it stands on', () => {
   // The patch is a quad of the room's own coordinates, so its width in angles is its cells and its width on the surface

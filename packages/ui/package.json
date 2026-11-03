@@ -7,18 +7,32 @@
   "description": "The frame's kit: primitives, chrome vocabulary, and the colour a mark is read in. No records, no board, no renderer of its own.",
   "exports": {
     ".": "./src/index.ts",
-    "./tokens.css": "./tokens.css"
+    "./tokens.css": "./tokens.css",
+    "./colour": "./src/colour.ts"
   },
-  "files": ["src", "tokens.css"],
+  "files": [
+    "src",
+    "tokens.css"
+  ],
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p ."
   },
-  "repository": { "type": "git", "url": "git+https://github.com/ssccsorg/skene.git", "directory": "packages/ui" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssccsorg/skene.git",
+    "directory": "packages/ui"
+  },
   "homepage": "https://github.com/ssccsorg/skene#readme",
-  "bugs": { "url": "https://github.com/ssccsorg/skene/issues" },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" },
+  "bugs": {
+    "url": "https://github.com/ssccsorg/skene/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-separator": "^1.1.7",
@@ -33,6 +47,12 @@
     "radix-ui": "^1.7.0",
     "tailwind-merge": "^3.3.1"
   },
-  "peerDependencies": { "react": "^19.0.0" },
-  "devDependencies": { "@types/react": "^19.2.2", "typescript": "^5.9.3", "vitest": "^3.2.4" }
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
 }
