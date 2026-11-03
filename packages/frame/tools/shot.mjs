@@ -1,6 +1,10 @@
+#!/usr/bin/env node
 // Take a screenshot of the dashboard at a size and a frame that can be named.
 //
-//   node tools/shot.mjs <width> <height> <url> <out.png> [--wait ms]
+//   skene-shot <width> <height> <url> <out.png> [--wait ms]
+//
+// It ships with the frame because every deployment takes the same picture of the same surface, and a copy per
+// deployment is a copy that drifts from the viewport the frame is drawn at.
 //
 // The dashboard is served by vite (`npm run dev`, or `npm run preview` for a build) and this drives a
 // Chrome that already has the debugging protocol open:
@@ -14,7 +18,7 @@
 
 const [width, height, url, out] = process.argv.slice(2);
 if (!width || !height || !url || !out) {
-  console.error('usage: shot.mjs <width> <height> <url> <out.png> [--wait ms]');
+  console.error('usage: skene-shot <width> <height> <url> <out.png> [--wait ms]');
   process.exit(1);
 }
 const waitAt = process.argv.indexOf('--wait');

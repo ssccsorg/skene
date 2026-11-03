@@ -82,9 +82,10 @@ Three entries are the contract, and they are what a product's own code uses:
 
 | Entry | What it is |
 |:---|:---|
-| `@ssccs/skene-frame` | the frame, the brand, the registers, the host type |
+| `@ssccs/skene-frame` | the frame, the brand, the registers, the host, and the room a deployment supplies |
 | `@ssccs/skene-frame/ui` | the buttons, the row and label tokens and `cn`, for the one form a deployment draws itself |
 | `@ssccs/skene-frame/tokens.css` | the palette, with `--mark` and `--board` as the tokens a product overrides |
+| `skene-shot` | the screenshot tool, at a viewport and a frame named on the command line |
 
 The layers below them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are exported on purpose and are
 not the frame's whole point of contact. They exist for a deployment's tests and tools, which read that deployment's
@@ -104,7 +105,12 @@ npm run dev          # http://localhost:5290
 
 The example is one project, one run, one place: a blackboard, two workers, a machine, a sensor, a
 rover, a camera and a reader. It carries three chains, which is what a queue can be in: one closed,
-one taken and not yet concluded, and one nobody has taken. The screenshot above is that board.
+one taken and not yet concluded, and one nobody has taken. The screenshot above is that board, taken
+with the frame's own tool against a dev server:
+
+```bash
+npx skene-shot 1600 1000 http://localhost:5290/ out.png
+```
 
 ```bash
 npm run build        # typecheck and a production bundle
@@ -114,9 +120,8 @@ npm run build        # typecheck and a production bundle
 
 ```text
 packages/frame/      the frame: src/, tokens.css, index.ts
+packages/frame/tools/shot.mjs   the screenshot tool, installed as `skene-shot`
 examples/board/      the smallest deployment: a brand, a board, one run
-tools/shot.mjs       a screenshot at a named size and frame
-tools/relative-imports.mjs   the one-off that made the package resolvable without the app's alias
 ```
 
 ## Consuming it before it is published

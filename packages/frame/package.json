@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
+  "bin": {
+    "skene-shot": "./tools/shot.mjs"
+  },
   "license": "Apache-2.0",
   "description": "Universal control surface for FIH state chains: a single open layer where every fact, intent, and hint is made visible, verifiable, and controllable, beneath your products and adapted to any domain through modular packs.",
   "exports": {
@@ -86,7 +89,8 @@
   },
   "files": [
     "src",
-    "tokens.css"
+    "tokens.css",
+    "tools"
   ],
   "publishConfig": {
     "access": "public"
