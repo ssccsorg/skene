@@ -1,7 +1,7 @@
-import { Separator } from './ui/separator';
-import { LABEL } from '../lib/chrome';
+import { Separator } from '@ssccsorg/skene-ui';
+import { LABEL } from '@ssccsorg/skene-ui';
 import { useBrand } from '../lib/brand';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * What the frame is, under the mark that opens it.

@@ -1,5 +1,5 @@
 import type { Lower } from './channel';
-import { nameWidth } from './labels';
+import { nameWidth } from '@ssccsorg/skene-ui';
 
 // The lower elements of a member, as a reading of the room's answers.
 //

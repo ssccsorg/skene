@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { useInstruments } from '../lib/instruments';
 import { useReadingAt } from '../lib/readings';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 // The imports are what put these in the register: an instrument declares itself where it lives, and a bar that listed
 // them would be the conditional this exists to avoid. The list is the kind's own barrel, so one control a file and one
 // line there is the whole of what an instrument costs.

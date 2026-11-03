@@ -119,7 +119,8 @@ npm run build        # typecheck and a production bundle
 ```text
 packages/kernel/      the contracts and the logic that answers without a browser: records, places,
                       scenarios, campaigns, and the pack rule. No React, no DOM, no renderer
-packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel
+packages/ui/          the kit: primitives, chrome vocabulary, colour, and the palette (tokens.css)
+packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel and the kit
 packages/frame/tools/ the board-carrying build plugin a deployment's vite config imports
 packages/view-media/  footage as a window kind: the picture, the surface it fills, the member's row and the
                       control that fills the surface
@@ -130,6 +131,9 @@ examples/board/       the smallest deployment: a brand, a board, one run, and it
 
 The kernel is a package of its own because its consumers are not all the frame: a deployment's node tools read a
 record, a place and a scenario without a browser, and a test asserts that nothing above it has reached down into it.
+
+The kit is a package because its consumers are not only the frame: a deployment's own form takes the same primitives,
+and the palette is the kit's, so a deployment that draws one control does not carry a second design system.
 
 A window kind is a package of its own. The frame ships none: footage and ground are packages, and a deployment imports
 the kinds it draws. Importing one is what installs it, so a deployment with no footage carries neither a video element

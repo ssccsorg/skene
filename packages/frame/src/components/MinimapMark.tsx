@@ -1,4 +1,4 @@
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * The map, drawn as what it is: a frame with the part of the shell its own reading holds inside it.

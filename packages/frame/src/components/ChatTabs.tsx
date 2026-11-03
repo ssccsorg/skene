@@ -1,10 +1,10 @@
 import { useMemo, type ReactNode } from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './ui/hint';
-import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
-import { CONTROL } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@ssccsorg/skene-ui';
+import { CONTROL } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 import { scopedThreads, useChat } from '../stores/chat';
 
 /**

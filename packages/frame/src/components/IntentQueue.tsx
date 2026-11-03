@@ -1,6 +1,6 @@
 import { keyOf } from '@ssccsorg/skene-kernel';
 import type { Intent, IntentState } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 // The queue of intents: one row a piece of declared work, and the state it has reached. It is where the
 // space's N:N is read, which is a participant declaring work another may take, so a row names both and the

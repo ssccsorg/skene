@@ -13,7 +13,7 @@
 // drawn across the front of a frame.
 
 import type { NodeKind, ProjectStatus } from '@ssccsorg/skene-kernel';
-import { readableColour } from './colour';
+import { readableColour } from '@ssccsorg/skene-ui';
 import { GLYPHS } from './world';
 
 /**

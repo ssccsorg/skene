@@ -17,7 +17,7 @@ import type { NodeKind, Place, World } from '@ssccsorg/skene-kernel';
 import { clipped } from '../lib/views';
 import type { Neighbour } from '../lib/world';
 import { viewKindOf, viewKinds } from '../lib/view-kinds';
-import { Hint } from './ui/hint';
+import { Hint } from '@ssccsorg/skene-ui';
 import { BoardOverlay } from './BoardOverlay';
 import { CockpitFrame } from './CockpitFrame';
 import { FieldRegion } from './FieldRegion';

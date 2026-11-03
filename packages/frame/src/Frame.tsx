@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
-import { TooltipProvider } from './components/ui/tooltip';
+import { TooltipProvider } from '@ssccsorg/skene-ui';
 import { BrandProvider, type Brand } from './lib/brand';
 import { setHost, type Host } from './lib/host';
 

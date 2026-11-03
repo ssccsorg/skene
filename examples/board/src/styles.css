@@ -5,6 +5,7 @@
 
 /* The frame's own source is scanned beside this application's, so a class the frame writes is a class Tailwind kept. A
    package that draws is scanned the same way, one line a package. */
+@source '../../../packages/ui/src';
 @source '../../../packages/frame/src';
 @source '../../../packages/view-media/src';
 @source '../../../packages/view-map/src';

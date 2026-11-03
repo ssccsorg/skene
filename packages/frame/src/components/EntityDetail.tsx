@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { GitBranch, MapPin, RotateCcw, Save } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '@ssccsorg/skene-ui';
 
 import type { Place, Standing } from '@ssccsorg/skene-kernel';
 import { useEdits } from '../stores/edits';
 import { useSelection } from '../stores/selection';
-import { LABEL, TITLE } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { LABEL, TITLE } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 import { Glyph } from './Glyph';
 
 // One participant, opened: what it is, where the place stands it, what the place declares it can be asked to do. The two

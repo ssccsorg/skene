@@ -1,12 +1,12 @@
 import { Columns2, Maximize2, Moon, Orbit, Rows2, Sun } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { Hint } from '../ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import { useWorld } from '../../hooks/useWorld';
-import { CONTROL } from '../../lib/chrome';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import { registerInstrument } from '../../lib/instruments';
 import { useReadings } from '../../lib/readings';
-import { cn } from '../../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { mappable } from '../../lib/world';
 import { useFrame, type MapSplit as Split } from '../../stores/frame';
 import { useScenario } from '../../stores/scenario';

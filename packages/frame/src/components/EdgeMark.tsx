@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { MARK, roomOf } from '../lib/views';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 // What a thing the frame does not hold is read by: a small round control carrying its own glyph, and the whole of its
 // label on the side of it the frame has room for.

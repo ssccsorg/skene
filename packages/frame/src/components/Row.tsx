@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { LABEL } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { LABEL } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * One row of a panel: a label, a value, and the content the row opens.

@@ -3,10 +3,10 @@ import { IntentQueue } from '../components/IntentQueue';
 import { useIntentPick } from '../hooks/useIntentPick';
 import { useWorld } from '../hooks/useWorld';
 import { keyOf } from '@ssccsorg/skene-kernel';
-import { LABEL, ROW } from '../lib/chrome';
+import { LABEL, ROW } from '@ssccsorg/skene-ui';
 import { boundsOf, intentsOf } from '@ssccsorg/skene-kernel';
 import { registerReading } from '../lib/readings';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useSelection } from '../stores/selection';
 
 /**

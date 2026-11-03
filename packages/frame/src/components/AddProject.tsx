@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import type { AddResult, NewProject } from '../stores/scenario';
 import { placeIn, validateSubmission, type ProjectIssue } from '../lib/contract';
 import type { SourceSpec } from '@ssccsorg/skene-kernel';

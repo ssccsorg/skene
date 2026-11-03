@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Check, RotateCcw, X } from 'lucide-react';
-import { Button } from './ui/button';
-import { LABEL, TITLE } from '../lib/chrome';
+import { Button } from '@ssccsorg/skene-ui';
+import { LABEL, TITLE } from '@ssccsorg/skene-ui';
 import type { Place, World } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { windowOf } from '../lib/windows';
 import { toPlace } from '../lib/world';
 import { useEdits } from '../stores/edits';

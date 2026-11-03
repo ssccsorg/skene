@@ -1,6 +1,6 @@
 import type { Bundle } from '@ssccsorg/skene-kernel';
-import { PROJECT_STATE, ROW } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { PROJECT_STATE, ROW } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * The contexts this board holds, each named by its own record and each in its own state, as one line

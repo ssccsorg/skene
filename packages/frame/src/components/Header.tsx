@@ -1,10 +1,10 @@
 import { Settings } from 'lucide-react';
-import { Hint } from './ui/hint';
-import { RowControl } from './ui/row-control';
+import { Hint } from '@ssccsorg/skene-ui';
+import { RowControl } from '@ssccsorg/skene-ui';
 import { useMenu } from '../hooks/useMenu';
-import { ROW, ROW_CONTROL_EDGE, TITLE } from '../lib/chrome';
+import { ROW, ROW_CONTROL_EDGE, TITLE } from '@ssccsorg/skene-ui';
 import { useBrand } from '../lib/brand';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { SettingsMenu } from './SettingsMenu';
 import { StatusBar } from './StatusBar';
 import { VersionCard } from './VersionCard';

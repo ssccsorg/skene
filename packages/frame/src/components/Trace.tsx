@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
-import { LABEL, TITLE } from '../lib/chrome';
+import { LABEL, TITLE } from '@ssccsorg/skene-ui';
 import { boundsOf, roundOf, turnsOf } from '@ssccsorg/skene-kernel';
 import type { Campaign, Entry, NodeKind } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { KindTag } from './KindTag';
 
 /** The reading a turn left, which is a name when it is a conclusion and a path when it is a reading. */

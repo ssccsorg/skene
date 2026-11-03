@@ -1,10 +1,10 @@
-import { Button } from '../ui/button';
-import { Hint } from '../ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import { useFrame } from '../../hooks/useFrame';
-import { CONTROL } from '../../lib/chrome';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import { registerInstrument } from '../../lib/instruments';
 import { usePanels, type PanelSide } from '../../lib/panels';
-import { cn } from '../../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useSelection } from '../../stores/selection';
 
 /**

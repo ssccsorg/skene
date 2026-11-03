@@ -13,6 +13,7 @@
   "dependencies": {
     "@ssccsorg/skene-frame": "0.1.0",
     "@ssccsorg/skene-kernel": "0.1.0",
+    "@ssccsorg/skene-ui": "0.1.0",
     "@ssccsorg/skene-view-map": "0.1.0",
     "@ssccsorg/skene-view-media": "0.1.0",
     "react": "^19.2.0",

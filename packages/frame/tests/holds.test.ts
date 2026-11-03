@@ -7,7 +7,7 @@
 
 import { expect, test } from 'vitest';
 import { fanAt, fanTree, heldUnder, leafOf, reachOf, spreadOf } from '@/lib/holds';
-import { nameWidth } from '@/lib/labels';
+import { nameWidth } from '@ssccsorg/skene-ui';
 import { useHoldStore } from '@/stores/holds';
 import type { Lower } from '@/lib/channel';
 

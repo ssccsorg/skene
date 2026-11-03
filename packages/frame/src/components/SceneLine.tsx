@@ -1,6 +1,6 @@
-import { LABEL, ROW, TITLE } from '../lib/chrome';
+import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
 import type { Scene } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * Where in the record the frame is: the project's own clock, and what the scene is.

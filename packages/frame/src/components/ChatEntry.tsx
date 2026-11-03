@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { ChevronRight, Lightbulb } from 'lucide-react';
 import { isToolCall, splitThinking, statusOf, timeOf, toolParts, type Message } from '../lib/channel';
-import { END_SLACK } from '../lib/chrome';
+import { END_SLACK } from '@ssccsorg/skene-ui';
 import { markdownOf } from '../lib/markdown';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * One entry of a thread, drawn by what it is rather than by who wrote it.

@@ -2,7 +2,7 @@ import { BottomBar } from './BottomBar';
 import { Panes } from './Panes';
 import { usePanels } from '../lib/panels';
 import { useSelection } from '../stores/selection';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * What an edge shows while the pointer rests on it.

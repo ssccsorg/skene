@@ -1,5 +1,5 @@
-import { Badge } from './ui/badge';
-import { cn } from '../lib/utils';
+import { Badge } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 import type { NodeKind } from '@ssccsorg/skene-kernel';
 
 // One kind, one colour, one letter. The four are peers: a fact, a declaration of work, what bounded it

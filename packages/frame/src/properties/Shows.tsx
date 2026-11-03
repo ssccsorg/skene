@@ -2,7 +2,7 @@ import { Row } from '../components/Row';
 import { useWorld } from '../hooks/useWorld';
 import type { Part, PartProps } from '../lib/kinds';
 import type { Place, UnitView, World } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { ownView, type OwnView } from '../lib/world';
 import { VIEW_STATUS, statusWith, windowOf } from '../lib/windows';
 import { UNKNOWN_KIND, viewKindOf, viewKinds } from '../lib/view-kinds';

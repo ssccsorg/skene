@@ -6,7 +6,7 @@
 // the collision the layer was written for.
 
 import { expect, test } from 'vitest';
-import { NAME_ROW, layoutLevels, layoutNames, nameWidth, type NameAt } from '@/lib/labels';
+import { NAME_ROW, layoutLevels, layoutNames, nameWidth, type NameAt } from '@ssccsorg/skene-ui';
 
 /** Two names drawn over one another: within half a width of each other and within a row of each other. */
 function over(a: { at: [number, number] }, b: { at: [number, number] }, aw: number, bw: number): boolean {

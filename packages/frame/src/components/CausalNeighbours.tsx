@@ -1,10 +1,10 @@
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from '@ssccsorg/skene-ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@ssccsorg/skene-ui';
 import type { Neighbour } from '@ssccsorg/skene-kernel';
 import { lineOf } from '../lib/world';
-import { LABEL, ROW } from '../lib/chrome';
+import { LABEL, ROW } from '@ssccsorg/skene-ui';
 import type { Entry } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { KindTag } from './KindTag';
 
 // The two directions a record runs in: what it came from, and what it led to. Every row is a jump, so

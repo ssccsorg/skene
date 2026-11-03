@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { capRim, glyphPath, placed, zoneOf } from '../lib/board';
-import { ROW } from '../lib/chrome';
+import { ROW } from '@ssccsorg/skene-ui';
 import { DISC, onDisc, onEdge, onMap, outlineOfPoints } from '../lib/map';
 import { UNIT_STATE, useEntityState } from '../hooks/useEntityState';
 import { useMapDrag } from '../hooks/useMapDrag';
@@ -8,7 +8,7 @@ import { MinimapMark } from '../components/MinimapMark';
 import { registerReading, type Board } from '../lib/readings';
 import { useScenario } from '../stores/scenario';
 import { useView } from '../stores/view';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * The shell seen from outside it: every place as the patch of ground it takes, named.

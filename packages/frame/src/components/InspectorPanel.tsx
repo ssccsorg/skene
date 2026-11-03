@@ -1,8 +1,8 @@
 import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
 import { POLICY } from '../lib/world';
 import { KindTag } from './KindTag';
-import { LABEL, ROW, TITLE } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * The fields the format gives each kind of record, one entry a kind.

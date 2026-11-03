@@ -1,5 +1,5 @@
 import { GLYPHS, glyphOf } from '../lib/world';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /** One unit's glyph, drawn as SVG rather than typed as a character. */
 export function Glyph({

@@ -7,7 +7,7 @@
 
 import { expect, test } from 'vitest';
 
-import { oklchToHex, readableColour } from '@/lib/colour';
+import { oklchToHex, readableColour } from '@ssccsorg/skene-ui';
 
 test('a token resolves to a six-digit colour', () => {
   for (const token of ['oklch(0.7 0.09 240)', 'oklch(0.84 0.2 149)', 'oklch(0.74 0.1 78)']) {

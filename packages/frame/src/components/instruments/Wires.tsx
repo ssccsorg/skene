@@ -1,9 +1,9 @@
 import { Waypoints } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Hint } from '../ui/hint';
-import { CONTROL } from '../../lib/chrome';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import { registerInstrument } from '../../lib/instruments';
-import { cn } from '../../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useDrawing } from '../../stores/drawing';
 // The reading this control is about, held as the declaration itself, so a shell renamed or withdrawn stops compiling here
 // rather than matching nothing.

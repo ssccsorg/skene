@@ -1,10 +1,10 @@
 import { PanelsTopLeft } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import { useFrame } from '../hooks/useFrame';
 import { useMenu } from '../hooks/useMenu';
 import { usePanels } from '../lib/panels';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useSelection } from '../stores/selection';
 
 /**

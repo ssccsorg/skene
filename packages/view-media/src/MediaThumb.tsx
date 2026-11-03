@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { FRAME_RATE, feedFrames } from './still';
-import { cn } from '@ssccsorg/skene-frame/lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';
 
 // A member's own camera, as the picture its row can carry.

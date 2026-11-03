@@ -6,9 +6,9 @@
 
 import { useMemo } from 'react';
 import { Check, Columns2, EyeOff, Grid2x2, Tv } from 'lucide-react';
-import { Hint } from '@ssccsorg/skene-frame/components/ui/hint';
+import { Hint } from '@ssccsorg/skene-ui';
 import { useMenu } from '@ssccsorg/skene-frame/hooks/useMenu';
-import { cn } from '@ssccsorg/skene-frame/lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { SURFACE_MODES, surfaceMedia } from './surface';
 import { useSurface } from './surface-store';
 import { filling, type SurfaceProps } from './MediaSurface';

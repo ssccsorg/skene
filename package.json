@@ -12,8 +12,8 @@
   "scripts": {
     "dev": "npm --workspace @ssccsorg/skene-example run dev",
     "build": "npm --workspace @ssccsorg/skene-example run build",
-    "typecheck": "npm --workspace @ssccsorg/skene-kernel run typecheck && npm --workspace @ssccsorg/skene-frame run typecheck && npm --workspace @ssccsorg/skene-view-media run typecheck && npm --workspace @ssccsorg/skene-view-map run typecheck && npm --workspace @ssccsorg/skene-example run typecheck",
-    "test": "npm --workspace @ssccsorg/skene-kernel run test && npm --workspace @ssccsorg/skene-frame run test && npm --workspace @ssccsorg/skene-view-media run test && npm --workspace @ssccsorg/skene-view-map run test && npm --workspace @ssccsorg/skene-example run test",
+    "typecheck": "npm --workspace @ssccsorg/skene-kernel run typecheck && npm --workspace @ssccsorg/skene-ui run typecheck && npm --workspace @ssccsorg/skene-frame run typecheck && npm --workspace @ssccsorg/skene-view-media run typecheck && npm --workspace @ssccsorg/skene-view-map run typecheck && npm --workspace @ssccsorg/skene-example run typecheck",
+    "test": "npm --workspace @ssccsorg/skene-kernel run test && npm --workspace @ssccsorg/skene-ui run test && npm --workspace @ssccsorg/skene-frame run test && npm --workspace @ssccsorg/skene-view-media run test && npm --workspace @ssccsorg/skene-view-map run test && npm --workspace @ssccsorg/skene-example run test",
     "test:coverage": "npm --workspace @ssccsorg/skene-frame run test:coverage"
   },
   "repository": {

@@ -6,13 +6,13 @@ import { useHolds } from '../hooks/useHolds';
 import { MARK, MARK_INSET } from '../lib/views';
 import { BrandMark } from '../lib/brand';
 import { EdgeMark } from './EdgeMark';
-import { layoutLevels, layoutNames, nameWidth, type Blocker, type NameAt } from '../lib/labels';
+import { layoutLevels, layoutNames, nameWidth, type Blocker, type NameAt } from '@ssccsorg/skene-ui';
 import { lineOf, writerOf } from '../lib/world';
 import type { Neighbour } from '../lib/world';
 import { useView } from '../stores/view';
 import { useSelection } from '../stores/selection';
 import type { Entry, ProjectStatus, World } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { BoardLabel, BOARD_NAME } from './BoardLabel';
 
 /** The one id the composition's own label is placed under, so no unit can be named like it. */

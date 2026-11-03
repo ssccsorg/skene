@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
 import { BOARD_NAME } from '@/components/BoardLabel';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@ssccsorg/skene-ui';
 import {
   CONTROL,
   LABEL,
@@ -27,7 +27,7 @@ import {
   ROW_CONTROL_EDGE,
   TITLE,
   type RowControlSize,
-} from '@/lib/chrome';
+} from '@ssccsorg/skene-ui';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const source = (path: string) => readFileSync(`${ROOT}${path}`, 'utf8');
@@ -103,9 +103,8 @@ test('a label and a control stand on one inset, at every size a row carries', ()
 });
 
 test('a control at the edge of a row takes its edge from the frame and not from a margin of its own', () => {
-  const edge = source('src/components/ui/row-control.tsx');
-  expect(edge, 'the size and the edge are one answer').toMatch(/ROW_CONTROL_EDGE\[/);
-
+  // The kit's own half of this is held where the kit is, because the control is a package now. What is here is every row
+  // that places one, which is the frame's side of the same answer.
   const rows = [
     'src/components/Header.tsx',
     'src/components/SpacePanel.tsx',

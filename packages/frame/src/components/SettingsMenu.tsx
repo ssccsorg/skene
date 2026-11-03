@@ -1,7 +1,7 @@
-import { Separator } from './ui/separator';
-import { LABEL, ROW } from '../lib/chrome';
+import { Separator } from '@ssccsorg/skene-ui';
+import { LABEL, ROW } from '@ssccsorg/skene-ui';
 import { usePanels } from '../lib/panels';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useSizes } from '../stores/sizes';
 import { useViews } from '../stores/views';
 import { host } from '../lib/host';

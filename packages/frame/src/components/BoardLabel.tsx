@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pencil } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 // A name in the space. It is drawn as DOM over the canvas rather than as a portal inside it: the
 // projection is the pilot's own and the page can do that arithmetic, and nine portals into a canvas is

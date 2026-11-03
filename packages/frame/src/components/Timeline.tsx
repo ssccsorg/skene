@@ -3,7 +3,7 @@ import { keyOf } from '@ssccsorg/skene-kernel';
 import { tracksOf, type RunBranch } from '@ssccsorg/skene-kernel';
 import { acrossOf, atOf, readingOf, shownIn } from '../lib/zoom';
 import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 // The run as one axis: the track is what the transport in the panel's own row walks.
 //

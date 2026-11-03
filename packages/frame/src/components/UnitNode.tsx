@@ -1,6 +1,6 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { TITLE } from '../lib/chrome';
-import { cn } from '../lib/utils';
+import { TITLE } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * A participant's node in the graph: its name, and how much its own store holds. It is a node of its own

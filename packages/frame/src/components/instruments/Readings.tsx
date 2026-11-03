@@ -1,10 +1,10 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { Hint } from '../ui/hint';
-import { CONTROL } from '../../lib/chrome';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import { registerInstrument } from '../../lib/instruments';
 import { useReadings, type Reading } from '../../lib/readings';
-import { cn } from '../../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useFrame } from '../../stores/frame';
 import { useScenario } from '../../stores/scenario';
 

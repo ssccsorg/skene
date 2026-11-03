@@ -13,7 +13,7 @@ import { expect, test } from 'vitest';
 
 import type { Lower } from '@/lib/channel';
 import { HELD_DEPTH, fanTree, heldUnder, treeAt, withinOf } from '@/lib/holds';
-import { layoutLevels, nameWidth, type NameAt } from '@/lib/labels';
+import { layoutLevels, nameWidth, type NameAt } from '@ssccsorg/skene-ui';
 
 const file = (name: string): Lower => ({ name, dir: false });
 const dir = (name: string): Lower => ({ name, dir: true });

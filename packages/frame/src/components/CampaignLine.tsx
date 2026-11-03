@@ -1,12 +1,12 @@
 import { CheckCircle2, Circle, Flag, XCircle } from 'lucide-react';
 import { useMemo } from 'react';
-import { Hint } from './ui/hint';
+import { Hint } from '@ssccsorg/skene-ui';
 import { useVolume } from '../hooks/useVolume';
 import { campaignAt, type CampaignState, type ObjectiveState } from '@ssccsorg/skene-kernel';
-import { LABEL, ROW, TITLE } from '../lib/chrome';
-import { campaignInk } from '../lib/inks';
+import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
+import { campaignInk } from '@ssccsorg/skene-ui';
 import { parseScenario } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 
 /**

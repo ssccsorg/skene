@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Crosshair, Minus, Plus } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '../lib/board';
 import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '../lib/map';
 import { useMapDrag } from '../hooks/useMapDrag';
@@ -11,7 +11,7 @@ import { useScenario } from '../stores/scenario';
 import { useView } from '../stores/view';
 import type { World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from '../lib/world';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 // The space as a disc, filling the width the column gives it: the shell the pilot stands inside, seen from outside
 // it, with every project's patch on it and the frame's own region painted over the part it holds.

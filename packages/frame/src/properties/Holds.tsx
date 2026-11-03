@@ -3,12 +3,12 @@ import { AtSign, ChevronRight } from 'lucide-react';
 import { Row } from '../components/Row';
 import { useHolds } from '../hooks/useHolds';
 import { CONSOLE, useCapability } from '../lib/capabilities';
-import { ROW } from '../lib/chrome';
+import { ROW } from '@ssccsorg/skene-ui';
 import { HELD_DEPTH, leafOf } from '../lib/holds';
 import { askable, type Part, type PartProps } from '../lib/kinds';
 import { useChat } from '../stores/chat';
 import { useSelection } from '../stores/selection';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * What a member holds, as a tree: the first part, and the shape every other part is written in.

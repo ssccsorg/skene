@@ -1,5 +1,5 @@
 import type { World } from '@ssccsorg/skene-kernel';
-import { LABEL } from '../lib/chrome';
+import { LABEL } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 
 // What the space is, when nothing in it is picked.

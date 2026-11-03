@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { ScrollArea } from './ui/scroll-area';
+import { ScrollArea } from '@ssccsorg/skene-ui';
 import { keyOf } from '@ssccsorg/skene-kernel';
-import { ROW } from '../lib/chrome';
+import { ROW } from '@ssccsorg/skene-ui';
 import { lineOf, whoOf } from '../lib/world';
 import type { Entry } from '@ssccsorg/skene-kernel';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { KindTag } from './KindTag';
 
 /**

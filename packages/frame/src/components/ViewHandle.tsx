@@ -1,13 +1,13 @@
 import { ChevronUp } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './ui/hint';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
 import { standing } from '../lib/carried';
 import { kindOf } from '../lib/windows';
 import { UNKNOWN_KIND, viewKindOf } from '../lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
-import { CONTROL } from '../lib/chrome';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import type { FrameBox } from '../lib/views';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useViews, type WindowView } from '../stores/views';
 
 // The pin a window on the shell is carried by: what the window is, and the one thing that can be done to it.

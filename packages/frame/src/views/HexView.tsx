@@ -3,7 +3,7 @@ import { Hexagon } from 'lucide-react';
 import { UNIT_STATE, useEntityState } from '../hooks/useEntityState';
 import { useHolds } from '../hooks/useHolds';
 import { STORE, glyphPath } from '../lib/board';
-import { ROW } from '../lib/chrome';
+import { ROW } from '@ssccsorg/skene-ui';
 import { heldUnder, type Held } from '../lib/holds';
 import { useBrand } from '../lib/brand';
 import {
@@ -24,7 +24,7 @@ import {
 } from '@ssccsorg/skene-kernel';
 import { registerReading, type Board } from '../lib/readings';
 import { fromPlace } from '../lib/world';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 
 /**

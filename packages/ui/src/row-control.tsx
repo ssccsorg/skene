@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Button } from './button';
-import { CONTROL, ROW_CONTROL_EDGE, type RowControlSize } from '../../lib/chrome';
-import { cn } from '../../lib/utils';
+import { CONTROL, ROW_CONTROL_EDGE, type RowControlSize } from './chrome';
+import { cn } from './utils';
 
 /**
  * A control on a row, at one of its edges or between them.

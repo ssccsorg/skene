@@ -1,7 +1,7 @@
 import { EntityGraph } from '../components/EntityGraph';
-import { ROW } from '../lib/chrome';
+import { ROW } from '@ssccsorg/skene-ui';
 import { registerReading } from '../lib/readings';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 import { useVolume } from '../hooks/useVolume';
 import { useScenario } from '../stores/scenario';
 import { Network } from 'lucide-react';

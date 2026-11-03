@@ -1,11 +1,11 @@
 import { Boxes, LoaderCircle, UserRound, Wifi, WifiOff, type LucideIcon } from 'lucide-react';
 import { propertiesOf } from '../lib/kinds';
-import { PROJECT_STATE } from '../lib/chrome';
+import { PROJECT_STATE } from '@ssccsorg/skene-ui';
 import { useVolume } from '../hooks/useVolume';
 import { useWorld } from '../hooks/useWorld';
 import { useScenario } from '../stores/scenario';
 import type { StreamState } from '../lib/record-client';
-import { cn } from '../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * The readings the frame keeps, at the end of the bar, where a status bar keeps them.

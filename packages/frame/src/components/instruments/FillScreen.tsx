@@ -1,10 +1,10 @@
 import { Fullscreen, Minimize2 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Hint } from '../ui/hint';
-import { CONTROL } from '../../lib/chrome';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
+import { CONTROL } from '@ssccsorg/skene-ui';
 import { useFullscreen } from '../../hooks/useFullscreen';
 import { registerInstrument } from '../../lib/instruments';
-import { cn } from '../../lib/utils';
+import { cn } from '@ssccsorg/skene-ui';
 
 /**
  * Whether the cockpit is filling the screen.

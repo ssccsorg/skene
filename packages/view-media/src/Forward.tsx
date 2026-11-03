@@ -8,10 +8,10 @@
 // markup here is the row's and the pin's as they were when the frame drew them, so a deployment sees no difference.
 
 import { ArrowUpRight } from 'lucide-react';
-import { Button } from '@ssccsorg/skene-frame/components/ui/button';
-import { Hint } from '@ssccsorg/skene-frame/components/ui/hint';
-import { CONTROL } from '@ssccsorg/skene-frame/lib/chrome';
-import { cn } from '@ssccsorg/skene-frame/lib/utils';
+import { Button } from '@ssccsorg/skene-ui';
+import { Hint } from '@ssccsorg/skene-ui';
+import { CONTROL } from '@ssccsorg/skene-ui';
+import { cn } from '@ssccsorg/skene-ui';
 import { useSurfaceForward } from './useSurfaceForward';
 
 export function Forward({ origin, where }: { origin: string; where: 'row' | 'handle' }) {
