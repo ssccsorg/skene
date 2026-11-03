@@ -1,4 +1,4 @@
-import type { Bundle } from '../lib/types';
+import type { Bundle } from '@ssccsorg/skene-kernel';
 import { PROJECT_STATE, ROW } from '../lib/chrome';
 import { cn } from '../lib/utils';
 

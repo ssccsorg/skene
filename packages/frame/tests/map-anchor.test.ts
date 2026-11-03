@@ -9,7 +9,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 import { fromPlace, geoOf, toPlace } from '@/lib/world';
-import type { Place } from '@/lib/types';
+import type { Place } from '@ssccsorg/skene-kernel';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 

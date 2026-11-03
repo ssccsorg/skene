@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Progress } from '../lib/channel';
-import { statesOf } from '../lib/live';
+import { statesOf } from '@ssccsorg/skene-kernel';
 
 // The positions the room's devices have stated, by project and unit.
 //

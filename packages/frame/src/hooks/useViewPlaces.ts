@@ -13,7 +13,7 @@ import {
   type Bearing,
   type View as Look,
 } from '../lib/board';
-import type { CarriedView } from '../lib/types';
+import type { CarriedView } from '@ssccsorg/skene-kernel';
 import {
   MARGIN,
   anchorOf,
@@ -29,7 +29,7 @@ import {
 } from '../lib/views';
 import { useView } from '../stores/view';
 import { useViews, type WindowView } from '../stores/views';
-import type { World } from '../lib/types';
+import type { World } from '@ssccsorg/skene-kernel';
 
 // Where each window the space carries stands, as one reading both of its renderers use.
 //

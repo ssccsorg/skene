@@ -1,6 +1,6 @@
 import { Badge } from './ui/badge';
 import { cn } from '../lib/utils';
-import type { NodeKind } from '../lib/types';
+import type { NodeKind } from '@ssccsorg/skene-kernel';
 
 // One kind, one colour, one letter. The four are peers: a fact, a declaration of work, what bounded it
 // and the act that took it are four kinds of the same record, and the colour is the whole of what

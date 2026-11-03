@@ -7,7 +7,7 @@ import { commandOf, EFFORTS, LINK_WORDS, noteOf, type Message } from '../lib/cha
 import { drawn } from '../hooks/useRoom';
 import { CONTROL, END_SLACK, ROW } from '../lib/chrome';
 import { firstMention, mentionAt, withoutMention } from '../lib/mention';
-import { offersFor, skillsOf, type Offered } from '../lib/offer';
+import { offersFor, skillsOf, type Offered } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { scopedThreads, useChat, type Queued } from '../stores/chat';
 import { host } from '../lib/host';

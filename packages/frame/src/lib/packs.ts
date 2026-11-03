@@ -4,7 +4,7 @@
 // component: a caller hands the readings it has and the declaration the project made, and gets back the ones that
 // stand. `lib/readings.ts` holds the React side and imports this, and a test can ask the rule on its own.
 
-import type { Layout, Views } from './types';
+import type { Layout, Views } from '@ssccsorg/skene-kernel';
 import type { Reading } from './readings';
 
 /** The pack every project stands, which is where the frame's own readings are registered. */

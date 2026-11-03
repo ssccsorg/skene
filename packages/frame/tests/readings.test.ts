@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
 import { declaredReadings, standing } from '@/lib/readings';
-import type { Layout } from '@/lib/types';
+import type { Layout } from '@ssccsorg/skene-kernel';
 // The readings that declare themselves register when their modules are imported, which is what the frame's own entry does.
 import '@/views/index';
 

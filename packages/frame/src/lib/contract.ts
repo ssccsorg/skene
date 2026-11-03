@@ -11,9 +11,9 @@
 // resource, a record that will not parse) are the reader's, and `bundleOf` still says those. The point of a separate
 // proof is that a declaration written by a person or a model can be refused with a list before the board is touched.
 
-import { campaignsOf } from './campaign';
+import { campaignsOf } from '@ssccsorg/skene-kernel';
 import type { ProjectDocument } from './project';
-import { ATOM_KEYS, type Place, type SourceSpec } from './types';
+import { ATOM_KEYS, type Place, type SourceSpec } from '@ssccsorg/skene-kernel';
 
 /** The version of the declaration this build reads. A bundle may carry it; a bundle without one is read as this. */
 export const PROJECT_FORMAT = 'project/1';

@@ -13,7 +13,7 @@ import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
 import { altitudeOf, spaceLift } from '../lib/board';
 import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from '../lib/geo-map';
 import { OVERLAY_PAINT, overlaysOf } from '../lib/map-overlays';
-import type { Place, Standing, World } from '../lib/types';
+import type { Place, Standing, World } from '@ssccsorg/skene-kernel';
 import type { MapTone } from '../stores/frame';
 import { located, ownView } from '../lib/world';
 

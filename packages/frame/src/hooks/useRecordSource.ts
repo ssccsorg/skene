@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { keyOf } from '../lib/address';
+import { keyOf } from '@ssccsorg/skene-kernel';
 import { useRecords, volumeOf } from '../stores/records';
 import { source, useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';

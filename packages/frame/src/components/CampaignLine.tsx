@@ -2,10 +2,10 @@ import { CheckCircle2, Circle, Flag, XCircle } from 'lucide-react';
 import { useMemo } from 'react';
 import { Hint } from './ui/hint';
 import { useVolume } from '../hooks/useVolume';
-import { campaignAt, type CampaignState, type ObjectiveState } from '../lib/campaign';
+import { campaignAt, type CampaignState, type ObjectiveState } from '@ssccsorg/skene-kernel';
 import { LABEL, ROW, TITLE } from '../lib/chrome';
 import { campaignInk } from '../lib/inks';
-import { parseScenario } from '../lib/scenario';
+import { parseScenario } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { useScenario } from '../stores/scenario';
 

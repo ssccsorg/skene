@@ -12,7 +12,7 @@
 // height is a wide arc up and down, so a space is a space the pilot is standing inside rather than a band
 // drawn across the front of a frame.
 
-import type { NodeKind, ProjectStatus } from './types';
+import type { NodeKind, ProjectStatus } from '@ssccsorg/skene-kernel';
 import { readableColour } from './colour';
 import { GLYPHS } from './world';
 

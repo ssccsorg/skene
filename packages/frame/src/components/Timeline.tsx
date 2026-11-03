@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useRef, type HTMLAttributes, type KeyboardEvent, type PointerEvent } from 'react';
-import { keyOf } from '../lib/address';
-import { tracksOf, type RunBranch } from '../lib/tracks';
+import { keyOf } from '@ssccsorg/skene-kernel';
+import { tracksOf, type RunBranch } from '@ssccsorg/skene-kernel';
 import { acrossOf, atOf, readingOf, shownIn } from '../lib/zoom';
-import type { Entry, NodeKind } from '../lib/types';
+import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 
 // The run as one axis: the track is what the transport in the panel's own row walks.

@@ -5,7 +5,7 @@ import { expect, test } from 'vitest';
 import { mediumOf, slotsOf, surfaceMedia } from '@/lib/surface';
 import { readView } from '@/lib/windows';
 import { useSurface } from '@/stores/surface';
-import type { Camera } from '@/lib/types';
+import type { Camera } from '@ssccsorg/skene-kernel';
 
 const camera = (id: string, origin: string, src = '/media/robot_1.mp4'): Camera => ({
   id,

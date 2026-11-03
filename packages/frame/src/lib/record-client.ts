@@ -10,7 +10,7 @@
 // out of the volume or subscribe to the store that holds it.
 
 import { host } from './host';
-import type { Entry, NodeKind } from './types';
+import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
 
 export interface WireRecord {
   seq: number;

@@ -1,5 +1,5 @@
 import type { Part } from '../lib/kinds';
-import type { Property } from '../lib/types';
+import type { Property } from '@ssccsorg/skene-kernel';
 
 import { emits } from './Emits';
 import { holds } from './Holds';

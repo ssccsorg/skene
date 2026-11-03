@@ -6,8 +6,8 @@
 // a second answer to what happened.
 
 import { expect, test } from 'vitest';
-import { boundsOf, roundOf, turnsOf } from '@/lib/round';
-import type { Entry } from '@/lib/types';
+import { boundsOf, roundOf, turnsOf } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 /** One turn as the wire leaves it: a declaration, a claim, and the reading it produced. */
 function turn(worker: string, said: string, wrote: string, from: Entry | null = null): Entry {

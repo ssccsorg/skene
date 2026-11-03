@@ -1,4 +1,4 @@
-import type { Charge } from '../lib/attributes';
+import type { Charge } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 
 // A charge, drawn once for every kind of thing that carries one.

@@ -16,7 +16,7 @@ import { useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
 import { useSurface } from '../stores/surface';
 import { useView } from '../stores/view';
-import type { NodeKind, Place, World } from '../lib/types';
+import type { NodeKind, Place, World } from '@ssccsorg/skene-kernel';
 import type { FrameBox } from '../lib/views';
 import { clipped } from '../lib/views';
 import type { Neighbour } from '../lib/world';

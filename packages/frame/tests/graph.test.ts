@@ -7,7 +7,7 @@
 import { expect, test } from 'vitest';
 
 import { graphOf } from '@/lib/graph';
-import type { Entry } from '@/lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 test('a participant the place forgot is appended rather than dropped', () => {
   const entry: Entry = { kind: 'fact', label: 'stray', origin: 'stranger/observation', at: 0 };
   const graph = graphOf([entry], { 'rover-1': {} });

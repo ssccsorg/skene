@@ -5,8 +5,8 @@
 // window cannot see how long the run is and a transport has to draw the run rather than what arrived of it.
 
 import { expect, test } from 'vitest';
-import { heldSource, windowOf } from '@/lib/source';
-import type { Entry } from '@/lib/types';
+import { heldSource, windowOf } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 const run: Entry[] = [1, 2, 3, 4, 5].map((at) => ({ kind: 'fact', at, origin: 'a/b', bytes: 8, cycle: at }));
 const at = (window: { entries: Entry[] }) => window.entries.map((entry) => entry.at);

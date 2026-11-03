@@ -5,7 +5,7 @@
 // answer for a window kept from before the kind existed.
 
 import { beforeEach, expect, test } from 'vitest';
-import type { DeclaredView } from '@/lib/types';
+import type { DeclaredView } from '@ssccsorg/skene-kernel';
 import { VIEW_STATUS, WINDOW_KINDS, kindOf, readView, statusOf, statusWith, windowOf, windowOfCamera } from '@/lib/windows';
 import { VIEW_CONTENT } from '@/properties/ViewContent';
 import { useViews } from '@/stores/views';

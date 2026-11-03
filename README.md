@@ -117,10 +117,15 @@ npm run build        # typecheck and a production bundle
 ## Layout
 
 ```text
-packages/frame/       the frame: src/, tokens.css, index.ts
+packages/kernel/      the contracts and the logic that answers without a browser: records, places,
+                      scenarios, campaigns, and the pack rule. No React, no DOM, no renderer
+packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel
 packages/frame/tools/ the board-carrying build plugin a deployment's vite config imports
 examples/board/       the smallest deployment: a brand, a board, one run, and its own tests
 ```
+
+The kernel is a package of its own because its consumers are not all the frame: a deployment's node tools read a
+record, a place and a scenario without a browser, and a test asserts that nothing above it has reached down into it.
 
 ## Consuming it
 
@@ -137,6 +142,14 @@ git clone --depth 1 https://github.com/ssccsorg/skene ../skene
 The path is relative to the deployment's own manifest, so it gains a `../` for every directory the
 manifest sits below its repository root: a manifest one directory down writes `../../skene`, and one two
 directories down writes `../../../skene`.
+
+A deployment that reads the kernel directly, in a node tool or in its own tests, declares it beside the frame:
+
+```json
+"@ssccsorg/skene-kernel": "file:../skene/packages/kernel"
+```
+
+The frame brings it as a dependency, so a deployment that only draws the board needs the one line.
 
 A deployment installs the frame packed rather than linked, which is one line in its `.npmrc`:
 

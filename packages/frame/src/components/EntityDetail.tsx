@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GitBranch, MapPin, RotateCcw, Save } from 'lucide-react';
 import { Button } from './ui/button';
 
-import type { Place, Standing } from '../lib/types';
+import type { Place, Standing } from '@ssccsorg/skene-kernel';
 import { useEdits } from '../stores/edits';
 import { useSelection } from '../stores/selection';
 import { LABEL, TITLE } from '../lib/chrome';

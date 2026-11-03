@@ -6,7 +6,7 @@
 
 import { expect, test } from 'vitest';
 
-import { statesOf } from '@/lib/live';
+import { statesOf } from '@ssccsorg/skene-kernel';
 
 test('a state line is a map of units to positions', () => {
   expect(statesOf('state {"rover-1":[100,130],"crawler-2":[20,40]}')).toEqual({

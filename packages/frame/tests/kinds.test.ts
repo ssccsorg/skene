@@ -10,7 +10,7 @@
 
 import { expect, test } from 'vitest';
 import { askable, kindsNamed, memberOf, partsOf, propertiesOf } from '@/lib/kinds';
-import { ATOM_KEYS, type Properties, type Property } from '@/lib/types';
+import { ATOM_KEYS, type Properties, type Property } from '@ssccsorg/skene-kernel';
 
 /** The atoms a member's answers hold, in the frame's own order, which is the order a panel reads them off in. */
 const on = (properties: Properties) => ATOM_KEYS.filter((key) => properties[key]);

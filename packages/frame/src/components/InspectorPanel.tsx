@@ -1,4 +1,4 @@
-import type { Entry, NodeKind } from '../lib/types';
+import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
 import { POLICY } from '../lib/world';
 import { KindTag } from './KindTag';
 import { LABEL, ROW, TITLE } from '../lib/chrome';

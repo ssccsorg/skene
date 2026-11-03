@@ -3,7 +3,7 @@ import { ChevronDown, MoveDiagonal2, X } from 'lucide-react';
 import { aimAt, shellAt, type View as Look } from '../lib/board';
 import { standing, viewsOf } from '../lib/cameras';
 import { WINDOW_KINDS, kindOf } from '../lib/windows';
-import type { CarriedView } from '../lib/types';
+import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { MARK, clipped, dragged, gripOf, sized } from '../lib/views';
 import { useSelection } from '../stores/selection';
 import { useView } from '../stores/view';

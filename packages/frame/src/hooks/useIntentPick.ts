@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { Intent } from '../lib/intents';
+import type { Intent } from '@ssccsorg/skene-kernel';
 import { useSelection } from '../stores/selection';
 
 /**

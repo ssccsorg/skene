@@ -6,7 +6,7 @@
 
 import { expect, test } from 'vitest';
 import { collectionOf, overlaysOf, pointOf, polygonOf, registerOverlays } from '@/lib/map-overlays';
-import type { Place } from '@/lib/types';
+import type { Place } from '@ssccsorg/skene-kernel';
 
 const PLACE: Place = {
   view: [0, 0, 100, 50],

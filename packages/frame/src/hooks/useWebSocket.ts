@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { RecordStream, streamUrl, type StreamState } from '../lib/record-client';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 /**
  * How long a burst of records is held before it is handed over as one change.

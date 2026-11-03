@@ -6,10 +6,10 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { keyOf } from '../lib/address';
+import { keyOf } from '@ssccsorg/skene-kernel';
 import { LABEL } from '../lib/chrome';
 import { lineOf, whoOf } from '../lib/world';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { KindTag } from './KindTag';
 

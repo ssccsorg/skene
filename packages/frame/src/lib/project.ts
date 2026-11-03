@@ -7,9 +7,9 @@
 // the title a project carries is its own record's.
 
 import { channelNamed } from './channel';
-import { campaignsNamed } from './campaign';
+import { campaignsNamed } from '@ssccsorg/skene-kernel';
 import { kindsNamed } from './kinds';
-import type { Bundle, Clock, Layout, Place, ProjectStatus, SourceSpec, Views } from './types';
+import type { Bundle, Clock, Layout, Place, ProjectStatus, SourceSpec, Views } from '@ssccsorg/skene-kernel';
 
 /**
  * The document format this build reads.

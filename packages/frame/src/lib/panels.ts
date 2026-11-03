@@ -1,7 +1,7 @@
 import { useMemo, useSyncExternalStore, type ComponentType } from 'react';
 import { useSelection } from '../stores/selection';
 import { useAbilities } from './capabilities';
-import type { Layout } from './types';
+import type { Layout } from '@ssccsorg/skene-kernel';
 
 /**
  * The frame's panels, each one declaring itself.

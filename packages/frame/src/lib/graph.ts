@@ -10,8 +10,8 @@
 // the place's own list; a writer the place forgot is appended, so nothing that wrote is missing. The only
 // edges are declarations, from the participant whose reading it started from to the one that took it.
 
-import { chainFor, entityOf } from './scenario';
-import type { Entry } from './types';
+import { chainFor, entityOf } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 import { writerOf } from './world';
 
 export interface GraphNode {

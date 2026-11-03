@@ -23,7 +23,7 @@ export { NATIVE, registerPack, registerReading, standing } from './lib/readings'
 export type { Board, Pack, Reading, Want } from './lib/readings';
 export { bundleOf, PROJECT_FORMAT, registerResource } from './lib/project';
 export type { BoardDocument, ProjectDocument } from './lib/project';
-export { actors, chainFor, entityOf, INTENT, parseScenario, titleOf } from './lib/scenario';
+export { actors, chainFor, entityOf, INTENT, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
 export { registerPanel } from './lib/panels';
 export { registerInstrument } from './lib/instruments';
 export { useScenario } from './stores/scenario';

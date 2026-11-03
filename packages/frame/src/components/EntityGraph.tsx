@@ -9,7 +9,7 @@ import {
 import dagre from 'dagre';
 import '@xyflow/react/dist/style.css';
 import { graphOf } from '../lib/graph';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 import { UnitNode } from './UnitNode';
 
 // The space as a graph: the participants and the work one declared and another took, laid out left to

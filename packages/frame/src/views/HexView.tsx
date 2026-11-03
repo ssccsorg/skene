@@ -21,7 +21,7 @@ import {
   spread,
   type Cell,
   type Extent,
-} from '../lib/hex';
+} from '@ssccsorg/skene-kernel';
 import { registerReading, type Board } from '../lib/readings';
 import { fromPlace } from '../lib/world';
 import { cn } from '../lib/utils';

@@ -1,8 +1,8 @@
 // The space, the record over it, and the words a row says. Everything here is derived from the
 // parsed scenario and the project's place, so the picture cannot say more than the file does.
 
-import { CELLS_TALL, between, cellOf, centreOf, type Extent } from './hex';
-import { FACT, HINT, INTENT, actors, chainFor, entityOf, parseScenario, titleOf } from './scenario';
+import { CELLS_TALL, between, cellOf, centreOf, type Extent } from '@ssccsorg/skene-kernel';
+import { FACT, HINT, INTENT, actors, chainFor, entityOf, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
 import { camerasIn, viewsIn } from './cameras';
 import { propertiesOf } from './kinds';
 import { readView } from './windows';
@@ -22,7 +22,7 @@ import type {
   UnitPlace,
   UnitView,
   World,
-} from './types';
+} from '@ssccsorg/skene-kernel';
 import type { Change } from '../stores/edits';
 
 export interface Model {

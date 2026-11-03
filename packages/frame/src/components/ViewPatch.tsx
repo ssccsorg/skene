@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import type { Bearing } from '../lib/board';
 import { FRAME_RATE, feedFrames } from '../lib/still';
-import type { Camera } from '../lib/types';
+import type { Camera } from '@ssccsorg/skene-kernel';
 import { useViews } from '../stores/views';
 import { ShellPatch } from './ShellPatch';
 

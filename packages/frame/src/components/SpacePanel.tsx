@@ -11,7 +11,7 @@ import { useReadingAt } from '../lib/readings';
 import { cn } from '../lib/utils';
 import { useScenario } from '../stores/scenario';
 import { LIMITS, useSizes } from '../stores/sizes';
-import type { Entry, Place, World } from '../lib/types';
+import type { Entry, Place, World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from '../lib/world';
 import { EntityPanel, MEMBERS_MIN } from './EntityPanel';
 import { AddProject } from './AddProject';

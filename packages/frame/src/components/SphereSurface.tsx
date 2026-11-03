@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { SHELL } from '../lib/board';
 import { FRAME_RATE, feedFrames } from '../lib/still';
 import { mediumOf, slotsOf, type SurfaceMode } from '../lib/surface';
-import type { Camera } from '../lib/types';
+import type { Camera } from '@ssccsorg/skene-kernel';
 
 // The media the room is read through, painted on the inside of the shell.
 //

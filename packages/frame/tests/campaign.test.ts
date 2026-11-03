@@ -6,8 +6,8 @@
 
 import { expect, test } from 'vitest';
 
-import { campaignsNamed, campaignsOf, runsOf } from '@/lib/campaign';
-import type { Campaign } from '@/lib/types';
+import { campaignsNamed, campaignsOf, runsOf } from '@ssccsorg/skene-kernel';
+import type { Campaign } from '@ssccsorg/skene-kernel';
 const campaign = (extra: Record<string, unknown> = {}): Campaign =>
   ({
     id: 'run-one',

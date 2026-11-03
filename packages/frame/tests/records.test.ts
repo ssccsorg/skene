@@ -9,7 +9,7 @@
 import { beforeEach, expect, test } from 'vitest';
 
 import { useRecords, volumeOf } from '@/stores/records';
-import type { Entry } from '@/lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 const fact = (at: number): Entry => ({ kind: 'fact', at, origin: 'servo-drive-3/cycle', bytes: 48, cycle: at });
 

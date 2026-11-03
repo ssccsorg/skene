@@ -7,11 +7,11 @@
 
 import { expect, test } from 'vitest';
 
-import { CELLS_TALL, NEST, apart, between, cellPath, cellSize, cellsOver, cellOf, centreOf, cornersOf, distanceOf, frameReach, ring, ringsByDepth, ringsFor, spiral, spread, type Cell } from '@/lib/hex';
+import { CELLS_TALL, NEST, apart, between, cellPath, cellSize, cellsOver, cellOf, centreOf, cornersOf, distanceOf, frameReach, ring, ringsByDepth, ringsFor, spiral, spread, type Cell } from '@ssccsorg/skene-kernel';
 import { levelOf, frameBox } from '@/views/HexView';
 import type { Held } from '@/lib/holds';
 import { fromPlace, toPlace } from '@/lib/world';
-import type { Place } from '@/lib/types';
+import type { Place } from '@ssccsorg/skene-kernel';
 
 /** A ground of the size the shipped scenarios declare, which is the shape a map is drawn of. */
 const VIEW: [number, number, number, number] = [0, 0, 520, 176];

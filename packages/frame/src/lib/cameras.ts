@@ -13,7 +13,7 @@
 // The space knows nothing else about a view. Where its window stands is its origin's own place, how large it is is the
 // view's own declaration, and a window the pilot has moved belongs to the window and not to the view.
 
-import type { Camera, CarriedView, Place } from './types';
+import type { Camera, CarriedView, Place } from '@ssccsorg/skene-kernel';
 import { readView } from './windows';
 
 /**

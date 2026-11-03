@@ -7,7 +7,7 @@
 // and it is what makes `@src` offer the folder `src` rather than everything under a folder that happens to be called that.
 
 import { expect, test } from 'vitest';
-import { addressesOf, offeredAt, offersFor, skillsOf } from '@/lib/offer';
+import { addressesOf, offeredAt, offersFor, skillsOf } from '@ssccsorg/skene-kernel';
 
 /** One space's addresses, which is what every case below is read out of. */
 const ADDRESSES = [

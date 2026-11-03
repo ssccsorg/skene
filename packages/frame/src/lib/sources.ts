@@ -7,7 +7,7 @@
 
 import type { HoldsAsk, Lower } from './channel';
 import { roomOf } from '../stores/chat';
-import type { SourceNode, SourceSpec } from './types';
+import type { SourceNode, SourceSpec } from '@ssccsorg/skene-kernel';
 
 export interface EntitySource {
   /** One level under the member, in the room's own address shape. */

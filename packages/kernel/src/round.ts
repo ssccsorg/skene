@@ -87,7 +87,4 @@ export function turnsOf(records: Entry[]): Turn[] {
   return records.filter((each) => each.kind === 'intent').map((each) => turnOf(each, records));
 }
 
-/** The hints the run carries, oldest first. They are the constraints that bound the work, and a campaign packages them. */
-export function boundsOf(records: Entry[]): Entry[] {
-  return records.filter((each) => each.kind === 'hint');
-}
+

@@ -9,7 +9,7 @@ import { UNIT_STATE } from '../hooks/useEntityState';
 import { useFrame } from '../stores/frame';
 import { useScenario } from '../stores/scenario';
 import { useView } from '../stores/view';
-import type { World } from '../lib/types';
+import type { World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from '../lib/world';
 import { cn } from '../lib/utils';
 

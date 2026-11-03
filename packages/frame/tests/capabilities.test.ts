@@ -11,7 +11,7 @@ import { expect, test } from 'vitest';
 import { CONSOLE, abilitiesOf, holds } from '@/lib/capabilities';
 import { standingPanels, type PanelUnit } from '@/lib/panels';
 import { bundleOf } from '@/lib/project';
-import type { Bundle } from '@/lib/types';
+import type { Bundle } from '@ssccsorg/skene-kernel';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 

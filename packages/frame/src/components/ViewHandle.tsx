@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Hint } from './ui/hint';
 import { standing } from '../lib/cameras';
 import { WINDOW_KINDS, kindOf } from '../lib/windows';
-import type { CarriedView } from '../lib/types';
+import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { CONTROL } from '../lib/chrome';
 import type { FrameBox } from '../lib/views';
 import { cn } from '../lib/utils';

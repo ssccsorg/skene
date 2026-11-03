@@ -3,7 +3,7 @@ import { Info } from 'lucide-react';
 import { Hint } from './ui/hint';
 import { RowControl } from './ui/row-control';
 import { InspectorPanel } from './InspectorPanel';
-import type { Place, Standing } from '../lib/types';
+import type { Place, Standing } from '@ssccsorg/skene-kernel';
 import { useSelection } from '../stores/selection';
 import { EntityDetail } from './EntityDetail';
 import { LABEL, ROW, TITLE } from '../lib/chrome';

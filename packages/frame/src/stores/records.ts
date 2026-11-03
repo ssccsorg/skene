@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { StreamState } from '../lib/record-client';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 // The records a project's own blackboard has delivered, and how far the pilot has walked them.
 //

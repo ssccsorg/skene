@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
 import { linkRecord, links, type Links, type WireRecord } from '@/lib/record-client';
-import type { Entry } from '@/lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 

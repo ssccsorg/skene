@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { defaultRoom } from '../lib/channel';
-import { runsOf } from '../lib/campaign';
+import { runsOf } from '@ssccsorg/skene-kernel';
 import { bundleOf, type BoardDocument, type ProjectDocument } from '../lib/project';
 import { slugOf, validateProject, type ProjectIssue } from '../lib/contract';
-import { heldSource, type RunSource } from '../lib/source';
+import { heldSource, type RunSource } from '@ssccsorg/skene-kernel';
 import { volumeSource } from '../lib/records-source';
 import { deviceViews, host } from '../lib/host';
 import { buildModel, type Model } from '../lib/world';
-import { titleOf } from '../lib/scenario';
+import { titleOf } from '@ssccsorg/skene-kernel';
 import { storageName } from '../lib/persist';
-import type { Bundle, Place, SourceSpec } from '../lib/types';
+import type { Bundle, Place, SourceSpec } from '@ssccsorg/skene-kernel';
 
 // The board: the projects a record model holds, the texts their records are read from, and the model
 // of the one that is open. A project is its bundle, so opening one is a read and not a lookup, and

@@ -1,7 +1,7 @@
 import { useMemo, useSyncExternalStore, type ComponentType } from 'react';
 import { useScenario } from '../stores/scenario';
 import { standing, type Pack } from './packs';
-import type { Bundle, Place, World } from './types';
+import type { Bundle, Place, World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from './world';
 
 export { NATIVE, standing } from './packs';

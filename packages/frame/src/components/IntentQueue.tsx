@@ -1,5 +1,5 @@
-import { keyOf } from '../lib/address';
-import type { Intent, IntentState } from '../lib/intents';
+import { keyOf } from '@ssccsorg/skene-kernel';
+import type { Intent, IntentState } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 
 // The queue of intents: one row a piece of declared work, and the state it has reached. It is where the

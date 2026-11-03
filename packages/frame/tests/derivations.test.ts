@@ -10,12 +10,12 @@
 
 import { expect, test } from 'vitest';
 
-import { campaignAt } from '@/lib/campaign';
-import { causesOf, effectsOf } from '@/lib/causes';
+import { campaignAt } from '@ssccsorg/skene-kernel';
+import { causesOf, effectsOf } from '@ssccsorg/skene-kernel';
 import { graphOf } from '@/lib/graph';
-import { boundsOf, intentsOf } from '@/lib/intents';
+import { boundsOf, intentsOf } from '@ssccsorg/skene-kernel';
 import { buildModel, lineOf, revealedCount, sceneStep, scenes, upto, whoOf, worldOf, writerOf } from '@/lib/world';
-import type { Bundle, Campaign } from '@/lib/types';
+import type { Bundle, Campaign } from '@ssccsorg/skene-kernel';
 
 /** A run the frame owns: one reading, one declaration, one movement after it. */
 const SCENARIO = `# Fixture run

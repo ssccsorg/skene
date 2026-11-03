@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Check, RotateCcw, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { LABEL, TITLE } from '../lib/chrome';
-import type { Place, World } from '../lib/types';
+import type { Place, World } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { windowOf } from '../lib/windows';
 import { toPlace } from '../lib/world';

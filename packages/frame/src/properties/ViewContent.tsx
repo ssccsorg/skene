@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
 import { DARK_MAP, MAP_STYLE, MAP_WORKER } from '../lib/geo-map';
-import type { Place, UnitView, World } from '../lib/types';
+import type { Place, UnitView, World } from '@ssccsorg/skene-kernel';
 import { EarthMap, PlaneMap } from '../components/GroundMap';
 import { MAP_SPAN_METRES, nearBounds, type GeoPoint, type OwnView } from '../lib/world';
 

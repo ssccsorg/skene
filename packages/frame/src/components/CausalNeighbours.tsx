@@ -1,9 +1,9 @@
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import type { Neighbour } from '../lib/causes';
+import type { Neighbour } from '@ssccsorg/skene-kernel';
 import { lineOf } from '../lib/world';
 import { LABEL, ROW } from '../lib/chrome';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { KindTag } from './KindTag';
 

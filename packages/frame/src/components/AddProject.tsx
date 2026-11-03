@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Hint } from './ui/hint';
 import type { AddResult, NewProject } from '../stores/scenario';
 import { placeIn, validateSubmission, type ProjectIssue } from '../lib/contract';
-import type { SourceSpec } from '../lib/types';
+import type { SourceSpec } from '@ssccsorg/skene-kernel';
 
 /**
  * A project added from the frame.

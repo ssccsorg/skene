@@ -17,7 +17,7 @@
 
 import type { ComponentType } from 'react';
 import { PARTS } from '../properties';
-import { ATOM_KEYS, type Place, type Properties, type Property, type Standing } from './types';
+import { ATOM_KEYS, type Place, type Properties, type Property, type Standing } from '@ssccsorg/skene-kernel';
 
 /**
  * What a member's own reading is handed: the member it is drawn for.

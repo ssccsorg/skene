@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { tintOf } from '../lib/board';
 import { workingSet, writerOf } from '../lib/world';
-import type { Entry, NodeKind, World } from '../lib/types';
+import type { Entry, NodeKind, World } from '@ssccsorg/skene-kernel';
 
 /**
  * What the board says about each unit, derived once and read by both halves of it: the mark the camera

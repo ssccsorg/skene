@@ -1,4 +1,4 @@
-import type { World } from '../lib/types';
+import type { World } from '@ssccsorg/skene-kernel';
 import { LABEL } from '../lib/chrome';
 import { useScenario } from '../stores/scenario';
 

@@ -6,8 +6,8 @@
 
 import { expect, test } from 'vitest';
 
-import { boundsOf, intentsOf } from '@/lib/intents';
-import type { Entry } from '@/lib/types';
+import { boundsOf, intentsOf } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 const declared = (label: string, extra: Partial<Entry> = {}): Entry => ({
   kind: 'intent',
   label,

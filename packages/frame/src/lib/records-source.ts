@@ -6,8 +6,8 @@
 // line format belong to the shell, which answers `/records` with records and a length.
 
 import { linkRecord, links, type WireRecord } from './record-client';
-import { windowOf, type RunSource } from './source';
-import type { Entry } from './types';
+import { windowOf, type RunSource } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 /** One run as the shell prints it: the records in order, and how many the run holds in all. */
 export interface Records {

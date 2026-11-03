@@ -1,0 +1,42 @@
+{
+  "name": "@ssccsorg/skene-kernel",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "The frame's contracts and pure logic: records, places, scenarios, campaigns, and the pack rule. No React, no DOM, no renderer.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "keywords": [
+    "fih",
+    "records",
+    "contracts",
+    "kernel"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssccsorg/skene.git",
+    "directory": "packages/kernel"
+  },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": {
+    "url": "https://github.com/ssccsorg/skene/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

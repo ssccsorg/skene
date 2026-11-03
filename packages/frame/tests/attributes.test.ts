@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { chargeOf } from '@/lib/attributes';
-import type { Place, Standing } from '@/lib/types';
+import { chargeOf } from '@ssccsorg/skene-kernel';
+import type { Place, Standing } from '@ssccsorg/skene-kernel';
 
 // A charge is an attribute of an entity and not a fact about the space, so the reader takes the place's declaration and
 // nothing else: the cockpit has no device to ask, and a row must be drawn from what the end tier wrote.

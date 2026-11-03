@@ -10,7 +10,7 @@
 // no entity, and a picked entity with no camera falls back to the run's own active media. The projection is carried by the
 // medium (`projection`), so a spatial camera can be added without making this layer a second reading of the place.
 
-import type { Camera } from './types';
+import type { Camera } from '@ssccsorg/skene-kernel';
 
 export type SurfaceMode = 'off' | 'single' | 'split' | 'grid';
 

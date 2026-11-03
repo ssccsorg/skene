@@ -8,13 +8,13 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
-import { causesOf, effectsOf } from '@ssccsorg/skene-frame/lib/causes';
+import { causesOf, effectsOf } from '@ssccsorg/skene-kernel';
 import { validateProject } from '@ssccsorg/skene-frame/lib/contract';
 import { graphOf } from '@ssccsorg/skene-frame/lib/graph';
-import { boundsOf, intentsOf } from '@ssccsorg/skene-frame/lib/intents';
+import { boundsOf, intentsOf } from '@ssccsorg/skene-kernel';
 import { bundleOf, type ProjectDocument } from '@ssccsorg/skene-frame/lib/project';
-import { actors, chainFor, parseScenario, titleOf } from '@ssccsorg/skene-frame/lib/scenario';
-import type { Bundle } from '@ssccsorg/skene-frame/lib/types';
+import { actors, chainFor, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
+import type { Bundle } from '@ssccsorg/skene-kernel';
 import {
   buildModel,
   revealedCount,

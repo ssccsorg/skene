@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { Frame, MapPin, Move, Video } from 'lucide-react';
-import type { Camera, DeclaredView, UnitView, ViewStatus } from './types';
+import type { Camera, DeclaredView, UnitView, ViewStatus } from '@ssccsorg/skene-kernel';
 
 /** The kinds a view can be, which are the kinds the content table has a renderer for. */
 export type ViewKind = UnitView['kind'];

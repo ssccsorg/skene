@@ -1,5 +1,5 @@
 import { LABEL, ROW, TITLE } from '../lib/chrome';
-import type { Scene } from '../lib/types';
+import type { Scene } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 
 /**

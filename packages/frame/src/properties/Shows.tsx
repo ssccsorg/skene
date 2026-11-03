@@ -4,7 +4,7 @@ import { Hint } from '../components/ui/hint';
 import { useSurfaceForward } from '../hooks/useSurfaceForward';
 import { useWorld } from '../hooks/useWorld';
 import type { Part, PartProps } from '../lib/kinds';
-import type { MapView, Place, UnitView, World } from '../lib/types';
+import type { MapView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { ownView, type OwnView } from '../lib/world';
 import { VIEW_STATUS, WINDOW_KINDS, statusWith, windowOf } from '../lib/windows';

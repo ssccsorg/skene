@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from '../lib/geo-map';
 import type { Bearing } from '../lib/board';
-import type { Place, World } from '../lib/types';
+import type { Place, World } from '@ssccsorg/skene-kernel';
 import type { MapTone } from '../stores/frame';
 import { located, ownView } from '../lib/world';
 import { bindMapWindow } from '../lib/map-windows';

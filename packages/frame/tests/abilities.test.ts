@@ -17,7 +17,7 @@ import { expect, test } from 'vitest';
 import { askLine } from '@/components/Abilities';
 import { drawnAbilities, wordsOf } from '@/lib/interface';
 import { askable, askableNames, propertiesOf } from '@/lib/kinds';
-import { ATOM_KEYS, type Properties, type Property, type Standing } from '@/lib/types';
+import { ATOM_KEYS, type Properties, type Property, type Standing } from '@ssccsorg/skene-kernel';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 

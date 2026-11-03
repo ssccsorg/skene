@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { writerOf } from '../lib/world';
 import { storageName } from '../lib/persist';
-import type { Entry } from '../lib/types';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 // What is picked, and how the space is being shown.
 //

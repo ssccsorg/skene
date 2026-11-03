@@ -11,7 +11,7 @@ import { lineOf, writerOf } from '../lib/world';
 import type { Neighbour } from '../lib/world';
 import { useView } from '../stores/view';
 import { useSelection } from '../stores/selection';
-import type { Entry, ProjectStatus, World } from '../lib/types';
+import type { Entry, ProjectStatus, World } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { BoardLabel, BOARD_NAME } from './BoardLabel';
 

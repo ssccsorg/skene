@@ -6,7 +6,7 @@
 
 import { expect, test } from 'vitest';
 import { mappable } from '@/lib/world';
-import type { Place, Properties, Standing, World } from '@/lib/types';
+import type { Place, Properties, Standing, World } from '@ssccsorg/skene-kernel';
 
 const PLACE: Place = {
   view: [0, 0, 100, 50],

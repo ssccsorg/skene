@@ -17,7 +17,7 @@
 
 import type { Asked } from './channel';
 import { memberOf } from './kinds';
-import type { Standing } from './types';
+import type { Standing } from '@ssccsorg/skene-kernel';
 
 /**
  * The abilities a member is drawn with, from the room's answer.

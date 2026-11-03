@@ -1,5 +1,5 @@
 import { CircleOff, CirclePause, CirclePlay, type LucideIcon } from 'lucide-react';
-import type { ProjectStatus } from './types';
+import type { ProjectStatus } from '@ssccsorg/skene-kernel';
 
 /**
  * The one row of the chrome, and the two inks a thing is named in.

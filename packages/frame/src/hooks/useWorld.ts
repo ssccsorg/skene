@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { sceneStep, worldOf, writerOf, type Model } from '../lib/world';
-import type { Entry, Scene, World } from '../lib/types';
+import type { Entry, Scene, World } from '@ssccsorg/skene-kernel';
 import { useEdits, type Change } from '../stores/edits';
 import { useVolume } from './useVolume';
 import { useScenario } from '../stores/scenario';

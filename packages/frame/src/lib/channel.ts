@@ -11,7 +11,7 @@
 // `Message`, so a reading written against one room's habits would be wrong about the other room's facts.
 
 import type { BoardDocument } from './project';
-import type { Channel } from './types';
+import type { Channel } from '@ssccsorg/skene-kernel';
 import { simRoom } from './chat';
 import { host } from './host';
 

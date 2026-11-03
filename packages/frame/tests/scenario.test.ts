@@ -6,7 +6,7 @@
 
 import { expect, test } from 'vitest';
 
-import { actors, chainFor, entityOf, parseScenario, titleOf } from '@/lib/scenario';
+import { actors, chainFor, entityOf, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
 
 const RUN = `# One run
 seed 1

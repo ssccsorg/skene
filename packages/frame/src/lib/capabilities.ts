@@ -6,7 +6,7 @@
 
 import { useMemo } from 'react';
 import { useScenario } from '../stores/scenario';
-import type { Bundle } from './types';
+import type { Bundle } from '@ssccsorg/skene-kernel';
 
 /** The capability a project states to have a console over a room that answers it. */
 export const CONSOLE = 'console';

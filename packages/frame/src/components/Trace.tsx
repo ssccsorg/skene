@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { LABEL, TITLE } from '../lib/chrome';
-import { boundsOf, roundOf, turnsOf } from '../lib/round';
-import type { Campaign, Entry, NodeKind } from '../lib/types';
+import { boundsOf, roundOf, turnsOf } from '@ssccsorg/skene-kernel';
+import type { Campaign, Entry, NodeKind } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { KindTag } from './KindTag';
 

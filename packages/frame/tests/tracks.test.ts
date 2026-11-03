@@ -5,8 +5,8 @@
 
 import { expect, test } from 'vitest';
 
-import { tracksOf, writerOf } from '@/lib/tracks';
-import type { Entry } from '@/lib/types';
+import { tracksOf, writerOf } from '@ssccsorg/skene-kernel';
+import type { Entry } from '@ssccsorg/skene-kernel';
 
 const fact = (origin: string): Entry => ({ kind: 'fact', at: 0, origin });
 const claim = (worker: string): Entry => ({ kind: 'claim', at: 0, worker });
