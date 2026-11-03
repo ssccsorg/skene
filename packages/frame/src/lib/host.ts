@@ -1,12 +1,32 @@
 // The window's shell and the rooms it answers with, as a deployment supplies them.
 //
 // The frame reaches a host through a few operations and no more: whether a shell exists, one command, one event, the
-// rooms a project may be answered by, and the form that connects one. A deployment that has none of this gets the
-// browser's answers, which are the refusal every panel already handles. What the commands mean is the deployment's
-// business, so the frame never names one.
+// rooms a project may be answered by, the whole screen when the shell owns it, and the form that connects a room. A
+// deployment that has none of this gets the browser's answers, which are the refusal every panel already handles.
+//
+// The frame asks for two commands by name, `front` and `views`, because a launcher's address and a device's picture are
+// the same question in every deployment that has a launcher. What the rest of a command means is the deployment's, and
+// the frame never learns it.
 
 import type { ComponentType } from 'react';
 import type { Prove } from './channel';
+
+/**
+ * The whole screen, when the shell owns it.
+ *
+ * A desktop build is a window and not a page, so the browser's Fullscreen API is not the one that owns the screen: the
+ * window's own switch is. A host with no window leaves the browser's API, which is what a cockpit served in a tab uses.
+ * `onResize` exists because a person leaves fullscreen with a key the frame never sees, and a webview reports that as a
+ * size change and nothing else.
+ */
+export interface Screen {
+  /** Whether the window fills the screen now. */
+  whole: () => Promise<boolean>;
+  /** Take the screen, or give it back. */
+  set: (whole: boolean) => Promise<void>;
+  /** Watch the window's size, which is what a webview reports about fullscreen. Absent means the DOM's own event. */
+  onResize?: (listener: () => void) => () => void;
+}
 
 export interface Host {
   /** Whether this window has a shell to reach. */
@@ -23,6 +43,10 @@ export interface Host {
   everConnected?: () => boolean;
   /** The connection form, when the deployment has one. */
   connect?: ComponentType;
+  /**
+   * The whole screen, when the shell owns it. Absent means the browser's Fullscreen API, which is what a tab uses.
+   */
+  screen?: Screen;
   /**
    * Where this deployment's record stream and chat answer, when they are not the frame's own defaults.
    *

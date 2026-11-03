@@ -5,7 +5,7 @@ export { BrandMark, BrandProvider, useBrand } from './lib/brand';
 export type { Brand } from './lib/brand';
 export { deviceViews, feed, frontUrl, host, NO_SHELL } from './lib/host';
 export { registerRoom } from './lib/channel';
-export type { Host } from './lib/host';
+export type { Host, Screen } from './lib/host';
 // The room is the second seam a deployment supplies, and a deployment that writes one reads these: exporting the
 // register without the shape it takes would send every deployment below the contract for the type of its own room.
 export type {

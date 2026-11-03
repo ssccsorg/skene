@@ -1,43 +1,45 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { host } from '../lib/host';
 
 /**
  * Whether the cockpit is filling the screen, and the press that puts it there or takes it back.
  *
  * The window holds this and not the store: a person leaves fullscreen with a key the cockpit never sees, so the state is
- * read back from the window on every resize rather than kept beside it, where it would go on saying the screen was full
+ * read back from the window on every change rather than kept beside it, where it would go on saying the screen was full
  * after it had stopped being. The refusal case is reported rather than swallowed, because a press that does nothing has
  * to say why: a browser that has not been touched yet refuses the request, and the pilot pressing again is the answer.
  * What it is reported to is the control's own hint, because a message in a console is a message the pilot does not have.
  *
- * A desktop build is a Tauri window and not a page, so the browser's Fullscreen API is not the one that owns the screen:
- * the window's own `setFullscreen` is. The two are told apart by the internals the shell installs, and the browser path
- * stays for the cockpit served in a tab.
+ * Which switch owns the screen is the deployment's, through `Host.screen`. A desktop build is a window, so its own
+ * switch is the one that matters; a cockpit in a tab has no window, and the browser's Fullscreen API is the answer. The
+ * frame asks for neither by name, which is what keeps it off a platform it does not ship on.
  */
-const inShell = (): boolean => typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
-
 export function useFullscreen(): [boolean, () => void, string | null] {
   const [whole, setWhole] = useState(() => document.fullscreenElement !== null);
   const [refusal, setRefusal] = useState<string | null>(null);
 
   useEffect(() => {
-    if (inShell()) {
-      const frame = getCurrentWindow();
+    const screen = host().screen;
+    if (screen) {
       let live = true;
       const read = () => {
-        void frame
-          .isFullscreen()
+        void screen
+          .whole()
           .then((value) => {
             if (live) setWhole(value);
           })
           .catch(() => {});
       };
       read();
-      // A fullscreen change resizes the window, which is the one event the webview reports for it.
-      const listening = frame.onResized(read);
+      const stop = screen.onResize
+        ? screen.onResize(read)
+        : (() => {
+            window.addEventListener('resize', read);
+            return () => window.removeEventListener('resize', read);
+          })();
       return () => {
         live = false;
-        void listening.then((off) => off()).catch(() => {});
+        stop();
       };
     }
     const onChange = () => setWhole(document.fullscreenElement !== null);
@@ -51,11 +53,11 @@ export function useFullscreen(): [boolean, () => void, string | null] {
 
   const toggle = useCallback(() => {
     setRefusal(null);
-    if (inShell()) {
-      const frame = getCurrentWindow();
-      void frame
-        .isFullscreen()
-        .then((value) => frame.setFullscreen(!value))
+    const screen = host().screen;
+    if (screen) {
+      void screen
+        .whole()
+        .then((value) => screen.set(!value))
         .then(() => setWhole((value) => !value))
         .catch(report);
       return;
