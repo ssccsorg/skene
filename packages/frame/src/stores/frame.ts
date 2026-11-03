@@ -19,13 +19,13 @@ import { storageName } from '../lib/persist';
 // The orbit is not an arrangement. It is the projection the map is read through, so it stands beside the arrangement and
 // both are kept per project: pressing the orbit changes how the map is drawn and not how much of the frame it takes.
 
-export type MapSplit = 'globe' | 'vertical' | 'horizontal' | 'full';
+export type Split = 'globe' | 'vertical' | 'horizontal' | 'full';
 
 /** The arrangements that draw the sphere beside the map, or the map alone. */
-export type OpenSplit = Exclude<MapSplit, 'globe'>;
+export type OpenSplit = Exclude<Split, 'globe'>;
 
 /** The map's own tone: the page's dark ground, or the ground as the tiles draw it. */
-export type MapTone = 'dark' | 'light';
+export type Tone = 'dark' | 'light';
 
 /** The map's own default where a project has not said otherwise: a place with a ground opens beside the globe. */
 const MAP_ON: OpenSplit = 'vertical';
@@ -37,25 +37,25 @@ const MAP_ON: OpenSplit = 'vertical';
  * must not come back to that one, because it would hide the sphere it was pressed to show: the map alone falls back to
  * the two-pane default, and a stacked pair comes back stacked.
  */
-export function togetherOf(mode: MapSplit): OpenSplit {
+export function togetherOf(mode: Split): OpenSplit {
   return mode === 'horizontal' ? 'horizontal' : 'vertical';
 }
 
 interface FrameState {
   /** The map's arrangement, by project. Absent means the default. */
-  modes: Record<string, MapSplit>;
+  modes: Record<string, Split>;
   /** The reading in force, by project, as the address it is reached at. */
   paths: Record<string, string>;
   /** The arrangement a closed pane comes back to. */
   last: OpenSplit;
   /** Whether the map is drawn on the page's dark ground or on the tiles' own colour. */
-  tone: MapTone;
+  tone: Tone;
   /** Whether the map is read through the flat projection or on the earth, by project. */
   orbits: Record<string, boolean>;
-  splitOf: (project: string | null) => MapSplit;
+  splitOf: (project: string | null) => Split;
   orbitOf: (project: string | null) => boolean;
   pathOf: (project: string | null) => string | null;
-  setSplit: (project: string | null, mode: MapSplit) => void;
+  setSplit: (project: string | null, mode: Split) => void;
   toggle: (project: string | null) => void;
   /** Switch the flat map and the orbit between the page's dark ground and the tiles' own colour. */
   toggleTone: () => void;
@@ -81,13 +81,13 @@ export const useFrame = create<FrameState>()(
       // arrangement the pilot left and the projection it asks for.
       splitOf: (project) => {
         if (!project) return 'globe';
-        const raw = get().modes[project] as MapSplit | 'orbit' | undefined;
+        const raw = get().modes[project] as Split | 'orbit' | undefined;
         return raw === 'orbit' ? get().last : raw ?? MAP_ON;
       },
 
       orbitOf: (project) => {
         if (!project) return false;
-        const raw = get().modes[project] as MapSplit | 'orbit' | undefined;
+        const raw = get().modes[project] as Split | 'orbit' | undefined;
         return get().orbits[project] ?? raw === 'orbit';
       },
 
@@ -132,13 +132,13 @@ export const useFrame = create<FrameState>()(
       version: 1,
       migrate: (persisted) => {
         const state = persisted as {
-          modes?: Record<string, MapSplit | 'orbit'>;
+          modes?: Record<string, Split | 'orbit'>;
           paths?: Record<string, string>;
           last?: OpenSplit | 'orbit' | 'globe';
-          tone?: MapTone;
+          tone?: Tone;
           orbits?: Record<string, boolean>;
         };
-        const modes: Record<string, MapSplit> = {};
+        const modes: Record<string, Split> = {};
         const orbits = { ...(state.orbits ?? {}) };
         for (const [id, mode] of Object.entries(state.modes ?? {})) {
           if (mode === 'orbit') {

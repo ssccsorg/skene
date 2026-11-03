@@ -8,7 +8,7 @@ import { registerInstrument } from '../../lib/instruments';
 import { useReadings } from '../../lib/readings';
 import { cn } from '@ssccsorg/skene-ui';
 import { mappable } from '../../lib/world';
-import { useFrame, type MapSplit as Split } from '../../stores/frame';
+import { useFrame, type Split as SplitMode } from '../../stores/frame';
 import { useScenario } from '../../stores/scenario';
 
 // The map, how much of the frame it takes, and how it is drawn, as one run of controls.
@@ -25,7 +25,7 @@ import { useScenario } from '../../stores/scenario';
 
 // Closing the pane is the pin's own press, so the arrangements are the three flat ways it can be open. A second globe
 // here would be the same state under a second icon, which is what the pin already says.
-const ARRANGEMENTS: { mode: Split; title: string; Icon: typeof Columns2 }[] = [
+const ARRANGEMENTS: { mode: SplitMode; title: string; Icon: typeof Columns2 }[] = [
   { mode: 'vertical', title: 'side by side', Icon: Columns2 },
   { mode: 'horizontal', title: 'stacked', Icon: Rows2 },
   { mode: 'full', title: 'map only', Icon: Maximize2 },
