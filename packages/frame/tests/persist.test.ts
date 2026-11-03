@@ -1,8 +1,8 @@
 // The key a store is remembered under.
 //
-// The frame is one package both products link, so a key named after either product is a key a deployment reads another's
-// state from. What is asserted here is that every store reaches its key through the one function that names it, and that
-// no product's name is left in what the frame writes.
+// The frame is one package every deployment links, so a key named after one of them is a key another
+// deployment reads that state from. What is asserted here is that every store reaches its key through the
+// one function that names it, and that no product's name is left in the frame's own source.
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -55,9 +55,9 @@ test('the namespace is written once, so a second spelling cannot appear', () => 
   expect(spellings).toEqual(['lib/persist.ts']);
 });
 
-test('no product name is left in what the frame writes', () => {
-  // The frame's source may name the engine whose run it reads, in prose, because that is the format it parses. What it may
-  // not do is carry a product's name into a key or an element a deployment inherits.
+test('no product name is left in the frame\'s own source', () => {
+  // The names are here so they can be refused. Nothing in the frame may carry one, in prose or in a key, because a
+  // deployment inherits both the source and the namespace.
   const products = /\bexaspec\b|['"](?:ktema|kletos|delta)['"]/i;
   const hits = source.filter(({ text }) => products.test(text)).map(({ path }) => relative(path));
   expect(hits).toEqual([]);

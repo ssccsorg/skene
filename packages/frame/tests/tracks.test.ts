@@ -13,7 +13,7 @@ const claim = (worker: string): Entry => ({ kind: 'claim', at: 0, worker });
 
 test('a record belongs to the entity its origin opens with', () => {
   expect(writerOf(fact('spiderpi/legs'))).toBe('spiderpi');
-  expect(writerOf(fact('kletos/note'))).toBe('kletos');
+  expect(writerOf(fact('relay/note'))).toBe('relay');
   // A part is not a writer: the leg is where the reading stands, and the spider is who wrote it.
   expect(tracksOf([fact('spiderpi/legs'), fact('spiderpi/sonar')]).map((track) => track.id)).toEqual([
     'spiderpi',
@@ -28,7 +28,7 @@ test('a step with no origin belongs to its worker, and one with neither belongs 
 test('every record lands on exactly one track', () => {
   const run: Entry[] = [
     fact('spiderpi/legs'),
-    fact('kletos/note'),
+    fact('relay/note'),
     claim('litewing'),
     fact('spiderpi/position'),
     fact('litewing/rotor'),
@@ -44,11 +44,11 @@ test('every record lands on exactly one track', () => {
 test('the rows come in the order the run brings the writers in', () => {
   const run: Entry[] = [
     fact('spiderpi/legs'),
-    fact('kletos/note'),
+    fact('relay/note'),
     fact('spiderpi/position'),
     claim('litewing'),
   ];
-  expect(tracksOf(run).map((track) => track.id)).toEqual(['spiderpi', 'kletos', 'litewing']);
+  expect(tracksOf(run).map((track) => track.id)).toEqual(['spiderpi', 'relay', 'litewing']);
 });
 
 test('a claim is counted, because a step of the stream is not a reading', () => {

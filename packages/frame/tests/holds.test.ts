@@ -56,7 +56,7 @@ test('an element says what holds it, so a level is drawn at its own parent', () 
 
 test('an element is named by the last step of the room own address for it', () => {
   expect(leafOf('spiderpi-1/legs/leg-3/hip')).toBe('hip');
-  expect(leafOf('kletos/apps/delta')).toBe('delta');
+  expect(leafOf('workspace/apps/cockpit')).toBe('cockpit');
   expect(leafOf('/'), 'an address with no step is left as it is rather than drawn empty').toBe('/');
 });
 

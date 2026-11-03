@@ -3,8 +3,8 @@
 //
 // A project is a list of resources, each by a kind the frame has a reader for, and the record it runs is one of them. That
 // envelope is small on purpose: a new capability is a new kind and a reader, and a project that declares a kind this build
-// does not have is refused by name rather than read as less than it is. The record inside it is a ktema run, so a project
-// is the envelope around a run and not a second language for the same thing.
+// does not have is refused by name rather than read as less than it is. The record inside it is the run's own text, so
+// a project is the envelope around a run and not a second language for the same thing.
 //
 // The checks below are the ones the frame can make before it reads anything: names, the resources a bundle cannot be
 // without, and the shape of the values a reader would divide by. A reader's own errors (an unknown project held as a
@@ -40,7 +40,7 @@ export type ProjectProof =
 /** What a project added in the frame is: the declaration, and the run the record resource would otherwise name. */
 export interface ProjectSubmission extends ProjectDocument {
   title?: string;
-  /** The ktema run itself, for a project the frame is handed rather than one on the disk. */
+  /** The run itself, for a project the frame is handed rather than one on the disk. */
   record: string;
 }
 

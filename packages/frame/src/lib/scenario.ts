@@ -1,9 +1,8 @@
 // The scenario's own language, read by the dashboard.
 //
-// The file this parses is the one the engine runs. `ktema-sim <scenario> <volume>` executes it on a
-// host, and the same file runs on riscv32imac with no operating system. So the dashboard holds no
-// second model of the work that could drift from the first: what a screen shows is read out of the
-// file the record was actually made from.
+// The file this parses is the one the engine runs: the same text executes on a host and on a bare
+// target with no operating system. So the dashboard holds no second model of the work that could drift
+// from the first: what a screen shows is read out of the file the record was actually made from.
 //
 // A `count` step in the file is the engine's own assertion about how many facts the volume holds at
 // that point, so a scenario this reader misreads is a scenario whose counts disagree.

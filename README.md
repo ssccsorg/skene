@@ -135,7 +135,8 @@ git clone --depth 1 https://github.com/ssccsorg/skene ../skene
 ```
 
 The path is relative to the deployment's own manifest, so it gains a `../` for every directory the
-manifest sits below its repository root (`es` writes `../../skene`, `kletos` writes `../../../skene`).
+manifest sits below its repository root: a manifest one directory down writes `../../skene`, and one two
+directories down writes `../../../skene`.
 
 A deployment installs the frame packed rather than linked, which is one line in its `.npmrc`:
 

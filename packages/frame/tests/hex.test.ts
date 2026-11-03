@@ -332,7 +332,7 @@ test('a frame is drawn in a box that holds its own outline and the name under it
   // What else the picture draws: a level's cells, or a ground's own declared view.
   const hold: [number, number, number, number] = [-30, -30, 60, 60];
   for (const rings of [1, 2, 3]) {
-    const box = frameBox(middle, rings, size, 'ktema blackboard', hold);
+    const box = frameBox(middle, rings, size, 'the board', hold);
     const [x, y, width, height] = box;
     // The outline is a hexagon of `frameReach` around the middle, so its own corners are the frame's widest points and they
     // stand in the box: an outline cut off at its own corners is a frame nobody reads as a hexagon.
@@ -351,7 +351,7 @@ test('a frame is drawn in a box that holds its own outline and the name under it
   // A ground's own declared view is wider than the frame drawn on it, and the two are one box: a frame does not shrink the
   // ground a place declares, which is the claim the cells are addresses under. A frame taller than the ground grows the
   // box rather than being cut, which is the other half of the same rule.
-  const ground = frameBox(middle, 1, size, 'ktema blackboard', [-260, -88, 520, 176]);
+  const ground = frameBox(middle, 1, size, 'the board', [-260, -88, 520, 176]);
   expect(ground[0], 'the ground is held from its own corner').toBeLessThanOrEqual(-260);
   expect(ground[1]).toBeLessThanOrEqual(-88);
   expect(ground[0] + ground[2], 'and holds it whole').toBeGreaterThanOrEqual(260);
