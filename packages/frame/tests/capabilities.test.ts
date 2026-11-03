@@ -73,16 +73,18 @@ test('a panel that names one stands where the project holds it', () => {
   expect(holds([], CONSOLE), 'the project does not').toBe(false);
 });
 
-test('the console panel names the capability it needs', () => {
-  // A panel that is a conversation with a room is a surface a deployment has to have shipped, so it is the one panel
-  // that cannot stand on a project that says nothing.
-  const source = readFileSync(here('../src/components/panels/ConsolePane.tsx'), 'utf8');
-  expect(source, 'the console declares what it needs').toMatch(/needs: CONSOLE/);
+test('the console stands for every project, and the room inside it is what a project has to hold', () => {
+  // The panel's text is the frame's own drawing of the run, so the panel is not gated. The exchange under it is a room a
+  // deployment has to have shipped, so the body asks the question the controls that compose a line ask.
+  const panel = readFileSync(here('../src/components/panels/ConsolePane.tsx'), 'utf8');
+  expect(panel, 'the panel stands for every project').not.toMatch(/needs:\s*CONSOLE/);
+  const body = readFileSync(here('../src/components/Console.tsx'), 'utf8');
+  expect(body, 'the room is drawn against the capability').toMatch(/useCapability\(CONSOLE\)/);
 });
 
 test('every control that opens the console is drawn against the capability', () => {
-  // A press that opens a panel the project does not stand is a press into nothing, so the three places that compose a
-  // line into the console ask the same question the panel does.
+  // A press that composes a line into a room the project does not have is a press into nothing, so the three places that
+  // compose a line ask the same question the room does.
   for (const path of [
     '../src/components/Abilities.tsx',
     '../src/properties/Holds.tsx',

@@ -32,8 +32,10 @@ export function useAbilities(): string[] {
 /**
  * Whether the open project holds one.
  *
- * A control that opens the console is drawn where the console stands, so the row of controls and the panel are one answer
- * rather than a control that presses into nothing.
+ * A surface is drawn where the project says the deployment has it, and the control that reaches it is drawn by the same
+ * answer: the console's room and the three controls that compose a line into it are one question, so neither promises a
+ * surface the other does not have. What is not gated is the board text the console draws beside the room, which is the
+ * frame's own reading of the run and stands for every project.
  */
 export function useCapability(name: string): boolean {
   return useAbilities().includes(name);

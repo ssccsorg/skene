@@ -5,6 +5,7 @@ import { Hint } from './ui/hint';
 import { keyOf } from '@ssccsorg/skene-kernel';
 import { CONTROL } from '../lib/chrome';
 import { applyPatch, changesBetween, isEdit, parseState, writeState, type BoardState } from '../lib/state-text';
+import { CONSOLE, useCapability } from '../lib/capabilities';
 import { askableNames } from '../lib/kinds';
 import { addressesOf } from '@ssccsorg/skene-kernel';
 import { lineOf, workingSet, writerOf } from '../lib/world';
@@ -59,6 +60,10 @@ export function Console({
   // and not a panel of the frame, so it folds here rather than standing in the bar: the control that puts it away is on
   // the row it folds into, which is where a reader looks for it.
   const [raw, setRaw] = useState(true);
+
+  // Whether the project's deployment shipped a room. The board text is the frame's own drawing of a run and stands for
+  // every project; the exchange below it is a surface, so it is drawn where the project says the deployment has one.
+  const room = useCapability(CONSOLE);
 
   // The last record each unit wrote, read once because two things want it: the text at the head of the panel, and the
   // record a member is picked by when the addressee is chosen from the console rather than on the board.
@@ -180,47 +185,69 @@ export function Console({
 
   return (
     <div data-region="console" className="flex h-full min-h-0 flex-col border-r">
-      {/* The panel's own head is the room's conversations, which is the title it does not need: a row that said
-          "console" over a row of conversations names the thing the conversations already are, and costs the row. */}
-      <ChatTabs
-        project={project}
-        work={work}
-        lead={
-          <Hint label="board text">
-            <Button
-              size="icon-xs"
-              variant="ghost"
-              className={cn(CONTROL)}
-              data-region="console-raw-toggle"
-              data-on={raw}
-              onClick={() => setRaw(!raw)}
-            >
-              <ScrollText />
-            </Button>
-          </Hint>
-        }
-      />
+      {room ? (
+        // The panel's own head is the room's conversations, which is the title it does not need: a row that said
+        // "console" over a row of conversations names the thing the conversations already are, and costs the row.
+        <ChatTabs
+          project={project}
+          work={work}
+          lead={
+            <Hint label="board text">
+              <Button
+                size="icon-xs"
+                variant="ghost"
+                className={cn(CONTROL)}
+                data-region="console-raw-toggle"
+                data-on={raw}
+                onClick={() => setRaw(!raw)}
+              >
+                <ScrollText />
+              </Button>
+            </Hint>
+          }
+        />
+      ) : (
+        // A project with no live room has no conversations to put in the head, so the head says what the panel is
+        // rather than putting a list of nothing over it. There is no fold to offer either: the board text is the whole
+        // panel, and the control that put it away would put away everything.
+        <div className="flex h-7 shrink-0 items-center border-b bg-card px-2 text-[11.5px] text-muted-foreground">
+          board
+        </div>
+      )}
 
-      {/* What the board is now. It stands outside the exchange and is recomputed every frame, because it is
-          the board's answer to "what are you now" and it changes while the run arrives.
+      {room ? (
+        <>
+          {/* What the board is now. It stands outside the exchange and is recomputed every frame, because it is
+              the board's answer to "what are you now" and it changes while the run arrives.
 
-          It yields rather than holds its height. This is a reading of the board and the exchange below it is what the
-          console is for, so a short panel is a panel where the reading is what gives way: it was held at half the panel
-          and the log was left with whatever was over, which in a short window was a strip one line tall. */}
-      {raw ? (
-        <div className="flex max-h-[30%] min-h-0 shrink flex-col border-b px-3 py-2">
+              It yields rather than holds its height. This is a reading of the board and the exchange below it is what the
+              console is for, so a short panel is a panel where the reading is what gives way: it was held at half the panel
+              and the log was left with whatever was over, which in a short window was a strip one line tall. */}
+          {raw ? (
+            <div className="flex max-h-[30%] min-h-0 shrink flex-col border-b px-3 py-2">
+              <pre
+                data-region="console-state"
+                className="min-h-0 overflow-y-auto font-mono text-[11.5px] leading-relaxed whitespace-pre-wrap break-words text-muted-foreground"
+              >
+                {writeState(before)}
+              </pre>
+            </div>
+          ) : null}
+
+          <div className="min-h-0 flex-1">
+            <Chat project={project} targets={targets} skills={skills} interpret={interpret} work={work} onAddress={address} />
+          </div>
+        </>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
           <pre
             data-region="console-state"
-            className="min-h-0 overflow-y-auto font-mono text-[11.5px] leading-relaxed whitespace-pre-wrap break-words text-muted-foreground"
+            className="font-mono text-[11.5px] leading-relaxed whitespace-pre-wrap break-words text-muted-foreground"
           >
             {writeState(before)}
           </pre>
         </div>
-      ) : null}
-
-      <div className="min-h-0 flex-1">
-        <Chat project={project} targets={targets} skills={skills} interpret={interpret} work={work} onAddress={address} />
-      </div>
+      )}
     </div>
   );
 }
