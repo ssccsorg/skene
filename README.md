@@ -49,7 +49,7 @@ place, the native readings, and the router.
 
 ```tsx
 import { createRoot } from 'react-dom/client';
-import { Frame, type Brand } from '@ssccs/skene-frame';
+import { Frame, type Brand } from '@ssccsorg/skene-frame';
 import './styles.css';
 
 const brand: Brand = { title: 'SKENE', name: 'Skene', version: 'v0.1.0', layers: [], Mark, mark };
@@ -82,9 +82,9 @@ Three entries are the contract, and they are what a product's own code uses:
 
 | Entry | What it is |
 |:---|:---|
-| `@ssccs/skene-frame` | the frame, the brand, the registers, the host, and the room a deployment supplies |
-| `@ssccs/skene-frame/ui` | the buttons, the row and label tokens and `cn`, for the one form a deployment draws itself |
-| `@ssccs/skene-frame/tokens.css` | the palette, with `--mark` and `--board` as the tokens a product overrides |
+| `@ssccsorg/skene-frame` | the frame, the brand, the registers, the host, and the room a deployment supplies |
+| `@ssccsorg/skene-frame/ui` | the buttons, the row and label tokens and `cn`, for the one form a deployment draws itself |
+| `@ssccsorg/skene-frame/tokens.css` | the palette, with `--mark` and `--board` as the tokens a product overrides |
 | `skene-shot` | the screenshot tool, at a viewport and a frame named on the command line |
 
 The layers below them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are exported on purpose and are
@@ -130,7 +130,7 @@ A deployment quotes the local path and dedupes React, because the frame resolves
 dependencies from this checkout and the deployment has its own copy:
 
 ```json
-"@ssccs/skene-frame": "file:../../skene/packages/frame"
+"@ssccsorg/skene-frame": "file:../../skene/packages/frame"
 ```
 
 ```ts
@@ -153,8 +153,8 @@ consumed by something other than Vite.
 ## Tests
 
 ```bash
-npm test --workspace @ssccs/skene-frame              # the frame's 45 suites
-npm test --workspace @ssccs/skene-frame -- --coverage # the same, with the coverage gate
+npm test --workspace @ssccsorg/skene-frame              # the frame's 45 suites
+npm test --workspace @ssccsorg/skene-frame -- --coverage # the same, with the coverage gate
 ```
 
 The tests cover the record model, the address, the scenario reader, the room contract, the pack

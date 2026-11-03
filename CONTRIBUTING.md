@@ -22,8 +22,8 @@ to the frame. A change that puts either back is the change this structure exists
 
 ```bash
 npm install
-npm test --workspace @ssccs/skene-frame                    # the frame's suites
-npm test --workspace @ssccs/skene-frame -- --coverage      # with the coverage gate
+npm test --workspace @ssccsorg/skene-frame                    # the frame's suites
+npm test --workspace @ssccsorg/skene-frame -- --coverage      # with the coverage gate
 npm run typecheck                                          # both workspaces
 npm run dev                                                # the example on :5290
 ```

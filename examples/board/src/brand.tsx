@@ -1,4 +1,4 @@
-import type { Brand } from '@ssccs/skene-frame';
+import type { Brand } from '@ssccsorg/skene-frame';
 
 /** The stage: a frame divided in four, which is the mark of a surface rather than of a product. */
 const MARK = 'M4 7H28V25H4ZM16 7V25M4 16H28';

@@ -1,4 +1,4 @@
-# @ssccs/skene-frame
+# @ssccsorg/skene-frame
 
 Universal control surface for FIH state chains: a single open layer where every fact, intent, and hint is made
 visible, verifiable, and controllable, beneath the products it serves.
@@ -9,14 +9,14 @@ readings, and the router.
 
 ```tsx
 import { createRoot } from 'react-dom/client';
-import { Frame, type Brand } from '@ssccs/skene-frame';
-import '@ssccs/skene-frame/tokens.css';
+import { Frame, type Brand } from '@ssccsorg/skene-frame';
+import '@ssccsorg/skene-frame/tokens.css';
 
 createRoot(document.getElementById('root')!).render(<Frame brand={brand} />);
 ```
 
-The entries that are the contract are `@ssccs/skene-frame`, `@ssccs/skene-frame/ui`, and
-`@ssccs/skene-frame/tokens.css`. The layers under them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are
+The entries that are the contract are `@ssccsorg/skene-frame`, `@ssccsorg/skene-frame/ui`, and
+`@ssccsorg/skene-frame/tokens.css`. The layers under them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are
 exported for a deployment's tests and tools.
 
 `skene-shot <width> <height> <url> <out.png>` takes a screenshot at a named viewport, against a Chrome with the

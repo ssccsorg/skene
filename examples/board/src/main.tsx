@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { Frame } from '@ssccs/skene-frame';
+import { Frame } from '@ssccsorg/skene-frame';
 import { brand } from './brand';
 import './styles.css';
 
