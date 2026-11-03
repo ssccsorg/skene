@@ -29,7 +29,6 @@ export { registerInstrument } from './lib/instruments';
 export { useScenario } from './stores/scenario';
 export { useRecords } from './stores/records';
 
-// The kinds and readings the frame ships register themselves when their modules are imported: the kinds are the two
-// first-party libraries over the core, and the readings are the whole of the native pack.
-import './kinds';
+// The readings the frame ships register themselves when their modules are imported, which is the whole of the native
+// pack. A window kind is a package: a deployment that draws one imports it, and that import is what installs it.
 import './views';

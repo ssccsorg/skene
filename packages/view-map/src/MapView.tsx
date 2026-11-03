@@ -10,11 +10,11 @@
 // console and the board cannot end up pointing at two different things.
 
 import { MapPin } from 'lucide-react';
-import { EarthMap } from '../components/GroundMap';
-import { registerReading, type Board } from '../lib/readings';
-import { mappable } from '../lib/world';
-import { useFrame } from '../stores/frame';
-import { useScenario } from '../stores/scenario';
+import { EarthMap } from './GroundMap';
+import { registerReading, type Board } from '@ssccsorg/skene-frame/lib/readings';
+import { mappable } from '@ssccsorg/skene-frame/lib/world';
+import { useFrame } from '@ssccsorg/skene-frame/stores/frame';
+import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
 
 function MapReading({ world, place, pickedId, onPick }: Board) {
   const projectId = useScenario((state) => state.projectId);
@@ -47,7 +47,7 @@ function MapReading({ world, place, pickedId, onPick }: Board) {
   );
 }
 
-export const MAP = registerReading({
+export const MAP_VIEW = registerReading({
   key: 'map',
   path: '/map',
   View: MapReading,

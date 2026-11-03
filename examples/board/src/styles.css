@@ -7,4 +7,5 @@
    package that draws is scanned the same way, one line a package. */
 @source '../../../packages/frame/src';
 @source '../../../packages/view-media/src';
+@source '../../../packages/view-map/src';
 @source './';

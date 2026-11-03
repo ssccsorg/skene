@@ -1,0 +1,56 @@
+{
+  "name": "@ssccsorg/skene-view-map",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Ground as a window kind and a reading for the skene frame: the picture on the shell, the page toolbar, and the place drawn as a map.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "keywords": [
+    "fih",
+    "frame",
+    "views",
+    "map"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssccsorg/skene.git",
+    "directory": "packages/view-media"
+  },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": {
+    "url": "https://github.com/ssccsorg/skene/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ssccsorg/skene-frame": "0.1.0",
+    "@ssccsorg/skene-kernel": "0.1.0",
+    "lucide-react": "^0.548.0",
+    "maplibre-gl": "^6.14.0",
+    "three": "^0.181.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@react-three/fiber": "^9.4.0",
+    "@types/react": "^19.2.2",
+    "@types/three": "^0.181.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

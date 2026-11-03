@@ -123,15 +123,17 @@ packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel
 packages/frame/tools/ the board-carrying build plugin a deployment's vite config imports
 packages/view-media/  footage as a window kind: the picture, the surface it fills, the member's row and the
                       control that fills the surface
+packages/view-map/    ground as a window kind and a reading: the picture on the shell, the page's toolbar, and
+                      the place drawn as a map
 examples/board/       the smallest deployment: a brand, a board, one run, and its own tests
 ```
 
 The kernel is a package of its own because its consumers are not all the frame: a deployment's node tools read a
 record, a place and a scenario without a browser, and a test asserts that nothing above it has reached down into it.
 
-A window kind is a package of its own for the same reason. The frame ships one, the map, and footage is a package: a
-deployment imports the kinds it draws, and importing one is what installs it, so a deployment with no footage does not
-carry a video element or its sampler.
+A window kind is a package of its own. The frame ships none: footage and ground are packages, and a deployment imports
+the kinds it draws. Importing one is what installs it, so a deployment with no footage carries neither a video element
+nor its sampler, and one with no map carries no map library.
 
 ## Consuming it
 
@@ -149,10 +151,11 @@ The path is relative to the deployment's own manifest, so it gains a `../` for e
 manifest sits below its repository root: a manifest one directory down writes `../../skene`, and one two
 directories down writes `../../../skene`.
 
-A deployment that draws footage declares the package that installs it:
+A deployment that draws footage or a map declares the packages that install them:
 
 ```json
-"@ssccsorg/skene-view-media": "file:../skene/packages/view-media"
+"@ssccsorg/skene-view-media": "file:../skene/packages/view-media",
+"@ssccsorg/skene-view-map": "file:../skene/packages/view-map"
 ```
 
 A deployment that reads the kernel directly, in a node tool or in its own tests, declares it beside the frame:

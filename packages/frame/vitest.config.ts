@@ -10,9 +10,6 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     environment: 'node',
-    // The kinds the frame ships register themselves where they are written, so the frame's own entry is imported once for
-    // every suite rather than in each test that reads a declaration.
-    setupFiles: ['tests/setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],

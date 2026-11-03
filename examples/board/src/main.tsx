@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 // The kinds this deployment draws. Footage is a package of its own, so importing it is what installs it.
 import '@ssccsorg/skene-view-media';
+import '@ssccsorg/skene-view-map';
 import { Frame } from '@ssccsorg/skene-frame';
 import { brand } from './brand';
 import './styles.css';

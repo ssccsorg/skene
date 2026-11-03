@@ -5,7 +5,7 @@
 // right, and that the register is empty until a module declares something.
 
 import { expect, test } from 'vitest';
-import { collectionOf, overlaysOf, pointOf, polygonOf, registerOverlays } from '@/lib/map-overlays';
+import { collectionOf, overlaysOf, pointOf, polygonOf, registerOverlays } from '../src/map-overlays';
 import type { Place } from '@ssccsorg/skene-kernel';
 
 const PLACE: Place = {

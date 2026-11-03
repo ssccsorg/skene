@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { GeoJSONSource } from 'maplibre-gl';
-import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from '../lib/geo-map';
-import type { Bearing } from '../lib/board';
+import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from './geo-map';
+import type { Bearing } from '@ssccsorg/skene-frame/lib/board';
 import type { Place, World } from '@ssccsorg/skene-kernel';
-import type { MapTone } from '../stores/frame';
-import { located, ownView } from '../lib/world';
-import { bindMapWindow } from '../lib/map-windows';
-import { ShellPatch } from './ShellPatch';
+import { located, ownView } from '@ssccsorg/skene-frame/lib/world';
+import { bindMapWindow } from './map-windows';
+import { ShellPatch } from '@ssccsorg/skene-frame/components/ShellPatch';
 
 // A map window drawn on the shell, by the patch a video window is drawn by.
 //
@@ -48,7 +47,7 @@ export function MapPatch3D({
   place: Place;
   pickedId: string | null;
   /** The map's own tone, which is the frame's setting and not this window's. */
-  tone: MapTone;
+  tone: 'dark' | 'light';
   /** The pilot's stack, which is the order the picture is drawn in. */
   order: number;
 }) {

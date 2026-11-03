@@ -3,7 +3,6 @@ import { App } from './App';
 import { TooltipProvider } from './components/ui/tooltip';
 import { BrandProvider, type Brand } from './lib/brand';
 import { setHost, type Host } from './lib/host';
-import 'maplibre-gl/dist/maplibre-gl.css';
 
 /**
  * The frame a deployment mounts: the router, the tooltips, the brand, and the shell.

@@ -4,7 +4,7 @@
 // module that draws one. The check here is the cheap half of that. The expensive half is the package boundary, which is
 // the next cut: footage and maps move out, and the frame's own build is what will fail if the direction is ever reversed.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
@@ -25,14 +25,21 @@ const CORE = [
 
 const source = (path: string) => readFileSync(here(path), 'utf8');
 
-test('the frame does not import a window kind it ships', () => {
-  // Footage is a package of its own and is not in the frame at all. What is left here is the kind the frame ships.
-  const implementations = ['MapPatch3D', 'GroundMap'];
-  const reached = CORE.flatMap((path) => {
-    const text = source(path);
-    return implementations.filter((each) => text.includes(`from './${each}'`) || text.includes(`from '../components/${each}'`));
-  });
-  expect(reached, 'a kind is reached through the register, not by the frame importing it').toEqual([]);
+test('the frame imports no view package', () => {
+  // Every kind is a package, and the direction is the package's to take: a frame that imported one would be a frame
+  // that could not be assembled without it.
+  const SRC = fileURLToPath(new URL('../src/', import.meta.url));
+  const files = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const path = `${dir}${entry.name}`;
+      if (entry.isDirectory()) return files(`${path}/`);
+      return /\.tsx?$/.test(entry.name) ? [path] : [];
+    });
+  const reached = files(SRC)
+    .map((path) => ({ path: path.slice(SRC.length), text: readFileSync(path, 'utf8') }))
+    .filter(({ text }) => text.includes('@ssccsorg/skene-view-'))
+    .map(({ path }) => path);
+  expect(reached).toEqual([]);
 });
 
 test('the frame names no kind of its own', () => {

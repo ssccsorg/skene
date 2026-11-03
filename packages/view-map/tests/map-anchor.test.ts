@@ -8,7 +8,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
-import { fromPlace, geoOf, toPlace } from '@/lib/world';
+import { fromPlace, geoOf, toPlace } from '@ssccsorg/skene-frame/lib/world';
 import type { Place } from '@ssccsorg/skene-kernel';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
@@ -32,14 +32,14 @@ test('a marker is placed by the map and never by its order in the page', () => {
   // The element is a child of the map's canvas container. In flow it would sit one marker-height below the marker
   // before it, and that offset is pixels: the ground scales under it when the map is zoomed, so the mark slides off
   // its own place exactly as the camera-derived mark this file is about does. The marker class is what places it.
-  const text = readFileSync(here('../src/components/GroundMap.tsx'), 'utf8');
+  const text = readFileSync(here('../src/GroundMap.tsx'), 'utf8');
   const element = text.slice(text.indexOf('function unitElement'), text.indexOf('function hoverable'));
   expect(element, 'a unit element is not put back into flow').not.toMatch(/position:\s*relative/);
   expect(element, 'and it does not place itself').not.toMatch(/position:\s*absolute/);
 });
 
 test('the earth map anchors a unit by latitude and longitude and never by the camera', () => {
-  const text = readFileSync(here('../src/components/GroundMap.tsx'), 'utf8');
+  const text = readFileSync(here('../src/GroundMap.tsx'), 'utf8');
   expect(text, 'a unit is a map marker').toContain('new maplibregl.Marker');
   expect(text, 'and the marker is placed on the ground').toContain('.setLngLat(');
   // The space layer is the one exception and the reason for it: an orbital unit is above the ground, so its mark is
@@ -50,13 +50,8 @@ test('the earth map anchors a unit by latitude and longitude and never by the ca
 });
 
 test('the declared areas are data, and no drawing makes them a dashed rectangle', () => {
-  for (const path of [
-    '../src/components/GroundMap.tsx',
-    '../src/components/MapPatch3D.tsx',
-    '../src/components/SpaceMap.tsx',
-    '../src/components/MoveContext.tsx',
-    '../src/properties/ViewContent.tsx',
-  ]) {
+  // The drawings this package owns. The frame's own, which are the space map and the move context, are held there.
+  for (const path of ['../src/GroundMap.tsx', '../src/MapPatch3D.tsx']) {
     expect(readFileSync(here(path), 'utf8'), path).not.toContain('place.areas');
   }
 });

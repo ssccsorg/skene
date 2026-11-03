@@ -7,14 +7,14 @@
 import { useEffect, useRef } from 'react';
 import { LocateFixed, MapPin, Minus, Plus } from 'lucide-react';
 import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
-import { DARK_MAP, MAP_STYLE, MAP_WORKER } from '../lib/geo-map';
-import { EarthMap, PlaneMap } from '../components/GroundMap';
-import { MapPatch3D } from '../components/MapPatch3D';
-import { mapWindowOf } from '../lib/map-windows';
-import { registerViewKind, type WindowPage, type WindowPaint, type WindowRow } from '../lib/view-kinds';
-import { statusOf } from '../lib/windows';
-import type { FrameBox } from '../lib/views';
-import { MAP_SPAN_METRES, nearBounds, type GeoPoint, type OwnView } from '../lib/world';
+import { DARK_MAP, MAP_STYLE, MAP_WORKER } from './geo-map';
+import { EarthMap, PlaneMap } from './GroundMap';
+import { MapPatch3D } from './MapPatch3D';
+import { mapWindowOf } from './map-windows';
+import { registerViewKind, type WindowPage, type WindowPaint, type WindowRow } from '@ssccsorg/skene-frame/lib/view-kinds';
+import { statusOf } from '@ssccsorg/skene-frame/lib/windows';
+import type { FrameBox } from '@ssccsorg/skene-frame/lib/views';
+import { MAP_SPAN_METRES, nearBounds, type GeoPoint, type OwnView } from '@ssccsorg/skene-frame/lib/world';
 import type { DeclaredView, MapView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
 
 /** A declared map view as this build holds it. */

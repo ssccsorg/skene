@@ -10,12 +10,11 @@
 
 import { useEffect, useRef } from 'react';
 import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
-import { altitudeOf, spaceLift } from '../lib/board';
-import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from '../lib/geo-map';
-import { OVERLAY_PAINT, overlaysOf } from '../lib/map-overlays';
+import { altitudeOf, spaceLift } from '@ssccsorg/skene-frame/lib/board';
+import { DARK_MAP, MAP_STYLE, MAP_WORKER, NOTHING, pathOf } from './geo-map';
+import { OVERLAY_PAINT, overlaysOf } from './map-overlays';
 import type { Place, Standing, World } from '@ssccsorg/skene-kernel';
-import type { MapTone } from '../stores/frame';
-import { located, ownView } from '../lib/world';
+import { located, ownView } from '@ssccsorg/skene-frame/lib/world';
 
 /**
  * Put the map's tone on the ground it draws.
@@ -23,7 +22,7 @@ import { located, ownView } from '../lib/world';
  * The flat map is a raster of light tiles, so the page's dark tone is the canvas filter. The orbit is a body in space, and
  * inverting its canvas would invert the space around it; the same tone is therefore a property of the ground layer alone.
  */
-function paintTone(map: MapLibreMap, tone: MapTone, orbit: boolean): void {
+function paintTone(map: MapLibreMap, tone: 'dark' | 'light', orbit: boolean): void {
   const dark = tone === 'dark';
   map.getCanvas().style.filter = orbit ? '' : dark ? DARK_MAP : 'none';
   if (!orbit || !map.isStyleLoaded() || !map.getLayer('ground')) return;
@@ -198,7 +197,7 @@ export function EarthMap({
   preview?: boolean;
   orbit?: boolean;
   /** The map's own tone, which is the frame's setting and not a property of this ground. */
-  tone?: MapTone;
+  tone?: 'dark' | 'light';
 }) {
   const box = useRef<HTMLDivElement>(null);
   const toneRef = useRef(tone);

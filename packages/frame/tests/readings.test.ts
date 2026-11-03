@@ -30,18 +30,7 @@ test('one reading is the pilot own view of the space, and it is where the frame 
   expect(readings[0]?.key, 'and the frame opens on it').toBe('shell');
 });
 
-test('the map closes the reading run as a pane of its own', () => {
-  const readings = declaredReadings();
-  const map = readings.find((reading) => reading.key === 'map');
-  expect(map?.path, 'the map is still reachable at its own address').toBe('/map');
-  expect(map?.asked, 'and every place is read on it').toBeUndefined();
-  expect(map?.seat, 'a map is not the pilot seat').toBeUndefined();
-  expect(map?.pane, 'the map declares itself a pane').toBe(true);
-  expect(map?.button?.order).toBe(14);
-  expect(readings.filter((reading) => reading.button).at(-1)?.key, 'and it closes the reading run').toBe('map');
-});
-
-test('the sphere, the graph, and the wires share a band, and the map opens its own', () => {
+test('the sphere, the graph, and the wires share a band, and the map control opens its own', () => {
   expect(source('src/components/instruments/Readings.tsx'), 'the sphere is a picture in the pictures run').toMatch(
     /key: 'sphere-view',\s*order: 10,\s*band: 0,/,
   );

@@ -5,10 +5,15 @@
 // here is that they agree about where a unit stands, and that the region the map paints is the region the
 // camera is aimed at rather than a rectangle kept in step with it by hand.
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
 import { fitView, placed, type View } from '@/lib/board';
 import { DISC, dragTurn, insideDisc, onDisc, onMap, viewRegion, visible } from '@/lib/map';
+
+/** The frame's own source, read where a drawing has to be held to what it may not draw. */
+const source = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), 'utf8');
 
 const ASPECT = 520 / 176;
 /** The place's own extremes, as the world hands them over: a fraction of the place's width and height. */
@@ -154,4 +159,14 @@ test('a drag on the map is worth what the disc it is drawn in is worth, and noth
   expect(dragTurn(6, 0, { width: 300, height: 412 }).per).toBe(DISC / 300);
   expect(dragTurn(6, 0, null).per, 'no disc drawn is not a turn').toBeUndefined();
   expect(dragTurn(6, 0, { width: 0, height: 0 }).per, 'a collapsed box turns by nothing').toBe(0);
+});
+
+test('the declared areas are data, and no drawing of the ground makes them a dashed rectangle', () => {
+  for (const path of [
+    'src/components/SpaceMap.tsx',
+    'src/components/MoveContext.tsx',
+    'src/properties/ViewContent.tsx',
+  ]) {
+    expect(source(path), path).not.toContain('place.areas');
+  }
 });

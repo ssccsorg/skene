@@ -46,7 +46,7 @@ beforeEach(() => {
 });
 
 test('every kind of window is one window with a word and a glyph', () => {
-  expect(viewKinds().map((kind) => kind.kind).sort()).toEqual(['map', 'sample']);
+  expect(viewKinds().map((kind) => kind.kind)).toEqual(['sample']);
   for (const kind of [...viewKinds(), UNKNOWN_KIND]) {
     expect(kind.label).toBeTruthy();
     expect(kind.Icon).toBeTruthy();
@@ -100,7 +100,7 @@ test('a view is stopped when its medium is not running, and its declaration answ
 
 test('a window kept before its kind existed is read as the kind that claims the default', () => {
   expect(kindOf(undefined)).toBe('sample');
-  expect(kindOf('map')).toBe('map');
+  expect(kindOf('sample')).toBe('sample');
 });
 
 test('a view a place writes without a kind is read by the kind that claims it', () => {
@@ -111,27 +111,6 @@ test('a view a place writes without a kind is read by the kind that claims it', 
     status: 'live',
     from: undefined,
     to: undefined,
-  });
-  expect(readView({ id: 'yard-map', kind: 'map', cells: [1, 1] })).toEqual({
-    id: 'yard-map',
-    kind: 'map',
-    cells: [1, 1],
-    status: 'live',
-  });
-  // A map of the whole place is the N:1 case: one window over every unit, and the scope is part of the view rather
-  // than of the window. A scope this build does not know is read as the carrier, which is what every map was before.
-  expect(readView({ id: 'array-map', kind: 'map', scope: 'place', cells: [1.2, 0.75] })).toEqual({
-    id: 'array-map',
-    kind: 'map',
-    scope: 'place',
-    cells: [1.2, 0.75],
-    status: 'live',
-  });
-  expect(readView({ id: 'other-map', kind: 'map', scope: 'galaxy', cells: [1, 1] })).toEqual({
-    id: 'other-map',
-    kind: 'map',
-    cells: [1, 1],
-    status: 'live',
   });
 });
 
@@ -153,8 +132,8 @@ test('a kind this build cannot draw is kept rather than dropped or misread', () 
 test('the store keeps the kind a window was opened with, and the default when none is said', () => {
   useViews.getState().open('drone-2-eye');
   expect(useViews.getState().views[0]).toMatchObject({ id: 'drone-2-eye', kind: 'sample' });
-  useViews.getState().open('drone-2/map', 'map');
-  expect(useViews.getState().views[1]).toMatchObject({ id: 'drone-2/map', kind: 'map' });
+  useViews.getState().open('drone-2/map', 'sample');
+  expect(useViews.getState().views[1]).toMatchObject({ id: 'drone-2/map', kind: 'sample' });
 });
 
 test('a kind reads its own view, and the register is where its mark is found', () => {

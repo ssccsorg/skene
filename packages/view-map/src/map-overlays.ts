@@ -10,7 +10,7 @@
 // this register, and the frame draws what it was told to.
 
 import type { Place } from '@ssccsorg/skene-kernel';
-import { geoOf } from './world';
+import { geoOf } from '@ssccsorg/skene-frame/lib/world';
 
 /** What a layer is for, which is enough for the map to choose an ink and a weight without knowing its subject. */
 export type OverlayKind = 'hud' | 'pointing' | 'route';
