@@ -1,0 +1,26 @@
+{
+  "name": "@ssccsorg/skene-view-shell",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "The cockpit as a reading for the skene frame: the shell drawn as the space, the windows standing on it, and the wires control.",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "test": "vitest run", "typecheck": "tsc --noEmit -p ." },
+  "repository": { "type": "git", "url": "git+https://github.com/ssccsorg/skene.git", "directory": "packages/view-shell" },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": { "url": "https://github.com/ssccsorg/skene/issues" },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" },
+  "dependencies": {
+    "@react-three/fiber": "^9.4.0",
+    "@ssccsorg/skene-frame": "0.1.0",
+    "@ssccsorg/skene-kernel": "0.1.0",
+    "@ssccsorg/skene-ui": "0.1.0",
+    "lucide-react": "^0.548.0",
+    "three": "^0.181.0"
+  },
+  "peerDependencies": { "react": "^19.0.0" },
+  "devDependencies": { "@types/react": "^19.2.2", "@types/three": "^0.181.0", "typescript": "^5.9.3", "vitest": "^3.2.4" }
+}

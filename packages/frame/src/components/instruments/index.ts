@@ -8,4 +8,3 @@ import './FoldPanels';
 import './MapSplit';
 import './Panels';
 import './Readings';
-import './Wires';

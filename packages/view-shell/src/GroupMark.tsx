@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { depthFade } from '../lib/board';
+import { depthFade } from '@ssccsorg/skene-frame/lib/board';
 
 // A project that is not open, as the space holds it: one mark at the place its patch is, drawn in the state
 // the project declares and sized by how many members it stands for. It is the summary of everything standing

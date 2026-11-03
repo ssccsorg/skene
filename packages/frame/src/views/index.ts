@@ -9,4 +9,3 @@ import './HexView';
 import './IntentsView';
 import './OutsideView';
 import './RecordsView';
-import './Shell';

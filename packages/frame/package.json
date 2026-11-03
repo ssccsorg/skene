@@ -11,13 +11,17 @@
     "./tokens.css": "./tokens.css",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
-    "./lib/*": "./src/lib/*.ts",
+    "./lib/*": [
+      "./src/lib/*.ts",
+      "./src/lib/*.tsx"
+    ],
     "./stores/*": "./src/stores/*.ts",
     "./views/*": [
       "./src/views/*.ts",
       "./src/views/*.tsx"
     ],
-    "./tools/*": "./tools/*"
+    "./tools/*": "./tools/*",
+    "./lib/brand": "./src/lib/brand.tsx"
   },
   "dependencies": {
     "@react-three/fiber": "^9.4.0",

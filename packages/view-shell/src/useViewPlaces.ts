@@ -12,7 +12,7 @@ import {
   unfold,
   type Bearing,
   type View as Look,
-} from '../lib/board';
+} from '@ssccsorg/skene-frame/lib/board';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
 import {
   MARGIN,
@@ -26,10 +26,10 @@ import {
   viewBearing,
   type FrameBox,
   type Mark,
-} from '../lib/views';
-import { viewKindOf } from '../lib/view-kinds';
-import { useView } from '../stores/view';
-import { useViews, type WindowView } from '../stores/views';
+} from '@ssccsorg/skene-frame/lib/views';
+import { viewKindOf } from '@ssccsorg/skene-frame/lib/view-kinds';
+import { useView } from '@ssccsorg/skene-frame/stores/view';
+import { useViews, type WindowView } from '@ssccsorg/skene-frame/stores/views';
 import type { World } from '@ssccsorg/skene-kernel';
 
 // Where each window the space carries stands, as one reading both of its renderers use.

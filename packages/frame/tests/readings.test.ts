@@ -20,14 +20,12 @@ import '@/views/index';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const source = (path: string) => readFileSync(`${ROOT}${path}`, 'utf8');
 
-test('one reading is the pilot own view of the space, and it is where the frame comes up', () => {
+test('the frame ships readings and claims no seat of its own', () => {
   const readings = declaredReadings();
-  const seats = readings.filter((reading) => reading.seat);
-
   expect(readings.length, 'there are readings to hold this over').toBeGreaterThan(1);
-  expect(seats.map((reading) => reading.key), 'one reading, and it is the space seen from the seat').toEqual(['shell']);
-  // A window that names no address comes back to the reading the frame opens on, which is the first the bar declares.
-  expect(readings[0]?.key, 'and the frame opens on it').toBe('shell');
+  // The seat is the cockpit's claim, and the cockpit is a package. A frame that declared it would be a frame that came
+  // up on a picture it does not draw.
+  expect(readings.filter((reading) => reading.seat)).toEqual([]);
 });
 
 test('the sphere, the graph, and the wires share a band, and the map control opens its own', () => {
@@ -37,16 +35,14 @@ test('the sphere, the graph, and the wires share a band, and the map control ope
   expect(source('src/components/instruments/Readings.tsx'), 'the other pictures stand beside it').toMatch(
     /key: 'readings',\s*order: 30,\s*band: 0,/,
   );
-  expect(source('src/components/instruments/Wires.tsx'), 'the wires stand with the pictures').toMatch(/band: 0/);
   expect(source('src/components/instruments/MapSplit.tsx'), 'the map opens its own band').toMatch(/band: 1/);
   for (const path of ['src/components/instruments/FoldPanels.tsx', 'src/components/instruments/FillScreen.tsx']) {
     expect(source(path), `${path} stands with the frame's own controls`).toMatch(/band: 2/);
   }
-  // The sphere's own controls are drawn over the board.
-  expect(source('src/components/SceneBoard.tsx'), 'the fit and the notches stand in the sphere').toMatch(
-    /data-region="view-controls"/,
+  // The sphere's own controls stand in the cockpit, and the bar does not carry a second set.
+  expect(source('src/components/instruments/index.ts'), 'the fit and the notches are not in the bar').not.toMatch(
+    /FitToSpace/,
   );
-  expect(source('src/components/instruments/index.ts'), 'and not in the bar').not.toMatch(/FitToSpace/);
   // The pin is the one control that closes the pane, so the arrangements do not carry a second globe that would be the
   // same state under another icon.
   expect(source('src/components/instruments/MapSplit.tsx')).not.toMatch(/mode: 'globe'/);
@@ -87,7 +83,7 @@ test('a reading a project has to ask for is carried where it asks and nowhere el
   const own = readings.filter((reading) => !reading.asked);
   const put = standing(readings, { layout: { [own[own.length - 1]?.key ?? '']: false } }).map((reading) => reading.key);
   expect(put, 'a picture a project puts away is not carried').toHaveLength(own.length - 1);
-  expect(put, 'and the space the frame comes up in is not the one it put away').toContain('shell');
+  expect(put, 'and the reading the frame comes up in is not the one it put away').toEqual(own.slice(0, -1).map((reading) => reading.key));
 });
 
 test('a view the frame has not settled waits to be asked for', () => {

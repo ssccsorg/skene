@@ -134,3 +134,6 @@ export const PROJECT_STATE: Record<
   idle: { mark: 'bg-idle', ink: 'text-idle', word: 'idle', Icon: CirclePause },
   offline: { mark: 'border-[1.5px] border-offline', ink: 'text-offline', word: 'offline', Icon: CircleOff },
 };
+
+/** The one type a name in the space is drawn at, so a name on the board and a name in a panel are one size. */
+export const BOARD_NAME = 'text-[11.5px]';

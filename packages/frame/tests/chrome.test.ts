@@ -17,8 +17,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
-import { BOARD_NAME } from '@/components/BoardLabel';
-import { buttonVariants } from '@ssccsorg/skene-ui';
+import { BOARD_NAME, buttonVariants } from '@ssccsorg/skene-ui';
 import {
   CONTROL,
   LABEL,

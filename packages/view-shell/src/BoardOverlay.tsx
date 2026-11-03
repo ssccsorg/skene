@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
-import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, orbitalAt, placed as onShell, project, spreadOnEdge, unfold } from '../lib/board';
-import { fanTree, heldUnder, treeAt } from '../lib/holds';
-import { useHolds } from '../hooks/useHolds';
-import { MARK, MARK_INSET } from '../lib/views';
-import { BrandMark } from '../lib/brand';
+import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, orbitalAt, placed as onShell, project, spreadOnEdge, unfold } from '@ssccsorg/skene-frame/lib/board';
+import { fanTree, heldUnder, treeAt } from '@ssccsorg/skene-frame/lib/holds';
+import { useHolds } from '@ssccsorg/skene-frame/hooks/useHolds';
+import { MARK, MARK_INSET } from '@ssccsorg/skene-frame/lib/views';
+import { BrandMark } from '@ssccsorg/skene-frame/lib/brand';
 import { EdgeMark } from './EdgeMark';
-import { layoutLevels, layoutNames, nameWidth, type Blocker, type NameAt } from '@ssccsorg/skene-ui';
-import { lineOf, writerOf } from '../lib/world';
-import type { Neighbour } from '../lib/world';
-import { useView } from '../stores/view';
-import { useSelection } from '../stores/selection';
+import { BOARD_NAME, layoutLevels, layoutNames, nameWidth, type Blocker, type NameAt } from '@ssccsorg/skene-ui';
+import { lineOf, writerOf } from '@ssccsorg/skene-frame/lib/world';
+import type { Neighbour } from '@ssccsorg/skene-frame/lib/world';
+import { useView } from '@ssccsorg/skene-frame/stores/view';
+import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
 import type { Entry, ProjectStatus, World } from '@ssccsorg/skene-kernel';
 import { cn } from '@ssccsorg/skene-ui';
-import { BoardLabel, BOARD_NAME } from './BoardLabel';
+import { BoardLabel } from './BoardLabel';
 
 /** The one id the composition's own label is placed under, so no unit can be named like it. */
 const STORE_NAME = '\u0000store';

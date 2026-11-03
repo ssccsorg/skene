@@ -1,6 +1,6 @@
 import { Globe } from 'lucide-react';
-import { SceneBoard } from '../components/SceneBoard';
-import { registerReading, type Board } from '../lib/readings';
+import { SceneBoard } from './SceneBoard';
+import { registerReading, type Board } from '@ssccsorg/skene-frame/lib/readings';
 
 /**
  * The space itself: every unit at the place its own place gives it, drawn on the shell.
@@ -27,7 +27,7 @@ function Shell({ world, place, neighbours, pickedId, onPick, onOpenProject }: Bo
 }
 
 /** The shell reading, held by name because it is the one the frame's own projection controls ask after. */
-export const SHELL = registerReading({
+export const SHELL_READING = registerReading({
   key: 'shell',
   path: '/space',
   View: Shell,

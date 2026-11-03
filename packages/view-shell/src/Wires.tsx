@@ -2,12 +2,12 @@ import { Waypoints } from 'lucide-react';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import { CONTROL } from '@ssccsorg/skene-ui';
-import { registerInstrument } from '../../lib/instruments';
+import { registerInstrument } from '@ssccsorg/skene-frame/lib/instruments';
 import { cn } from '@ssccsorg/skene-ui';
-import { useDrawing } from '../../stores/drawing';
+import { useDrawing } from '@ssccsorg/skene-frame/stores/drawing';
 // The reading this control is about, held as the declaration itself, so a shell renamed or withdrawn stops compiling here
 // rather than matching nothing.
-import { SHELL } from '../../views/Shell';
+import { SHELL_READING } from './Shell';
 
 /**
  * How the board joins a mark to the middle.
@@ -47,6 +47,6 @@ registerInstrument({
   key: 'wires',
   order: 31,
   band: 0,
-  shows: (picture) => picture === SHELL.key,
+  shows: (picture) => picture === SHELL_READING.key,
   Control: Wires,
 });

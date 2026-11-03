@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pencil } from 'lucide-react';
-import { cn } from '@ssccsorg/skene-ui';
+import { BOARD_NAME, cn } from '@ssccsorg/skene-ui';
 
 // A name in the space. It is drawn as DOM over the canvas rather than as a portal inside it: the
 // projection is the pilot's own and the page can do that arithmetic, and nine portals into a canvas is
@@ -14,8 +14,6 @@ import { cn } from '@ssccsorg/skene-ui';
 // The type is the frame's one type, so a name on the space and a name in the rail are the same name at the same size;
 // what changes with what is named is where its name stands, and whether the name is a folder or a leaf is its kind's own
 // ink. A held element is drawn in the same type as the member it belongs to.
-export const BOARD_NAME = 'text-[11.5px]';
-
 export function BoardLabel({
   children,
   ringed,

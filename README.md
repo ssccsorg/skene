@@ -126,6 +126,8 @@ packages/view-media/  footage as a window kind: the picture, the surface it fill
                       control that fills the surface
 packages/view-map/    ground as a window kind and a reading: the picture on the shell, the page's toolbar, and
                       the place drawn as a map
+packages/view-shell/  the cockpit as a reading: the space drawn on the shell, the windows standing on it, and the
+                      wires control
 examples/board/       the smallest deployment: a brand, a board, one run, and its own tests
 ```
 
@@ -135,9 +137,10 @@ record, a place and a scenario without a browser, and a test asserts that nothin
 The kit is a package because its consumers are not only the frame: a deployment's own form takes the same primitives,
 and the palette is the kit's, so a deployment that draws one control does not carry a second design system.
 
-A window kind is a package of its own. The frame ships none: footage and ground are packages, and a deployment imports
-the kinds it draws. Importing one is what installs it, so a deployment with no footage carries neither a video element
-nor its sampler, and one with no map carries no map library.
+A window kind is a package of its own, and so is the cockpit. The frame ships none of them: footage, ground and the
+space drawn on the shell are packages, and a deployment imports the pictures it draws. Importing one is what installs it,
+so a deployment with no footage carries neither a video element nor its sampler, one with no map carries no map library,
+and one that opens on a table carries no three.js scene.
 
 ## Consuming it
 
@@ -159,7 +162,8 @@ A deployment that draws footage or a map declares the packages that install them
 
 ```json
 "@ssccsorg/skene-view-media": "file:../skene/packages/view-media",
-"@ssccsorg/skene-view-map": "file:../skene/packages/view-map"
+"@ssccsorg/skene-view-map": "file:../skene/packages/view-map",
+"@ssccsorg/skene-view-shell": "file:../skene/packages/view-shell"
 ```
 
 A deployment that reads the kernel directly, in a node tool or in its own tests, declares it beside the frame:

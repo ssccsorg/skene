@@ -15,10 +15,7 @@ const CORE = [
   '../src/lib/windows.ts',
   '../src/lib/views.ts',
   '../src/lib/world.ts',
-  '../src/components/SceneBoard.tsx',
   '../src/components/EntityPanel.tsx',
-  '../src/components/ViewHandle.tsx',
-  '../src/components/ViewLayer.tsx',
   '../src/properties/Shows.tsx',
   '../src/properties/ViewContent.tsx',
 ];
@@ -54,9 +51,6 @@ test('the frame names no kind of its own', () => {
 test('a kind is read through the register where the frame needs its mark, its body or its picture', () => {
   const askers = {
     '../src/lib/windows.ts': 'viewKindOf',
-    '../src/components/SceneBoard.tsx': 'viewKindOf',
-    '../src/components/ViewLayer.tsx': 'viewKindOf',
-    '../src/components/ViewHandle.tsx': 'viewKindOf',
     '../src/properties/Shows.tsx': 'viewKindOf',
     '../src/properties/ViewContent.tsx': 'viewKindOf',
   };

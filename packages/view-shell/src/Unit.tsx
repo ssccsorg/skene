@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { depthFade } from '../lib/board';
+import { depthFade } from '@ssccsorg/skene-frame/lib/board';
 
 // A unit on the board: a small bright point in the colour of the last record it wrote, and, for the kinds the space has a
 // body for, that body drawn from primitives rather than a point. What a unit is, the name beside it says: the space holds

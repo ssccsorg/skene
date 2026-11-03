@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { capGrid } from '../lib/board';
-import { ring, surface } from '../lib/board-geometry';
+import { capGrid } from '@ssccsorg/skene-frame/lib/board';
+import { ring, surface } from '@ssccsorg/skene-frame/lib/board-geometry';
 
 // A field's own ground, as the zone its place takes on the shell: every direction within reach of the field's
 // bearing, drawn as a translucent surface with its rim drawn out. The zone of a field the pilot is not inside
