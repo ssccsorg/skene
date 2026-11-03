@@ -194,6 +194,7 @@ export function SceneBoard({
   const spin = useView((state) => state.spin);
   const setFrame = useView((state) => state.setFrame);
   const held = useView((state) => state.held);
+  const release = useView((state) => state.release);
   const arrival = useView((state) => state.arrival);
   const box = useRef<HTMLDivElement>(null);
   const camera = useRef<THREE.PerspectiveCamera | null>(null);
@@ -259,6 +260,14 @@ export function SceneBoard({
   // Choosing another project is a turn and not a cut: the shell holds every project at its own bearing, so
   // the next one is already there and the pilot's own patch comes round to the middle. A resize or a run
   // arriving is the same patch seen again, so that is the view being fitted rather than turned.
+  // Another project is another space, so the pilot's own view of the last one is not a view of this one: the frame is the
+  // space's until they take it. It is released here rather than by the layout that switches projects, because the view is
+  // this board's and a layout that released it would be a layout that knew how a space is framed. The trigger is the
+  // project and not the patch, so two places of the same shape are still two spaces as far as the pilot is concerned.
+  const projectId = useScenario((state) => state.projectId);
+  useEffect(() => {
+    release();
+  }, [release, projectId]);
   const lastSector = useRef<string | null>(null);
   useEffect(() => {
     if (held || !ground.length || size[0] === 0) return;

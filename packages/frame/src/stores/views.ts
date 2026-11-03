@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Bearing } from '../lib/board';
 import { kindOf, type WindowKind } from '../lib/windows';
+
+/**
+ * A shift across the shell, in the two axes the frame lays a window out on.
+ *
+ * The store holds where the pilot put a window and draws nothing, so it names the unit rather than borrowing the
+ * projection's own name for it: a window's offset is two numbers whether or not anything on this page is drawn in
+ * radians, and a store that imported the board would be a store that could not be tested without a projection.
+ */
+export type Offset = [number, number];
+/** How many cells of the graticule a window covers, across and down. */
+export type Cells = [number, number];
 import { storageName } from '../lib/persist';
 
 // The windows the space is carrying: the views the place declares (footage and maps), the places and editors the pilot
@@ -29,13 +39,13 @@ export interface WindowView {
   /** What it shows, which is what the frame draws inside it and what its mark says. */
   kind: WindowKind;
   /** Where the pilot has put it, as a shift of its own origin's bearing, or null while they have not moved it. */
-  offset: Bearing | null;
+  offset: Offset | null;
   /**
    * How large the pilot has made it, in cells of the graticule, or null while they have not sized it and it is the
    * camera's own. Cells and not pixels, so a window is the same window whatever frame it is drawn in, and it is kept
    * here rather than recomputed because a size the pilot gave is a thing they said and not a thing to work out again.
    */
-  size: Bearing | null;
+  size: Cells | null;
   /** Whether it is folded away, which is the picture gone and its pin left behind. */
   folded: boolean;
   /** Its place in the stack of the pins: the highest is in front. */
@@ -61,9 +71,9 @@ interface ViewsState {
   /** Bring a window to the front, which is what a press on any part of it does. */
   raise: (id: string) => void;
   /** Put a window somewhere of its own, which is the pilot taking it off its origin. */
-  move: (id: string, offset: Bearing) => void;
+  move: (id: string, offset: Offset) => void;
   /** Make a window the size the pilot dragged it to, in cells of the graticule. */
-  resize: (id: string, size: Bearing) => void;
+  resize: (id: string, size: Cells) => void;
   /** Fold a window away, or bring it back. */
   fold: (id: string) => void;
   /** Say whether a window's own medium is running, which its own picture reports. */

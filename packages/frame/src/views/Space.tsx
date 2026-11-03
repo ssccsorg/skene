@@ -15,7 +15,6 @@ import { useScenario } from '../stores/scenario';
 import { useEdits } from '../stores/edits';
 import { useSelection } from '../stores/selection';
 import { useFrame } from '../stores/frame';
-import { useView } from '../stores/view';
 // The readings that declare themselves, loaded where the board is drawn: a register knows only what has been imported.
 import '.';
 
@@ -58,14 +57,11 @@ export function Space() {
   const moving = useSelection((state) => state.moving);
   const selectUnit = useSelection((state) => state.selectUnit);
   const setMoving = useSelection((state) => state.setMoving);
-  const release = useView((state) => state.release);
   const save = useEdits((state) => state.set);
   // Where the frame's bottom edge reaches. Between the columns it is drawn here, under the board; spanning the frame it
   // is the shell's, below the columns, because a bar wider than the space cannot be drawn by the space.
   const spanning = useSelection((state) => state.bottom === 'full');
 
-  // Another project is another space, so the pilot's own view of the last one is not a view of this one: the
-  // fitted frame is the space's until the pilot takes it.
   const projectId = useScenario((state) => state.projectId);
   const projects = useScenario((state) => state.projects);
   const openProject = useScenario((state) => state.open);
@@ -75,7 +71,6 @@ export function Space() {
   const split = useFrame((state) => state.splitOf(projectId));
   // The map taking the frame is one picture of the place, in whichever projection the map is read through.
   const mapOnly = split === 'full';
-  useEffect(() => release(), [release, projectId]);
   // A move belongs to the place it was opened in, so another project closes the context rather than carrying it over.
   useEffect(() => setMoving(null), [projectId, setMoving]);
 
