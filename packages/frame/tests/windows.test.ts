@@ -1,14 +1,37 @@
 // One window model under every content the space can put on its shell.
 //
-// A media view, a map and a place being chosen differ in what they show and not in being a window: they stand where the
-// pilot put them, fold, and are named by the member that carries them. This holds the seam that says so, and the store's
-// answer for a window kept from before the kind existed.
+// A view of any kind differs in what it shows and not in being a window: it stands where the pilot put it, folds, and is
+// named by the member that carries it. This holds the seam that says so, and the rule a kind is read by. The frame ships
+// a map and nothing else, so the rule is held with a kind this file installs: a kind is any module's declaration, and the
+// frame may not know which one it is.
 
 import { beforeEach, expect, test } from 'vitest';
 import type { DeclaredView } from '@ssccsorg/skene-kernel';
 import { VIEW_STATUS, kindOf, readView, statusOf, statusWith, windowOf, windowOfCamera } from '@/lib/windows';
-import { UNKNOWN_KIND, viewKindOf, viewKinds } from '@/lib/view-kinds';
+import { UNKNOWN_KIND, registerViewKind, viewKindOf, viewKinds } from '@/lib/view-kinds';
 import { useViews } from '@/stores/views';
+
+/**
+ * A kind of this file's own, which claims the default.
+ *
+ * It is what a deployment's kind is: a name, a mark and a reading of a declaration. The default it claims is the answer a
+ * declaration written before kinds existed gets, and which kind claims it is the register's business rather than the
+ * frame's.
+ */
+registerViewKind({
+  kind: 'sample',
+  label: 'sample',
+  Icon: () => null,
+  default: true,
+  read: (declared: DeclaredView) => ({
+    id: declared.id,
+    kind: 'sample',
+    cells: declared.cells,
+    status: statusOf(declared),
+    from: declared.from,
+    to: declared.to,
+  }),
+});
 
 const camera = {
   id: 'drone-2-eye',
@@ -23,7 +46,7 @@ beforeEach(() => {
 });
 
 test('every kind of window is one window with a word and a glyph', () => {
-  expect(viewKinds().map((kind) => kind.kind).sort()).toEqual(['map', 'media']);
+  expect(viewKinds().map((kind) => kind.kind).sort()).toEqual(['map', 'sample']);
   for (const kind of [...viewKinds(), UNKNOWN_KIND]) {
     expect(kind.label).toBeTruthy();
     expect(kind.Icon).toBeTruthy();
@@ -31,12 +54,12 @@ test('every kind of window is one window with a word and a glyph', () => {
 });
 
 test('a kind this build does not know is named rather than guessed', () => {
-  expect(kindOf(undefined)).toBe('media');
+  expect(kindOf(undefined), 'the kind that claims the default is the answer').toBe('sample');
   expect(kindOf('chart')).toBe('unknown');
   expect(UNKNOWN_KIND.label).toBe('view');
 });
 
-test('a camera is a media window of the member that carries it', () => {
+test('a camera is the window its own kind names, carried by the member that carries it', () => {
   expect(windowOfCamera(camera)).toEqual({
     id: 'drone-2-eye',
     kind: 'media',
@@ -75,19 +98,19 @@ test('a view is stopped when its medium is not running, and its declaration answ
   expect(statusWith({ ...view, status: 'stopped' }, true)).toBe('live');
 });
 
-test('a window kept before its kind existed is read as media', () => {
-  expect(kindOf(undefined)).toBe('media');
+test('a window kept before its kind existed is read as the kind that claims the default', () => {
+  expect(kindOf(undefined)).toBe('sample');
   expect(kindOf('map')).toBe('map');
 });
 
-test('a view a place writes without a kind is read as the footage it is', () => {
-  // Every place written before a view had a kind declares bytes and nothing else, and those are a camera.
+test('a view a place writes without a kind is read by the kind that claims it', () => {
   expect(readView({ id: 'camera-1', src: '/media/robot_1.mp4', cells: [1, 0.6] })).toEqual({
     id: 'camera-1',
-    kind: 'media',
-    src: '/media/robot_1.mp4',
+    kind: 'sample',
     cells: [1, 0.6],
     status: 'live',
+    from: undefined,
+    to: undefined,
   });
   expect(readView({ id: 'yard-map', kind: 'map', cells: [1, 1] })).toEqual({
     id: 'yard-map',
@@ -123,22 +146,18 @@ test('a kind this build cannot draw is kept rather than dropped or misread', () 
     cells: [1, 1],
     status: 'unknown',
   });
-  // A media view with no bytes is not a picture either, so it takes the same undrawable row.
-  expect(readView({ id: 'camera-2', cells: [1, 1] })).toMatchObject({ kind: 'unknown', declared: 'media' });
+  // A kind whose module was never imported has no reading, so the declaration is named rather than guessed at.
+  expect(readView({ id: 'radar-1', kind: 'radar', cells: [1, 1] })).toMatchObject({ kind: 'unknown', declared: 'radar' });
 });
 
-test('a kind that reads a view draws its row, so a registered kind cannot fold to nothing', () => {
-  // The register is the answer the panel reads, and a kind that reads a declaration without a body would be a row with an
-  // empty fold. A kind this build does not hold is named by the panel instead, which is what the unknown entry is for.
-  for (const kind of viewKinds().filter((each) => each.read)) {
-    expect(kind.Row, `${kind.kind} reads a view and draws no body`).toBeTypeOf('function');
-  }
-  expect(viewKindOf('chart')).toBeUndefined();
-});
-
-test('the store keeps the kind a window was opened with, and media when none is said', () => {
+test('the store keeps the kind a window was opened with, and the default when none is said', () => {
   useViews.getState().open('drone-2-eye');
-  expect(useViews.getState().views[0]).toMatchObject({ id: 'drone-2-eye', kind: 'media' });
+  expect(useViews.getState().views[0]).toMatchObject({ id: 'drone-2-eye', kind: 'sample' });
   useViews.getState().open('drone-2/map', 'map');
   expect(useViews.getState().views[1]).toMatchObject({ id: 'drone-2/map', kind: 'map' });
+});
+
+test('a kind reads its own view, and the register is where its mark is found', () => {
+  expect(viewKindOf('sample')?.kind).toBe('sample');
+  expect(viewKindOf('chart')).toBeUndefined();
 });

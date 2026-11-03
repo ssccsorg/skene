@@ -15,7 +15,7 @@ import { registerViewKind, type WindowPage, type WindowPaint, type WindowRow } f
 import { statusOf } from '../lib/windows';
 import type { FrameBox } from '../lib/views';
 import { MAP_SPAN_METRES, nearBounds, type GeoPoint, type OwnView } from '../lib/world';
-import type { DeclaredView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
+import type { DeclaredView, MapView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
 
 /** A declared map view as this build holds it. */
 function readMap(declared: DeclaredView): UnitView {
@@ -32,8 +32,11 @@ function readMap(declared: DeclaredView): UnitView {
 
 /** The ground under a member's row: the whole place at the window's shape, or the carrier's own place. */
 function MapBody({ view, own, place, member, world, pickedId, onPick }: WindowRow) {
-  if (view.kind !== 'map') return null;
-  if (view.scope === 'place' && world) {
+  // The kind is the map's own, so its shape is read here rather than by the frame: a register that holds a kind by name
+  // cannot ask the compiler to prove the name, and a body that trusted any view handed to it would draw a camera's row.
+  const map = view.kind === 'map' ? (view as MapView) : null;
+  if (!map) return null;
+  if (map.scope === 'place' && world) {
     // A map preview is the same box a footage preview is, so a member with both shows two windows of one size. The
     // window's own map is the whole ground at that size; the panel is not a second scale of it.
     return (

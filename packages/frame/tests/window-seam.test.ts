@@ -26,9 +26,8 @@ const CORE = [
 const source = (path: string) => readFileSync(here(path), 'utf8');
 
 test('the frame does not import a window kind it ships', () => {
-  // The surface is the one part of the media cluster the board still draws itself, because a window kind is a patch and
-  // the surface is the whole room. It goes out with the media package rather than through this seam.
-  const implementations = ['ViewPatch', 'MapPatch3D', 'GroundMap', 'MediaThumb'];
+  // Footage is a package of its own and is not in the frame at all. What is left here is the kind the frame ships.
+  const implementations = ['MapPatch3D', 'GroundMap'];
   const reached = CORE.flatMap((path) => {
     const text = source(path);
     return implementations.filter((each) => text.includes(`from './${each}'`) || text.includes(`from '../components/${each}'`));

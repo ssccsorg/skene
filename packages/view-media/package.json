@@ -1,0 +1,55 @@
+{
+  "name": "@ssccsorg/skene-view-media",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Footage as a window kind for the skene frame: the video element, the sampler behind its texture, and the control that sends it to the surface.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "keywords": [
+    "fih",
+    "frame",
+    "views",
+    "video"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssccsorg/skene.git",
+    "directory": "packages/view-media"
+  },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": {
+    "url": "https://github.com/ssccsorg/skene/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.4.0",
+    "@ssccsorg/skene-frame": "0.1.0",
+    "@ssccsorg/skene-kernel": "0.1.0",
+    "lucide-react": "^0.548.0",
+    "three": "^0.181.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/three": "^0.181.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

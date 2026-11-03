@@ -5,11 +5,12 @@
 // frame's own panel reaches it through the register and not through an import.
 
 import { Video } from 'lucide-react';
-import { MediaThumb } from '../components/MediaThumb';
-import { ViewPatch } from '../components/ViewPatch';
-import { registerViewKind, type WindowPaint, type WindowRow } from '../lib/view-kinds';
-import { statusOf } from '../lib/windows';
-import type { DeclaredView, UnitView } from '@ssccsorg/skene-kernel';
+import { Forward } from './Forward';
+import { MediaThumb } from './MediaThumb';
+import { ViewPatch } from './ViewPatch';
+import { registerViewKind, type WindowPaint, type WindowRow } from '@ssccsorg/skene-frame/lib/view-kinds';
+import { statusOf } from '@ssccsorg/skene-frame/lib/windows';
+import type { Camera, DeclaredView, MediaView, UnitView } from '@ssccsorg/skene-kernel';
 
 /**
  * A declared footage view as this build holds it.
@@ -40,18 +41,21 @@ function readMedia(declared: DeclaredView): UnitView | null {
 
 /** The picture under a member's row, which is the medium itself and not a frame around it. */
 function MediaBody({ view, setRunning }: WindowRow) {
-  if (view.kind !== 'media') return null;
+  // The kind is this package's own, so its shape is read here: a register holds a kind by name and cannot prove it, and
+  // a body that trusted any view would draw a map's row as a video.
+  const media = view.kind === 'media' ? (view as MediaView) : null;
+  if (!media) return null;
   return (
     <video
       data-region="shows-view"
-      src={view.src}
+      src={media.src}
       autoPlay
       muted
       loop
       playsInline
-      onPlay={() => setRunning(view.id, true)}
-      onPause={() => setRunning(view.id, false)}
-      onEnded={() => setRunning(view.id, false)}
+      onPlay={() => setRunning(media.id, true)}
+      onPause={() => setRunning(media.id, false)}
+      onEnded={() => setRunning(media.id, false)}
       className="aspect-video w-full rounded-sm border border-border/70 bg-black object-cover"
     />
   );
@@ -59,10 +63,11 @@ function MediaBody({ view, setRunning }: WindowRow) {
 
 /** The picture on the shell, which is the one patch every window kind stands on, handed a texture. */
 function MediaPaint({ source, bearing, cells, lead, hidden, order }: WindowPaint) {
-  if (source.kind !== 'media') return null;
+  const camera = source.kind === 'media' ? (source as Camera) : null;
+  if (!camera) return null;
   return (
     <ViewPatch
-      camera={source}
+      camera={camera}
       bearing={bearing}
       cells={cells}
       lead={lead}
@@ -80,9 +85,9 @@ export const MEDIA = registerViewKind({
   Paint: MediaPaint,
   Row: MediaBody,
   Thumb: MediaThumb,
+  Forward,
   // The picture fills the box a footage view declares, so the pilot's cell round it would stand away from its own edge.
   edge: false,
-  forward: true,
   // A place written before a view had a kind wrote footage, so this is what an absent kind is read as.
   default: true,
 });

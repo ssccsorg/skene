@@ -1,7 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
 import { Row } from '../components/Row';
-import { Hint } from '../components/ui/hint';
-import { useSurfaceForward } from '../hooks/useSurfaceForward';
 import { useWorld } from '../hooks/useWorld';
 import type { Part, PartProps } from '../lib/kinds';
 import type { Place, UnitView, World } from '@ssccsorg/skene-kernel';
@@ -121,7 +118,9 @@ function ViewRow({
   // The same state is what the pin on the space draws, so one view has one answer in both places.
   const running = useViews((state) => state.running[view.id]);
   const setRunning = useViews((state) => state.setRunning);
-  const forward = useSurfaceForward();
+  // The control that reaches the kind's own surface, when the kind has one. What it is and where it goes is the kind's
+  // answer, so the row carries it without knowing what a surface is.
+  const Forward = viewKindOf(view.kind)?.Forward;
   const status = statusWith(view, running);
   const { word, ink } = VIEW_STATUS[status];
   const { label, Icon } = viewKindOf(view.kind) ?? UNKNOWN_KIND;
@@ -142,18 +141,7 @@ function ViewRow({
               <Icon className="size-3.5" />
             </span>
             <span className="min-w-0 flex-1 truncate font-mono text-[11.5px] text-muted-foreground">{shell.title}</span>
-            {viewKindOf(view.kind)?.forward ? (
-              <Hint label="forward to the sphere">
-                <button
-                  type="button"
-                  data-region="surface-forward"
-                  className="flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
-                  onClick={() => forward(member)}
-                >
-                  <ArrowUpRight className="size-3.5" />
-                </button>
-              </Hint>
-            ) : null}
+            {Forward ? <Forward origin={member} where="row" /> : null}
           </>
         }
         content={

@@ -3,7 +3,6 @@
 
 import { expect, test } from 'vitest';
 import { mediumOf, slotsOf, surfaceMedia } from '@/lib/surface';
-import { readView } from '@/lib/windows';
 import { useSurface } from '@/stores/surface';
 import type { Camera } from '@ssccsorg/skene-kernel';
 
@@ -71,21 +70,8 @@ test('forwarding a media item turns the surface on in the layout it was left in'
   expect(useSurface.getState().previous).toBe('grid');
 });
 
-test('a still is read from its declaration or its source name, and a spatial feed keeps its projection', () => {
+test('a still is read from its declaration or its source name', () => {
   expect(mediumOf(camera('still', 'unit', '/media/villa.png'))).toBe('image');
   expect(mediumOf(camera('video-with-png-name', 'unit', '/media/clip.png'))).toBe('image');
   expect(mediumOf({ ...camera('declared', 'unit', '/media/clip.png'), medium: 'video' })).toBe('video');
-
-  const view = readView({
-    id: 'look',
-    kind: 'media',
-    src: '/media/look.png',
-    medium: 'image',
-    projection: '360',
-    cells: [1, 1],
-  });
-  expect(view.kind).toBe('media');
-  if (view.kind !== 'media') return;
-  expect(view.medium).toBe('image');
-  expect(view.projection, 'a 360 declaration is read into the spatial renderer').toBe('spatial');
 });

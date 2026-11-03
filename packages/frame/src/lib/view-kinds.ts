@@ -111,8 +111,13 @@ export interface ViewKind {
    * box draws no frame. Absent means the frame is drawn.
    */
   edge?: boolean;
-  /** Whether a member's row offers the control that sends this kind to the surface. */
-  forward?: boolean;
+  /**
+   * The control that reaches this kind's own surface, when it has one.
+   *
+   * The frame draws it where a member's row and a window's pin have room for it and nowhere else, because what a surface
+   * is and how a picture is sent to it is the kind's answer. A kind with no surface supplies none.
+   */
+  Forward?: ComponentType<{ origin: string; where: 'row' | 'handle' }>;
   /**
    * Whether this kind can draw a member's own position.
    *

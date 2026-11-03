@@ -1,11 +1,11 @@
 import { useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
-import type { Bearing } from '../lib/board';
-import { FRAME_RATE, feedFrames } from '../lib/still';
+import type { Bearing } from '@ssccsorg/skene-frame/lib/board';
+import { FRAME_RATE, feedFrames } from '@ssccsorg/skene-frame/lib/still';
 import type { Camera } from '@ssccsorg/skene-kernel';
-import { useViews } from '../stores/views';
-import { ShellPatch } from './ShellPatch';
+import { useViews } from '@ssccsorg/skene-frame/stores/views';
+import { ShellPatch } from '@ssccsorg/skene-frame/components/ShellPatch';
 
 // A window is a scale of the picture, and not the size the picture is rendered at. The medium is
 // drawn at its own resolution and the patch samples that through a mip chain, so a window made

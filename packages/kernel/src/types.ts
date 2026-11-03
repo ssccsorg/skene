@@ -109,6 +109,13 @@ interface ViewShape {
   cells: [number, number];
   /** What the view is doing, read through `statusOf`. Absent means live. */
   status?: ViewStatus;
+  /**
+   * The kind the place wrote, when this build has no renderer for it.
+   *
+   * It is on the shape rather than only on the unknown view because a kind is free-form: the frame reads a declaration
+   * whose kind it does not hold as this, and a kind that does hold it is named by the kind it returned.
+   */
+  declared?: string;
 }
 
 /** Footage: bytes the frame's own origin serves, drawn as a picture. */
@@ -164,8 +171,20 @@ export interface UnknownView extends ViewShape {
   src?: string;
 }
 
+/**
+ * A view of a kind this build holds through a register rather than through a union.
+ *
+ * The frame ships two kinds and a deployment may add its own, so the set of kinds is not a closed union: a kind is a
+ * string, and a module installs what that string draws. This is the shape such a kind returns, and the union carries it
+ * so a declaration never has to be refused for having a kind the compiler had not heard of.
+ */
+export interface KindView extends ViewShape {
+  kind: string;
+  src?: string;
+}
+
 /** Any view a place may declare, once this build has read its kind. */
-export type UnitView = MediaView | MapView | UnknownView;
+export type UnitView = MediaView | MapView | UnknownView | KindView;
 
 /**
  * A view as a place writes it, before this build has read it.

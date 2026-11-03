@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronUp } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { Hint } from './ui/hint';
 import { standing } from '../lib/cameras';
@@ -8,7 +8,6 @@ import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { CONTROL } from '../lib/chrome';
 import type { FrameBox } from '../lib/views';
 import { cn } from '../lib/utils';
-import { useSurfaceForward } from '../hooks/useSurfaceForward';
 import { useViews, type WindowView } from '../stores/views';
 
 // The pin a window on the shell is carried by: what the window is, and the one thing that can be done to it.
@@ -54,11 +53,10 @@ export function ViewHandle({
   onPick: () => void;
 }) {
   const fold = useViews((state) => state.fold);
-  const forward = useSurfaceForward();
   // The place declares what a view is, so its kind is read from there: a window the browser kept before the place gave
   // the view a kind would otherwise go on being drawn as footage, which is what a map used to look like.
   const kind = viewKindOf(kindOf(source.kind)) ?? UNKNOWN_KIND;
-  const { Icon } = kind;
+  const { Icon, Forward } = kind;
 
   return (
     <div
@@ -71,23 +69,7 @@ export function ViewHandle({
     >
       <Icon className="ml-1.5 size-3 shrink-0 text-muted-foreground" />
       <span className="min-w-0 flex-1 truncate px-0.5 text-[10px] text-muted-foreground">{source.id}</span>
-      {viewKindOf(source.kind)?.forward ? (
-        <Hint label="forward to the sphere">
-          <Button
-            size="icon-xs"
-            variant="ghost"
-            className={cn(CONTROL)}
-            data-region="surface-forward"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              forward(source.origin);
-            }}
-          >
-            <ArrowUpRight />
-          </Button>
-        </Hint>
-      ) : null}
+      {Forward ? <Forward origin={source.origin} where="handle" /> : null}
       <Hint label="fold">
         <Button
           size="icon-xs"
