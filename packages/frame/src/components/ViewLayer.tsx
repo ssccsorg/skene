@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import { ChevronDown, MoveDiagonal2, X } from 'lucide-react';
 import { aimAt, shellAt, type View as Look } from '../lib/board';
 import { standing, viewsOf } from '../lib/cameras';
-import { WINDOW_KINDS, kindOf } from '../lib/windows';
+import { kindOf } from '../lib/windows';
+import { UNKNOWN_KIND, viewKindOf } from '../lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { MARK, clipped, dragged, gripOf, sized } from '../lib/views';
 import { useSelection } from '../stores/selection';
@@ -311,8 +312,7 @@ export function ViewLayer({
         const box = place.box;
         const handle = place.handle;
         const mark = place.mark;
-        const kind = kindOf(place.view.kind);
-        const KindGlyph = WINDOW_KINDS[kind].Icon;
+        const KindGlyph = (viewKindOf(kindOf(place.view.kind)) ?? UNKNOWN_KIND).Icon;
         // What of the window the frame draws, which is what the pilot can press: any part of it at all, so that a window
         // standing half over an edge is still a window they take hold of where they can see it. A window entirely past the
         // frame is drawn nowhere and is pressed nowhere either: its icon is the whole of it, so the target is drawn only

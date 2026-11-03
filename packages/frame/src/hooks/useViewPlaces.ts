@@ -27,6 +27,7 @@ import {
   type FrameBox,
   type Mark,
 } from '../lib/views';
+import { viewKindOf } from '../lib/view-kinds';
 import { useView } from '../stores/view';
 import { useViews, type WindowView } from '../stores/views';
 import type { World } from '@ssccsorg/skene-kernel';
@@ -145,7 +146,8 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
       // The bearing comes from the entity's own place as the space unfolds it, so a window comes out of its group
       // with the entity it belongs to rather than appearing where it will be.
       const carried = bearingOf(unfold(placed(unit.at, world.aspect, world.sector), centre, arrival));
-      const own = anchorOf(source, carried, bearingOf(centre));
+      const overPlace = viewKindOf(source.kind)?.anchor === 'place';
+      const own = anchorOf(carried, bearingOf(centre), overPlace);
       // Where that entity falls on the frame, which is the side the window's pin is set on. It is the entity's
       // direction and not its distance, so the same reading stands as the mark the pilot reads in the space.
       const [originX, originY] = project(shellAt(carried), size[0], size[1], look);
@@ -170,14 +172,13 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
         return view.folded || held(handleOf(window, [originX, originY]), size, MARGIN);
       };
       const others = origins.filter((bearing) => bearingGap(bearing, own) > 1e-6);
-      // A map of the whole place stands over the place. The search for a clear place is what keeps a camera's window off
-      // the marks it is not about, and a map of the ground is about all of them: moving it to the limb to keep it clear
-      // of the units it draws would shrink the map to read the units. It is where the place is centred, and the pilot
-      // moves it like any other window.
-      const place =
-        source.kind === 'map' && source.scope === 'place'
-          ? shifted(own, view.offset ?? [0, 0])
-          : viewBearing(view.offset, own, half, [...marks, ...others], view.id, holds);
+      // A window that stands over the place is not moved to a clear spot. The search for one is what keeps a camera's
+      // window off the marks it is not about, and a window of the ground is about all of them: moving it to the limb to
+      // keep it clear of the units it draws would shrink the picture to read the units. It is where the place is
+      // centred, and the pilot moves it like any other window.
+      const place = overPlace
+        ? shifted(own, view.offset ?? [0, 0])
+        : viewBearing(view.offset, own, half, [...marks, ...others], view.id, holds);
       const [x, y, depth] = project(shellAt(place), size[0], size[1], look);
       const window = box(place);
       // The picture's own edge on the frame, which is what its press is clipped to: a bounding box is wider than the patch

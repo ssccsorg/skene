@@ -2,7 +2,8 @@ import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { Hint } from './ui/hint';
 import { standing } from '../lib/cameras';
-import { WINDOW_KINDS, kindOf } from '../lib/windows';
+import { kindOf } from '../lib/windows';
+import { UNKNOWN_KIND, viewKindOf } from '../lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { CONTROL } from '../lib/chrome';
 import type { FrameBox } from '../lib/views';
@@ -56,7 +57,8 @@ export function ViewHandle({
   const forward = useSurfaceForward();
   // The place declares what a view is, so its kind is read from there: a window the browser kept before the place gave
   // the view a kind would otherwise go on being drawn as footage, which is what a map used to look like.
-  const { Icon } = WINDOW_KINDS[kindOf(source.kind)];
+  const kind = viewKindOf(kindOf(source.kind)) ?? UNKNOWN_KIND;
+  const { Icon } = kind;
 
   return (
     <div
@@ -69,7 +71,7 @@ export function ViewHandle({
     >
       <Icon className="ml-1.5 size-3 shrink-0 text-muted-foreground" />
       <span className="min-w-0 flex-1 truncate px-0.5 text-[10px] text-muted-foreground">{source.id}</span>
-      {source.kind === 'media' ? (
+      {viewKindOf(source.kind)?.forward ? (
         <Hint label="forward to the sphere">
           <Button
             size="icon-xs"

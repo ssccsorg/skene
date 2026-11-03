@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Bearing } from '../lib/board';
-import type { WindowKind } from '../lib/windows';
+import { kindOf, type WindowKind } from '../lib/windows';
 import { storageName } from '../lib/persist';
 
 // The windows the space is carrying: the views the place declares (footage and maps), the places and editors the pilot
@@ -85,7 +85,7 @@ export const useViews = create<ViewsState>()(
       top: 0,
       running: {},
 
-      open: (id, kind = 'media') => {
+      open: (id, kind = kindOf()) => {
         const already = get().views.find((view) => view.id === id);
         // A camera that is open is a window that is somewhere: opening it again brings it to the front rather than
         // putting a second window on the shell. The place's declaration is still the answer to what the window is, so

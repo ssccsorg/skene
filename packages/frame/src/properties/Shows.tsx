@@ -4,10 +4,11 @@ import { Hint } from '../components/ui/hint';
 import { useSurfaceForward } from '../hooks/useSurfaceForward';
 import { useWorld } from '../hooks/useWorld';
 import type { Part, PartProps } from '../lib/kinds';
-import type { MapView, Place, UnitView, World } from '@ssccsorg/skene-kernel';
+import type { Place, UnitView, World } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
 import { ownView, type OwnView } from '../lib/world';
-import { VIEW_STATUS, WINDOW_KINDS, statusWith, windowOf } from '../lib/windows';
+import { VIEW_STATUS, statusWith, windowOf } from '../lib/windows';
+import { UNKNOWN_KIND, viewKindOf, viewKinds } from '../lib/view-kinds';
 import { useSelection } from '../stores/selection';
 import { useViews } from '../stores/views';
 import { ViewContent } from './ViewContent';
@@ -34,15 +35,14 @@ export const shows: Part = function Shows({ member, place }: PartProps) {
   const pickedId = useSelection((state) => state.unit);
   const selectUnit = useSelection((state) => state.selectUnit);
   const pick = (id: string) => selectUnit(id, lastOf[id] ?? null);
-  // The place is a window of the same model as a camera's picture, read here as the member's own attribute. When it
-  // becomes a patch of the shell it is opened under this name and needs nothing else about a window invented for it.
-  const mapWindow = windowOf('map', `${member.id}/map`, member.id, `${member.id} place`);
-  // A place may declare a map of its own, and then that one is a row of its own. The Location row keeps the coordinates
-  // and stops offering a second drawing of the same ground.
-  const declaredMap = own.views.some((view) => view.kind === 'map');
-  // The member's own place is a view the place does not have to declare. The panel draws it at the row's width rather
-  // than as a patch of the shell, so its cells are not read here; they are read when it is opened as a window.
-  const placeMap: MapView = { id: mapWindow.id, kind: 'map', cells: [1, 1] };
+  // A kind may say it can draw a member's own position, and then the Location row carries that drawing. The place's own
+  // declaration is read through the kind, so the panel invents no view and names no kind of its own.
+  const placeKind = viewKinds().find((kind) => kind.place && kind.read);
+  const placeView = placeKind?.read?.({ id: `${member.id}/${placeKind.kind}`, cells: [1, 1] }) ?? null;
+  const placeWindow = placeView ? windowOf(placeView.kind, placeView.id, member.id, `${member.id} place`) : null;
+  // A place may declare a view that stands over the ground, and then that one is a row of its own. The Location row keeps
+  // the coordinates and stops offering a second drawing of the same ground.
+  const declaredPlace = own.views.some((view) => viewKindOf(view.kind)?.anchor === 'place');
   return (
     <div data-region="shows" className="flex flex-col gap-2 px-3 pb-2">
       <Row
@@ -55,10 +55,10 @@ export const shows: Part = function Shows({ member, place }: PartProps) {
           </span>
         }
         content={
-          declaredMap ? undefined : (
-            <div data-window={mapWindow.id} data-kind={mapWindow.kind}>
+          declaredPlace || !placeView || !placeWindow ? undefined : (
+            <div data-window={placeWindow.id} data-kind={placeWindow.kind}>
               <ViewContent
-                view={placeMap}
+                view={placeView}
                 member={member.id}
                 own={own}
                 place={place}
@@ -124,7 +124,7 @@ function ViewRow({
   const forward = useSurfaceForward();
   const status = statusWith(view, running);
   const { word, ink } = VIEW_STATUS[status];
-  const { label, Icon } = WINDOW_KINDS[view.kind];
+  const { label, Icon } = viewKindOf(view.kind) ?? UNKNOWN_KIND;
   const shell = windowOf(view.kind, view.id, member, view.id);
   return (
     <div data-window={shell.id} data-kind={shell.kind}>
@@ -142,7 +142,7 @@ function ViewRow({
               <Icon className="size-3.5" />
             </span>
             <span className="min-w-0 flex-1 truncate font-mono text-[11.5px] text-muted-foreground">{shell.title}</span>
-            {view.kind === 'media' ? (
+            {viewKindOf(view.kind)?.forward ? (
               <Hint label="forward to the sphere">
                 <button
                   type="button"

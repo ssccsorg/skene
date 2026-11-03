@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Columns2, Crosshair, EyeOff, Grid2x2, LocateFixed, Minus, Plus, Tv } from 'lucide-react';
+import { Check, Columns2, Crosshair, EyeOff, Grid2x2, Minus, Plus, Tv } from 'lucide-react';
 import * as THREE from 'three';
 import { DIM, GRATICULE, LEVEL, aimAt, blackboardInk, fitView, forwardOf, liftOf, orbitalAt, placed, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '../lib/board';
 import { dashes, dotTexture, line, ring, segments } from '../lib/board-geometry';
@@ -17,15 +17,11 @@ import { useSelection } from '../stores/selection';
 import { useSurface } from '../stores/surface';
 import { useView } from '../stores/view';
 import type { NodeKind, Place, World } from '@ssccsorg/skene-kernel';
-import type { FrameBox } from '../lib/views';
 import { clipped } from '../lib/views';
 import type { Neighbour } from '../lib/world';
 import { cn } from '../lib/utils';
+import { viewKindOf } from '../lib/view-kinds';
 import { Hint } from './ui/hint';
-import { PlaneMap } from './GroundMap';
-import { MapPatch3D } from './MapPatch3D';
-import { mapWindowOf } from '../lib/map-windows';
-import type { MapWindowControls } from '../lib/map-windows';
 import { BoardOverlay } from './BoardOverlay';
 import { CockpitFrame } from './CockpitFrame';
 import { FieldRegion } from './FieldRegion';
@@ -33,7 +29,6 @@ import { GroupMark } from './GroupMark';
 import { SphereSurface } from './SphereSurface';
 import { Unit } from './Unit';
 import { ViewLayer } from './ViewLayer';
-import { ViewPatch } from './ViewPatch';
 
 // The cockpit. The pilot stands at the centre of a shell and the space is laid out around them: what is in
 // front is what they are looking at, and the rest is reached by turning or by widening the frame. The
@@ -547,49 +542,34 @@ export function SceneBoard({
           );
         })}
 
-        {/* The windows the space carries, painted on the shell at the place their own camera's entity stands: a
-            window is a patch of the surface, so it goes round with the space and one behind the pilot is off the
-            frame rather than folded onto it. Drawn over the marks, because a thing whose view is on the screen is a
-            thing that has been asked about.
+        {/* The windows the space carries, painted on the shell at the place their own entity stands: a window is a
+            patch of the surface, so it goes round with the space and one behind the pilot is off the frame rather
+            than folded onto it. Drawn over the marks, because a thing whose view is on the screen is a thing that has
+            been asked about.
 
-            A folded window keeps its picture running with nothing of it drawn. What the pilot put away is the view
-            and not the camera, so the camera carries on watching, and a camera that stopped the moment its window
-            was folded would be the interface deciding what the space is doing. It is also the only thing that knows
+            What is painted is the kind's own, and the frame paints whatever the kind it was declared as supplied. A
+            folded window keeps its picture running with nothing of it drawn. What the pilot put away is the view and
+            not the camera, so the camera carries on watching, and a camera that stopped the moment its window was
+            folded would be the interface deciding what the space is doing. It is also the only thing that knows
             whether its own medium is running, which is what the icon it becomes says. Nothing is uploaded for a
             picture nothing is drawn with, so what a folded window costs is the decode. */}
         {places.map((each) => {
-          if (each.source.kind !== 'media') return null;
+          const Paint = viewKindOf(each.source.kind)?.Paint;
+          if (!Paint) return null;
           return (
-            <ViewPatch
+            <Paint
               key={each.id}
-              camera={each.source}
+              id={each.id}
+              source={each.source}
               bearing={each.place}
               cells={each.cells}
               lead={each.lead}
               hidden={each.view.folded}
               order={each.view.z}
-            />
-          );
-        })}
-
-        {/* A map is ground the window carries, and it is painted by the same patch the footage is: the window's kind
-            decides what its pixels are, never where it stands. The map keeps its own camera and is drawn once at a
-            fixed size, so the patch scales it as the window is sized. */}
-        {places.map((each) => {
-          if (each.source.kind !== 'map' || !place.geo) return null;
-          return (
-            <MapPatch3D
-              key={`map3d-${each.id}`}
-              id={each.id}
-              bearing={each.place}
-              cells={each.cells}
-              lead={each.lead}
-              hidden={each.view.folded}
               world={world}
               place={place}
               pickedId={pickedId}
               tone={tone}
-              order={each.view.z}
             />
           );
         })}
@@ -624,23 +604,26 @@ export function SceneBoard({
           if (!turned.current) onOpenProject(id);
         }}
       />
-      {/* The map windows the space carries. A place with a geography is painted on the shell by `MapPatch3D`, so all
-          the page owes it is its toolbar. A place that declares none keeps the page's own plane, which is not on the
-          shell and so is drawn here. A map the frame holds none of is not drawn: its icon is the whole of it that is on
-          the board, and a screen at the whole box would stand over the panels beside it. */}
+      {/* What the page owes a window that the shell cannot draw: a toolbar for a picture painted on the shell, or the
+          whole picture for a place whose ground is not. The kind decides which, because it is the kind that knows
+          whether its picture is a texture and where its ground comes from. A window the frame holds none of is not
+          drawn: its icon is the whole of it that is on the board, and a screen at the whole box would stand over the
+          panels beside it. */}
       {places.map((each) => {
-        if (each.source.kind !== 'map' || each.view.folded || !each.box) return null;
+        const Layer = viewKindOf(each.source.kind)?.Page;
+        if (!Layer || each.view.folded || !each.box) return null;
         const at = clipped(each.box, size);
         if (!at) return null;
-        if (place.geo) return <MapTools key={`map-tools-${each.id}`} id={each.id} at={at} />;
         return (
-          <MapPatch
-            key={`map-${each.id}`}
+          <Layer
+            key={`page-${each.id}`}
+            id={each.id}
             at={at}
             world={world}
             place={place}
             pickedId={pickedId}
             onPick={onPick}
+            tone={tone}
           />
         );
       })}
@@ -735,73 +718,6 @@ function ViewControls({ hasMedia }: { hasMedia: boolean }) {
           </div>
         ) : null}
       </div>
-    </div>
-  );
-}
-
-/**
- * A map window's toolbar, which is a thing of the page because a button cannot be a texture.
- *
- * The map itself is painted on the shell (`MapPatch3D`), so its camera belongs to that component; this asks for it by
- * the window's own name. The buttons stand at the window's own corner, over the ground they change, and a press on one
- * is not a press on the space.
- */
-function MapTools({ id, at }: { id: string; at: FrameBox }) {
-  const act = (run: (controls: MapWindowControls) => void) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    const controls = mapWindowOf(id);
-    if (controls) run(controls);
-  };
-  const tool =
-    'pointer-events-auto flex size-6 items-center justify-center rounded-sm border border-border/70 bg-card/85 ' +
-    'text-muted-foreground transition-colors hover:text-foreground';
-  return (
-    <div
-      data-region="map-tools"
-      className="absolute z-[75] flex flex-col gap-1"
-      style={{ left: at.left + at.width - 30, top: at.top + 6 }}
-      onPointerDown={(event) => event.stopPropagation()}
-    >
-      <button type="button" title="zoom in" className={tool} onClick={act((controls) => controls.zoomIn())}>
-        <Plus className="size-3.5" />
-      </button>
-      <button type="button" title="zoom out" className={tool} onClick={act((controls) => controls.zoomOut())}>
-        <Minus className="size-3.5" />
-      </button>
-      <button type="button" title="fit the place" className={tool} onClick={act((controls) => controls.home())}>
-        <LocateFixed className="size-3.5" />
-      </button>
-    </div>
-  );
-}
-
-/**
- * The plane a map window carries for a place that declares no geography.
- *
- * This is the fallback and not the map: a place with a geography is painted on the shell. A place with no box keeps its
- * own plane, which is the picture every project had before a place could have a location, so the window is still a
- * picture of where things stand rather than a control that does nothing.
- */
-function MapPatch({
-  at,
-  world,
-  place,
-  pickedId,
-  onPick,
-}: {
-  at: FrameBox;
-  world: World;
-  place: Place;
-  pickedId: string | null;
-  onPick: (id: string) => void;
-}) {
-  return (
-    <div
-      data-region="map-patch"
-      className="pointer-events-none absolute z-[70] overflow-hidden rounded-[2px]"
-      style={{ left: at.left, top: at.top, width: at.width, height: at.height }}
-    >
-      <PlaneMap world={world} place={place} pickedId={pickedId} onPick={onPick} preview />
     </div>
   );
 }

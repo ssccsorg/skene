@@ -29,5 +29,7 @@ export { registerInstrument } from './lib/instruments';
 export { useScenario } from './stores/scenario';
 export { useRecords } from './stores/records';
 
-// The frame's own readings register themselves when their modules are imported, which is the whole of the native pack.
+// The kinds and readings the frame ships register themselves when their modules are imported: the kinds are the two
+// first-party libraries over the core, and the readings are the whole of the native pack.
+import './kinds';
 import './views';

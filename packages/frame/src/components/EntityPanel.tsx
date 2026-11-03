@@ -8,11 +8,11 @@ import { useAsks } from '../hooks/useAsks';
 import { wordsOf } from '../lib/interface';
 import { memberOf, partsOf } from '../lib/kinds';
 import { lineOf, ownView } from '../lib/world';
-import type { Entry, MediaView, Place, World } from '@ssccsorg/skene-kernel';
+import type { Entry, Place, World } from '@ssccsorg/skene-kernel';
 import { cn } from '../lib/utils';
+import { viewKindOf } from '../lib/view-kinds';
 import { Battery } from './Battery';
 import { Glyph } from './Glyph';
-import { MediaThumb } from './MediaThumb';
 
 // The members the space stands, read whole: what each of them is, whether it is at work, where the place stands
 // it, how much its own store holds, what it can be asked to do and which of the three it is.
@@ -190,9 +190,11 @@ export function EntityPanel({
           {shown.map((unit) => {
           const last = lastOf[unit.id] ?? null;
           const [x, y] = unit.ground;
-          // The member's own eye, when it carries one: the row says that this member is looking at something. A member
-          // with two cameras stands the first of them here, and both are rows of its own panel.
-          const eye = ownView(place, unit).views.find((view): view is MediaView => view.kind === 'media');
+          // What the member presents as a mark, when any of its views declares one: the row says that this member is
+          // looking at something without the row knowing which kinds have a picture. A member with two of them stands
+          // the first here, and both are rows of its own panel.
+          const presented = ownView(place, unit).views.find((view) => viewKindOf(view.kind)?.Thumb);
+          const Thumb = presented ? viewKindOf(presented.kind)?.Thumb : undefined;
           // What the member says about itself beyond its kind, read from its own declaration.
           const charge = chargeOf(place, unit);
           return (
@@ -234,7 +236,7 @@ export function EntityPanel({
                   {charge ? <Battery charge={charge} /> : null}
                 </span>
               </button>
-                {eye ? <MediaThumb id={eye.id} src={eye.src} className="mr-1" /> : null}
+                {presented && Thumb ? <Thumb id={presented.id} src={'src' in presented ? (presented.src ?? '') : ''} className="mr-1" /> : null}
                 <Hint label={unit.id === pickedId && folded !== unit.id ? 'fold' : 'open'}>
                   <button
                     type="button"

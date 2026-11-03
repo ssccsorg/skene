@@ -1,22 +1,24 @@
-import type { ComponentType } from 'react';
-import { Frame, MapPin, Move, Video } from 'lucide-react';
 import type { Camera, DeclaredView, UnitView, ViewStatus } from '@ssccsorg/skene-kernel';
+import { defaultViewKind, viewKindOf } from './view-kinds';
 
-/** The kinds a view can be, which are the kinds the content table has a renderer for. */
-export type ViewKind = UnitView['kind'];
+/**
+ * The kinds a view can be.
+ *
+ * It is a string and not a union, which is the one cost of a kind declaring itself: TS cannot enumerate the modules that
+ * registered. What replaces the union is that the name is asked of the register and not written down here, so a kind a
+ * deployment installs is a kind this frame draws.
+ */
+export type ViewKind = string;
 
 /**
  * What a window on the shell shows.
  *
- * A window is one abstraction with the contents the frame knows: a camera's picture, a member's place on the earth, the
- * place being chosen, and a view this build cannot draw. They share everything the frame does to a window (where it
- * stands, how large it is, whether it is folded, which pin is in front), and they differ only in what is inside it and
- * which word its mark carries.
+ * A window is one abstraction with the contents a kind supplies: the frame holds where it stands, how large it is, whether
+ * it is folded and which pin is in front, and a kind says what is inside it and which word its mark carries. `edit` is a
+ * window the frame opens for itself, so it has no registered kind and no picture.
  *
- * A view kind is what a place may declare; `edit` is a window the frame opens for itself, so it has no view variant.
- * Keeping the kind here rather than in the store or the layer is what lets the record's editor become a window without
- * changing what a window is. A kind a newer place writes and this build does not know is `unknown`, which draws the
- * name and says the frame cannot show it rather than guessing at a picture.
+ * A kind a newer place writes and this build does not know is `unknown`, which draws the name and says the frame cannot
+ * show it rather than guessing at a picture.
  */
 export type WindowKind = ViewKind | 'edit';
 
@@ -32,24 +34,14 @@ export interface ShellWindow {
   title: string;
 }
 
-/** What each kind is called and drawn by, in one table so a mark and a handle cannot name it two ways. */
-export const WINDOW_KINDS: Record<WindowKind, { label: string; Icon: ComponentType<{ className?: string }> }> = {
-  media: { label: 'video', Icon: Video },
-  // A map here is ground the place declares and not the minimap the frame draws around the pilot, so its mark is a
-  // pin on that ground rather than a folded sheet.
-  map: { label: 'map', Icon: MapPin },
-  edit: { label: 'place', Icon: Move },
-  unknown: { label: 'view', Icon: Frame },
-};
-
 /** One window, named by what it shows rather than by a second constructor for each kind. */
 export function windowOf(kind: WindowKind, id: string, origin: string, title?: string): ShellWindow {
   return { id, kind, origin, title: title ?? id };
 }
 
-/** The window a camera is: the media kind, carried by the entity that declares it. */
+/** The window a camera is: its own kind's window, carried by the entity that declares it. */
 export function windowOfCamera(camera: Camera): ShellWindow {
-  return windowOf('media', camera.id, camera.origin, camera.id);
+  return windowOf(camera.kind, camera.id, camera.origin, camera.id);
 }
 
 /**
@@ -91,69 +83,42 @@ export function statusWith(view: { status?: string }, running: boolean | undefin
 }
 
 /**
- * The kind a window was opened with, and media when an older window was kept without one.
+ * The kind a window was opened with, and the default kind when an older window was kept without one.
  *
- * The store is written to the browser and a window kept before this field existed has no kind; a reader that treated
- * the missing value as an unknown window would drop a picture the pilot had placed. A kind the place writes and this
- * build does not know is `unknown`, so a newer view is named rather than misread as a picture.
+ * The store is written to the browser and a window kept before the kind was declared has none; a reader that treated the
+ * missing value as an unknown window would drop a picture the pilot had placed. The default is a fact of the kind that
+ * asks to be it, not a word here: the frame does not know which of its kinds was once the only one. A kind the place
+ * writes and this build does not know is `unknown`, so a newer view is named rather than misread as a picture.
  */
-export function kindOf(kind: string | undefined): WindowKind {
-  if (!kind) return 'media';
-  return Object.prototype.hasOwnProperty.call(WINDOW_KINDS, kind) ? (kind as WindowKind) : 'unknown';
+export function kindOf(kind?: string): WindowKind {
+  // The editor is the frame's own window and not a place's view, so it has no registered kind and is still a kind.
+  if (kind === 'edit') return 'edit';
+  const named = kind ?? defaultViewKind();
+  if (!named) return 'unknown';
+  return viewKindOf(named) ? named : 'unknown';
 }
 
 /**
  * One view as a place writes it, read into the kind this build can draw.
  *
- * This is the only place a declaration becomes a `UnitView`, so the store's old data, a place's new kind and a kind
- * this build has never heard of are read once and alike. Absent kind is media, because that is what every place wrote
- * before a view had a kind. A kind with no renderer becomes `unknown` and keeps its name and source, so the panel can
- * say what it is; a media view with no bytes has nothing to draw, so it becomes `unknown` too rather than a blank
- * picture.
+ * This is the only place a declaration becomes a `UnitView`, so the store's old data, a place's new kind and a kind this
+ * build has never heard of are read once and alike. The reading itself is the kind's own: a kind that knows the
+ * declaration returns the view, and one that does not is named rather than guessed at, so a media view with no bytes and
+ * a kind this build has never heard of are both `unknown` and both keep the name the place wrote.
  */
 export function readView(declared: DeclaredView): UnitView {
   const kind = kindOf(declared.kind);
-  const status = statusOf(declared);
-  const when = { from: declared.from, to: declared.to };
-  if (kind === 'media' && declared.src) {
-    // A medium and a projection this build does not know are left out rather than guessed at: the medium then falls back
-    // to the source's name and the projection to a flat frame.
-    const medium = declared.medium === 'image' || declared.medium === 'video' ? declared.medium : undefined;
-    // The renderer names the projection `spatial`; the spellings a spatial device is commonly declared with are read into
-    // the same value so a 360 camera does not have to be rewritten before this build can hold it.
-    const spatial =
-      declared.projection === 'spatial' ||
-      declared.projection === '360' ||
-      declared.projection === 'equirectangular';
-    const projection = spatial ? 'spatial' : undefined;
-    return {
-      id: declared.id,
-      kind,
-      src: declared.src,
-      cells: declared.cells,
-      status,
-      ...(medium ? { medium } : {}),
-      ...(projection ? { projection } : {}),
-      ...when,
-    };
-  }
-  if (kind === 'map') {
-    return {
-      id: declared.id,
-      kind,
-      cells: declared.cells,
-      status,
-      ...(declared.scope === 'place' ? { scope: 'place' as const } : {}),
-      ...when,
-    };
-  }
+  const read = viewKindOf(kind)?.read;
+  const view = read?.(declared) ?? null;
+  if (view) return view;
   return {
     id: declared.id,
     kind: 'unknown',
-    declared: declared.kind ?? 'media',
+    declared: declared.kind ?? kind,
     src: declared.src,
     cells: declared.cells,
-    status,
-    ...when,
+    status: statusOf(declared),
+    from: declared.from,
+    to: declared.to,
   };
 }

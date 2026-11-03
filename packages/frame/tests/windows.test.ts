@@ -6,8 +6,8 @@
 
 import { beforeEach, expect, test } from 'vitest';
 import type { DeclaredView } from '@ssccsorg/skene-kernel';
-import { VIEW_STATUS, WINDOW_KINDS, kindOf, readView, statusOf, statusWith, windowOf, windowOfCamera } from '@/lib/windows';
-import { VIEW_CONTENT } from '@/properties/ViewContent';
+import { VIEW_STATUS, kindOf, readView, statusOf, statusWith, windowOf, windowOfCamera } from '@/lib/windows';
+import { UNKNOWN_KIND, viewKindOf, viewKinds } from '@/lib/view-kinds';
 import { useViews } from '@/stores/views';
 
 const camera = {
@@ -23,8 +23,8 @@ beforeEach(() => {
 });
 
 test('every kind of window is one window with a word and a glyph', () => {
-  expect(Object.keys(WINDOW_KINDS).sort()).toEqual(['edit', 'map', 'media', 'unknown']);
-  for (const kind of Object.values(WINDOW_KINDS)) {
+  expect(viewKinds().map((kind) => kind.kind).sort()).toEqual(['map', 'media']);
+  for (const kind of [...viewKinds(), UNKNOWN_KIND]) {
     expect(kind.label).toBeTruthy();
     expect(kind.Icon).toBeTruthy();
   }
@@ -33,7 +33,7 @@ test('every kind of window is one window with a word and a glyph', () => {
 test('a kind this build does not know is named rather than guessed', () => {
   expect(kindOf(undefined)).toBe('media');
   expect(kindOf('chart')).toBe('unknown');
-  expect(WINDOW_KINDS.unknown.label).toBe('view');
+  expect(UNKNOWN_KIND.label).toBe('view');
 });
 
 test('a camera is a media window of the member that carries it', () => {
@@ -127,13 +127,13 @@ test('a kind this build cannot draw is kept rather than dropped or misread', () 
   expect(readView({ id: 'camera-2', cells: [1, 1] })).toMatchObject({ kind: 'unknown', declared: 'media' });
 });
 
-test('every kind a view can be has a body, so a kind the union names cannot draw nothing', () => {
-  // The table is keyed by the union, so the compiler asks for a body when a kind is added. This holds the same answer
-  // where the panel reads it, because a kind whose body is missing would be a row with an empty fold.
-  expect(Object.keys(VIEW_CONTENT).sort()).toEqual(['map', 'media', 'unknown']);
-  for (const kind of Object.keys(VIEW_CONTENT)) {
-    expect(VIEW_CONTENT[kind as keyof typeof VIEW_CONTENT]).toBeTypeOf('function');
+test('a kind that reads a view draws its row, so a registered kind cannot fold to nothing', () => {
+  // The register is the answer the panel reads, and a kind that reads a declaration without a body would be a row with an
+  // empty fold. A kind this build does not hold is named by the panel instead, which is what the unknown entry is for.
+  for (const kind of viewKinds().filter((each) => each.read)) {
+    expect(kind.Row, `${kind.kind} reads a view and draws no body`).toBeTypeOf('function');
   }
+  expect(viewKindOf('chart')).toBeUndefined();
 });
 
 test('the store keeps the kind a window was opened with, and media when none is said', () => {

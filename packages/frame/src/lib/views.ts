@@ -425,14 +425,15 @@ export function clearOffset(
 }
 
 /**
- * Where a window stands before the pilot moves it: over the entity that carries it, except a map of the whole place.
+ * Where a window stands before the pilot moves it: over the entity that carries it, or over the place.
  *
- * A map of the place is about the ground and every unit on it, so it stands over the place rather than over the
- * carrier: anchored on a drone it would cover the drone's own footage and show the site from off its middle. The
- * carrier is still what the window belongs to, and still where the line back to it lands.
+ * A window of the whole ground is about every unit on it, so it stands over the place rather than over its carrier:
+ * anchored on a drone it would cover the drone's own footage and show the site from off its middle. The carrier is still
+ * what the window belongs to, and still where the line back to it lands. Whether a window is of that kind is the kind's
+ * own declaration, so this takes the answer rather than reading a name here.
  */
-export function anchorOf(source: { kind: string; scope?: string }, carried: Bearing, centre: Bearing): Bearing {
-  return source.kind === 'map' && source.scope === 'place' ? centre : carried;
+export function anchorOf(carried: Bearing, centre: Bearing, overPlace: boolean): Bearing {
+  return overPlace ? centre : carried;
 }
 
 /**
