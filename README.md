@@ -34,6 +34,27 @@ substrate's own record, in whichever perspective a project asks for.
 
 The frame ships no picture. A deployment with no footage carries neither a video element nor its sampler; one with no map carries no map library; one that opens on a table carries no three.js scene.
 
+## Layers
+
+The dependency direction is one way, and each layer answers one kind of question.
+
+| Layer | Package | Answers | May import |
+|:---|:---|:---|:---|
+| foundation | [kernel](packages/kernel/src/index.ts) | what a fact, an intent and a hint are | nothing |
+| kit | [ui](packages/ui/src/index.ts) | how a primitive looks, and what chrome is called | kernel |
+| geometry | [board](packages/board/src/index.ts) | where a payload stands on the shell | kernel, ui |
+| pane | [frame](packages/frame/src/index.ts) | how a window, a panel, a register and a host fit together | kernel, ui, board |
+| pictures | [view-media](packages/view-media/src/index.ts), [view-map](packages/view-map/src/index.ts), [view-shell](packages/view-shell/src/index.ts), [view-graph](packages/view-graph/src/index.ts) | one perspective each, installed by import | the packages it draws with |
+
+A row imports only the rows above it. A new picture is a new row, and no existing row changes.
+
+| Boundary | Held by |
+|:---|:---|
+| the kernel imports nothing outside itself | `assembly` job |
+| the board imports no frame | `assembly` job |
+| the frame imports no view package | `assembly` job |
+| a deployment imports every picture its board names | [pictures.test.ts](examples/board/tests/pictures.test.ts) |
+
 ## Consuming
 
 ```bash
@@ -101,7 +122,7 @@ The example is one project, one run, one place, and three chains in the three st
 | Job | Holds |
 |:---|:---|
 | `package` matrix | one job a package: typecheck, then tests; `board` and `frame` also hold a coverage floor |
-| `assembly` | every workspace resolves; the kernel imports nothing outside itself; the board imports no frame; the frame imports no view package |
+| `assembly` | every workspace resolves, and the boundary table above is checked as text |
 | `example` | the deployment's own assertions, and a build that carries its board |
 
 ```bash
