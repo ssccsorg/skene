@@ -124,21 +124,31 @@ packages/frame/tools/shot.mjs   the screenshot tool, installed as `skene-shot`
 examples/board/      the smallest deployment: a brand, a board, one run
 ```
 
-## Consuming it before it is published
+## Consuming it
 
-A deployment quotes the local path and dedupes React, because the frame resolves its own
-dependencies from this checkout and the deployment has its own copy:
+A deployment clones this repository beside its own and quotes a path into it, which needs no registry:
+
+```bash
+git clone --depth 1 https://github.com/ssccsorg/skene ../skene
+```
 
 ```json
-"@ssccsorg/skene-frame": "file:../../skene/packages/frame"
+"@ssccsorg/skene-frame": "file:../skene/packages/frame"
 ```
+
+The path is relative to the deployment's own manifest, so it gains a `../` for every directory the
+manifest sits below its repository root (`es` writes `../../skene`, `kletos` writes `../../../skene`).
+
+A linked checkout resolves the frame's imports from the deployment's tree only while the link keeps its
+own name, so a deployment sets it:
 
 ```ts
-// vite.config.ts
-resolve: { dedupe: ['react', 'react-dom'] }
+// vite.config.ts and tsconfig.json
+resolve: { preserveSymlinks: true }
 ```
 
-A published package replaces the path with a version and the dedupe becomes unnecessary.
+An installed package replaces both the path and the setting with a version range and
+`resolve: { dedupe: ['react', 'react-dom'] }`.
 
 ## Status
 
