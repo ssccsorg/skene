@@ -12,7 +12,7 @@ import { Button } from '@ssccsorg/skene-frame/components/ui/button';
 import { Hint } from '@ssccsorg/skene-frame/components/ui/hint';
 import { CONTROL } from '@ssccsorg/skene-frame/lib/chrome';
 import { cn } from '@ssccsorg/skene-frame/lib/utils';
-import { useSurfaceForward } from '@ssccsorg/skene-frame/hooks/useSurfaceForward';
+import { useSurfaceForward } from './useSurfaceForward';
 
 export function Forward({ origin, where }: { origin: string; where: 'row' | 'handle' }) {
   const forward = useSurfaceForward();

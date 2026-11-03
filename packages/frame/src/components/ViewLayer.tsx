@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ChevronDown, MoveDiagonal2, X } from 'lucide-react';
 import { aimAt, shellAt, type View as Look } from '../lib/board';
-import { standing, viewsOf } from '../lib/cameras';
+import { standing, viewsOf } from '../lib/carried';
 import { kindOf } from '../lib/windows';
 import { UNKNOWN_KIND, viewKindOf } from '../lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';

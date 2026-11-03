@@ -3,7 +3,7 @@
 
 import { CELLS_TALL, between, cellOf, centreOf, type Extent } from '@ssccsorg/skene-kernel';
 import { FACT, HINT, INTENT, actors, chainFor, entityOf, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
-import { camerasIn, viewsIn } from './cameras';
+import { fillsIn, viewsIn } from './carried';
 import { propertiesOf } from './kinds';
 import { readView } from './windows';
 import { sectorOf } from './board';
@@ -393,7 +393,7 @@ export function worldOf(
     here,
     before,
     records,
-    cameras: camerasIn(place, now),
+    fills: fillsIn(place, now),
     views: viewsIn(place, now),
     standing,
     present,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { frameAddress } from '@/lib/still';
+import { frameAddress } from '../src/still';
 
 // A still is the address asked again, and the counter it carries is what makes an answer a new
 // picture. The address a device hands the app already has its token in a query, so the counter is

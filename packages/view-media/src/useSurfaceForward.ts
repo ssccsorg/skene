@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useReadings } from '../lib/readings';
-import { useFrame } from '../stores/frame';
-import { useScenario } from '../stores/scenario';
-import { useSelection } from '../stores/selection';
-import { useSurface } from '../stores/surface';
+import { useReadings } from '@ssccsorg/skene-frame/lib/readings';
+import { useFrame } from '@ssccsorg/skene-frame/stores/frame';
+import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
+import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
+import { useSurface } from './surface-store';
 
 // Send a media item to the shell.
 //

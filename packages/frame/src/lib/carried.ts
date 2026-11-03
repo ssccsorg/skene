@@ -13,8 +13,9 @@
 // The space knows nothing else about a view. Where its window stands is its origin's own place, how large it is is the
 // view's own declaration, and a window the pilot has moved belongs to the window and not to the view.
 
-import type { Camera, CarriedView, Place } from '@ssccsorg/skene-kernel';
+import type { CarriedView, Place } from '@ssccsorg/skene-kernel';
 import { readView } from './windows';
+import { viewKindOf } from './view-kinds';
 
 /**
  * Every view a place declares that stands at a time in the run, read into what this build can draw, each with the unit
@@ -30,14 +31,14 @@ export function viewsIn(place: Place, at = Number.POSITIVE_INFINITY): CarriedVie
 }
 
 /**
- * Every camera a place declares: the footage the shell draws as a patch, each one with the unit that carries it.
+ * Every view a place declares whose kind fills the room's surface, each one with the unit that carries it.
  *
- * A view of another kind is carried all the same, and the panel draws it where the member's own attributes are read
- * (`ownView`). A camera is the footage the shell paints on a patch; a map is carried the same way and drawn by the page
- * over the shell, which is why the window list reads every view (`world.views`) and the patch list reads the media.
+ * Whether a kind fills the surface is the kind's own declaration, so the frame holds the list and not the word: a
+ * deployment's kind that fills the room is in it, and a view of any other kind is carried all the same and drawn where
+ * the member's own attributes are read.
  */
-export function camerasIn(place: Place, at = Number.POSITIVE_INFINITY): Camera[] {
-  return viewsIn(place, at).filter((view): view is Camera => view.kind === 'media');
+export function fillsIn(place: Place, at = Number.POSITIVE_INFINITY): CarriedView[] {
+  return viewsIn(place, at).filter((view) => viewKindOf(view.kind)?.fills);
 }
 
 /** Whether a view stands in the space as an entity of its own, rather than being carried inside another. */
@@ -50,12 +51,3 @@ export function viewsOf(views: CarriedView[], origin: string): CarriedView[] {
   return views.filter((view) => view.origin === origin);
 }
 
-/** The camera a window is named for, which is how a window's id is read back into the space. */
-export function cameraOf(cameras: Camera[], id: string): Camera | undefined {
-  return cameras.find((camera) => camera.id === id);
-}
-
-/** Every camera one entity carries, which is the list an entity-to-window reading has to be asked for. */
-export function camerasOf(cameras: Camera[], origin: string): Camera[] {
-  return cameras.filter((camera) => camera.origin === origin);
-}

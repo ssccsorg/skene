@@ -6,6 +6,8 @@
 
 import { Video } from 'lucide-react';
 import { Forward } from './Forward';
+import { MediaSurface } from './MediaSurface';
+import { SurfaceControl } from './SurfaceControl';
 import { MediaThumb } from './MediaThumb';
 import { ViewPatch } from './ViewPatch';
 import { registerViewKind, type WindowPaint, type WindowRow } from '@ssccsorg/skene-frame/lib/view-kinds';
@@ -86,6 +88,9 @@ export const MEDIA = registerViewKind({
   Row: MediaBody,
   Thumb: MediaThumb,
   Forward,
+  fills: true,
+  Surface: MediaSurface,
+  SurfaceControl,
   // The picture fills the box a footage view declares, so the pilot's cell round it would stand away from its own edge.
   edge: false,
   // A place written before a view had a kind wrote footage, so this is what an absent kind is read as.

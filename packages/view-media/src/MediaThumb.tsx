@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { FRAME_RATE, feedFrames } from '@ssccsorg/skene-frame/lib/still';
+import { FRAME_RATE, feedFrames } from './still';
 import { cn } from '@ssccsorg/skene-frame/lib/utils';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';
 

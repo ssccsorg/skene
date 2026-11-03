@@ -37,7 +37,6 @@ test('every persisted store reaches its key through the one function that names 
     'stores/scenario.ts',
     'stores/selection.ts',
     'stores/sizes.ts',
-    'stores/surface.ts',
     'stores/views.ts',
   ]);
   // One store reads its key in two places, so it holds it in a constant rather than spelling it twice.

@@ -593,8 +593,13 @@ export interface World {
   here: SceneKey;
   before: SceneKey;
   records: Point[];
-  /** Every camera the place declares, each one with the unit that carries it. */
-  cameras: Camera[];
+  /**
+   * The views whose kind fills the room's surface, each one with the unit that carries it.
+   *
+   * It is the place's own declaration filtered by what each kind says it can fill: the frame holds the list and a kind
+   * decides whether its views are in it, so the room's inside is not a word the frame knows.
+   */
+  fills: CarriedView[];
   /**
    * Every view the place declares, each one with the unit that carries it.
    *

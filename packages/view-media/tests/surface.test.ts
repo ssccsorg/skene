@@ -1,9 +1,10 @@
+import { readFileSync } from 'node:fs';
 // The surface is one picture with layouts: the tests hold the layouts, the observer rule, and the media declaration
 // that tells a flat camera from a still or a spatial feed.
 
 import { expect, test } from 'vitest';
-import { mediumOf, slotsOf, surfaceMedia } from '@/lib/surface';
-import { useSurface } from '@/stores/surface';
+import { mediumOf, slotsOf, surfaceMedia } from '../src/surface';
+import { useSurface } from '../src/surface-store';
 import type { Camera } from '@ssccsorg/skene-kernel';
 
 const camera = (id: string, origin: string, src = '/media/robot_1.mp4'): Camera => ({
@@ -74,4 +75,9 @@ test('a still is read from its declaration or its source name', () => {
   expect(mediumOf(camera('still', 'unit', '/media/villa.png'))).toBe('image');
   expect(mediumOf(camera('video-with-png-name', 'unit', '/media/clip.png'))).toBe('image');
   expect(mediumOf({ ...camera('declared', 'unit', '/media/clip.png'), medium: 'video' })).toBe('video');
+});
+
+test('the store is remembered under the package, by the one rule that names a key', () => {
+  const source = readFileSync(new URL('../src/surface-store.ts', import.meta.url), 'utf8');
+  expect(source, 'the key is reached through the one function that names it').toContain("storageName('surface')");
 });

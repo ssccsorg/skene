@@ -121,7 +121,8 @@ packages/kernel/      the contracts and the logic that answers without a browser
                       scenarios, campaigns, and the pack rule. No React, no DOM, no renderer
 packages/frame/       the frame: src/, tokens.css, index.ts, built on the kernel
 packages/frame/tools/ the board-carrying build plugin a deployment's vite config imports
-packages/view-media/  footage as a window kind: the picture, the member's row and the surface control
+packages/view-media/  footage as a window kind: the picture, the surface it fills, the member's row and the
+                      control that fills the surface
 examples/board/       the smallest deployment: a brand, a board, one run, and its own tests
 ```
 

@@ -118,6 +118,17 @@ export interface ViewKind {
    * is and how a picture is sent to it is the kind's answer. A kind with no surface supplies none.
    */
   Forward?: ComponentType<{ origin: string; where: 'row' | 'handle' }>;
+  /** Whether this kind's views fill the room's surface. */
+  fills?: boolean;
+  /**
+   * The picture that fills the room's surface, when this kind has one.
+   *
+   * The board hands it the space and the observer and draws whatever it returns, so the surface's own layout and rate are
+   * the kind's and a board with no such kind draws a room with nothing inside it.
+   */
+  Surface?: ComponentType<{ world: World; pickedId: string | null }>;
+  /** How the surface is filled: the control the board's column carries, when the kind has a surface to fill. */
+  SurfaceControl?: ComponentType<{ world: World; pickedId: string | null }>;
   /**
    * Whether this kind can draw a member's own position.
    *

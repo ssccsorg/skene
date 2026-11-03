@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { SurfaceMode } from '../lib/surface';
-import { storageName } from '../lib/persist';
+import type { SurfaceMode } from './surface';
+import { storageName } from '@ssccsorg/skene-frame/lib/persist';
 
 // How the shell surface is filled, which is the pilot's viewing choice rather than the place's declaration.
 //

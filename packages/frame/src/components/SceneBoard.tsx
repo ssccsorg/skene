@@ -1,32 +1,27 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Columns2, Crosshair, EyeOff, Grid2x2, Minus, Plus, Tv } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Crosshair, Minus, Plus } from 'lucide-react';
 import * as THREE from 'three';
 import { DIM, GRATICULE, LEVEL, aimAt, blackboardInk, fitView, forwardOf, liftOf, orbitalAt, placed, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '../lib/board';
 import { dashes, dotTexture, line, ring, segments } from '../lib/board-geometry';
-import { SURFACE_MODES, surfaceMedia } from '../lib/surface';
 import { routeOf, writerOf } from '../lib/world';
 import { graphOf } from '../lib/graph';
-import { useMenu } from '../hooks/useMenu';
 import { useUnitMarks } from '../hooks/useUnitMarks';
 import { useViewPlaces } from '../hooks/useViewPlaces';
 import { useDrawing } from '../stores/drawing';
 import { useFrame as useFrameStore } from '../stores/frame';
 import { useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
-import { useSurface } from '../stores/surface';
 import { useView } from '../stores/view';
 import type { NodeKind, Place, World } from '@ssccsorg/skene-kernel';
 import { clipped } from '../lib/views';
 import type { Neighbour } from '../lib/world';
-import { cn } from '../lib/utils';
-import { viewKindOf } from '../lib/view-kinds';
+import { viewKindOf, viewKinds } from '../lib/view-kinds';
 import { Hint } from './ui/hint';
 import { BoardOverlay } from './BoardOverlay';
 import { CockpitFrame } from './CockpitFrame';
 import { FieldRegion } from './FieldRegion';
 import { GroupMark } from './GroupMark';
-import { SphereSurface } from './SphereSurface';
 import { Unit } from './Unit';
 import { ViewLayer } from './ViewLayer';
 
@@ -397,10 +392,10 @@ export function SceneBoard({
   }, [world, neighbours, ink, aspect, sector, centre, arrival, wires]);
 
   const { lastOf, working, tints } = useUnitMarks(world, pickedId, ink);
-  const surface = useSurface((store) => store.mode);
-  // The media the surface is read through. A picked entity with its own cameras is the observer, so the room can be a
-  // drone's or a satellite's cockpit; an entity with none leaves the surface reading the run's active media.
-  const media = useMemo(() => surfaceMedia(world.cameras, pickedId), [world.cameras, pickedId]);
+  // The kind that fills the room, when this build holds one. Which picture the surface is, and which views fill it, is
+  // that kind's declaration: the board hands over the space and the observer and draws what comes back.
+  const Surface = viewKinds().find((kind) => kind.Surface)?.Surface;
+  const SurfaceControl = viewKinds().find((kind) => kind.SurfaceControl)?.SurfaceControl;
   // Where the views stand, read once for both of their renderers: the canvas draws the pictures and the page
   // over it draws the bars and the press targets.
   const places = useViewPlaces(world, size);
@@ -454,7 +449,7 @@ export function SceneBoard({
 
         {/* The room's own media, painted on the inside of the shell under the cage and every mark. The layout is the
             surface's and the media are the place's, so a drone's cameras can be the room without a second reading. */}
-        {surface !== 'off' && media.length ? <SphereSurface media={media} mode={surface} /> : null}
+        {Surface ? <Surface world={world} pickedId={pickedId} /> : null}
 
         {/* The fields themselves, as the zones their places take on the shell: the open one lit and the
             others at the weight of context. Drawn first, under everything, because they are the ground the
@@ -628,7 +623,7 @@ export function SceneBoard({
         );
       })}
       <ViewLayer places={places} views={world.views} tints={tints} onPick={onPick} size={size} />
-      <ViewControls hasMedia={media.length > 0} />
+      <ViewControls surface={SurfaceControl ? <SurfaceControl world={world} pickedId={pickedId} /> : null} />
     </div>
   );
 }
@@ -640,16 +635,10 @@ export function SceneBoard({
  * the bar: a control about what is inside the board is read with the board. A press here is not a press on the space, so
  * it does not reach the board's own drag.
  */
-function ViewControls({ hasMedia }: { hasMedia: boolean }) {
+function ViewControls({ surface }: { surface?: ReactNode }) {
   const release = useView((state) => state.release);
   const zoom = useView((state) => state.zoom);
   const held = useView((state) => state.held);
-  const surface = useSurface((state) => state.mode);
-  const setSurface = useSurface((state) => state.setMode);
-  const [menu, setMenu, menuBox] = useMenu();
-  const SurfaceIcon =
-    surface === 'single' ? Tv : surface === 'split' ? Columns2 : surface === 'grid' ? Grid2x2 : EyeOff;
-  const surfaceName = surface === 'single' ? 'full' : surface;
   const tool =
     'pointer-events-auto flex size-6 items-center justify-center rounded-sm border border-border/70 bg-card/85 ' +
     'text-muted-foreground transition-colors hover:text-foreground disabled:cursor-default disabled:opacity-40';
@@ -674,50 +663,7 @@ function ViewControls({ hasMedia }: { hasMedia: boolean }) {
           <Crosshair className="size-3.5" />
         </button>
       </Hint>
-      <div ref={menuBox} className="relative">
-        <Hint label={`surface: ${surfaceName}`}>
-          <button
-            type="button"
-            data-region="surface-mode"
-            data-on={surface !== 'off'}
-            className={tool}
-            disabled={!hasMedia}
-            aria-expanded={menu}
-            onClick={() => setMenu(!menu)}
-          >
-            <SurfaceIcon className="size-3.5" />
-          </button>
-        </Hint>
-        {menu ? (
-          <div
-            data-region="surface-mode-menu"
-            className="absolute right-7 bottom-0 z-[90] flex w-20 flex-col rounded-sm border bg-card p-0.5 text-[11px] shadow-sm"
-          >
-            {SURFACE_MODES.map((mode) => {
-              const name = mode === 'single' ? 'full' : mode;
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  data-mode={mode}
-                  aria-pressed={surface === mode}
-                  className={cn(
-                    'flex items-center justify-between rounded-sm px-1.5 py-1 text-left text-muted-foreground hover:bg-accent/40 hover:text-foreground',
-                    surface === mode && 'text-foreground',
-                  )}
-                  onClick={() => {
-                    setSurface(mode);
-                    setMenu(false);
-                  }}
-                >
-                  <span>{name}</span>
-                  {surface === mode ? <Check className="size-3" /> : null}
-                </button>
-              );
-            })}
-          </div>
-        ) : null}
-      </div>
+      {surface}
     </div>
   );
 }

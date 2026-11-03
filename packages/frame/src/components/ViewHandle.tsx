@@ -1,7 +1,7 @@
 import { ChevronUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { Hint } from './ui/hint';
-import { standing } from '../lib/cameras';
+import { standing } from '../lib/carried';
 import { kindOf } from '../lib/windows';
 import { UNKNOWN_KIND, viewKindOf } from '../lib/view-kinds';
 import type { CarriedView } from '@ssccsorg/skene-kernel';
