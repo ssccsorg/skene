@@ -222,3 +222,31 @@ test('a submission whose declaration is wrong is refused with the declaration\'s
   if (proof.ok) return;
   expect(proof.issues.map((issue) => issue.path)).toContain('id');
 });
+
+test('a project states the capabilities its deployment has, and a proof admits the kind', () => {
+  // The reader has taken `abilities` since the console learned to ask for a room, and the proof refused it, so a board
+  // that stated one was proved against a list that called its own reader's kind unknown.
+  const answer = validateProject({
+    format: PROJECT_FORMAT,
+    id: 'trial',
+    resources: [
+      { kind: 'abilities', at: ['console'] },
+      { kind: 'record', at: 'scenario/trial.txt' },
+    ],
+  });
+  expect(answer.ok, answer.ok ? '' : JSON.stringify(answer.issues)).toBe(true);
+});
+
+test('a capability that is not a name is refused by the proof', () => {
+  const answer = validateProject({
+    format: PROJECT_FORMAT,
+    id: 'trial',
+    resources: [
+      { kind: 'abilities', at: ['console', 7] },
+      { kind: 'record', at: 'scenario/trial.txt' },
+    ],
+  });
+  expect(answer.ok).toBe(false);
+  if (answer.ok) return;
+  expect(answer.issues.map((issue) => issue.path)).toContain('resources[0].at');
+});

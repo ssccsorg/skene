@@ -57,6 +57,9 @@ const KINDS = new Set([
   // The project's own declaration of how the board is read: the pack it brings, the reading it opens on, and the readings
   // it stands. It is proved here because `bundleOf` reads it, and a list of the kinds this build reads cannot refuse one.
   'views',
+  // What the deployment can do beside drawing a run. `bundleOf` reads it for the panels and the controls that ask, so the
+  // proof has to admit the kind: a list that refused one the reader accepts would refuse the books it exists to read.
+  'abilities',
   'record',
   'status',
   'clock',
@@ -74,6 +77,7 @@ const ONCE = new Set([
   'sources',
   'layout',
   'views',
+  'abilities',
   'record',
   'status',
   'clock',
@@ -90,6 +94,17 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const isNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+
+/**
+ * A name, or a list of names.
+ *
+ * One capability is a declaration too, which is how a deployment that has one writes it. An empty list is a project
+ * stating none, and that is a declaration the reader already answers, so it is admitted here.
+ */
+function namesOf(value: unknown): boolean {
+  const list = Array.isArray(value) ? value : [value];
+  return list.every((name) => typeof name === 'string' && name.trim().length > 0);
+}
 
 /** Four numbers, which is what a ground box and a place view are. */
 function four(value: unknown, path: string, issues: ProjectIssue[]): number[] | null {
@@ -322,6 +337,11 @@ export function validateProject(input: unknown, taken: string[] = []): ProjectPr
       case 'views':
         if (!isRecord(resource.at)) {
           issues.push({ path: `${path}.at`, message: 'is an object naming the pack and the reading it opens on' });
+        }
+        break;
+      case 'abilities':
+        if (!namesOf(resource.at)) {
+          issues.push({ path: `${path}.at`, message: 'is a capability name, or a list of them' });
         }
         break;
     }
