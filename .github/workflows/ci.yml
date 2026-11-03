@@ -11,9 +11,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  frame:
-    name: frame
+  # One job a package, so a red build names the package and the other seven still report. Every package is typechecked
+  # and tested on its own: a package that only compiles because another one happens to be installed is exactly what the
+  # boundaries exist to prevent.
+  package:
+    name: ${{ matrix.package }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: kernel
+          - package: ui
+          - package: board
+            coverage: true
+          - package: frame
+            coverage: true
+          - package: view-media
+          - package: view-map
+          - package: view-shell
+          - package: view-graph
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -22,13 +39,20 @@ jobs:
           cache: npm
       # `ci` and not `install`: the lockfile is the one the suite was run against, and a drift is a failure.
       - run: npm ci
-      - run: npm --workspace @ssccsorg/skene-frame run typecheck
-      - run: npm --workspace @ssccsorg/skene-frame run test:coverage
+      - run: npm --workspace @ssccsorg/skene-${{ matrix.package }} run typecheck
+      - name: test
+        if: ${{ !matrix.coverage }}
+        run: npm --workspace @ssccsorg/skene-${{ matrix.package }} run test
+      # The two packages whose logic is a set of decisions carry a floor. A change that stops reaching a line is a change
+      # the suite has to explain.
+      - name: test with coverage
+        if: ${{ matrix.coverage }}
+        run: npm --workspace @ssccsorg/skene-${{ matrix.package }} run test:coverage
       - uses: actions/upload-artifact@v5
-        if: always()
+        if: always() && matrix.coverage
         with:
-          name: coverage
-          path: packages/frame/coverage
+          name: coverage-${{ matrix.package }}
+          path: packages/${{ matrix.package }}/coverage
           retention-days: 7
 
   example:
@@ -48,3 +72,33 @@ jobs:
       - run: npm --workspace @ssccsorg/skene-example run build
       - name: the build carries the board
         run: test -f examples/board/dist/projects.json && test -d examples/board/dist/scenario
+
+  # The assembly a deployment performs, held to the two surfaces this repository cannot test for them: that every package
+  # resolves from the workspace, and that no package reaches up into another one's dependency graph.
+  assembly:
+    name: assembly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: every workspace is installed
+        run: npm ls --workspaces --depth=0
+      - name: the frame imports no view package
+        run: |
+          if grep -rn "@ssccsorg/skene-view-" packages/frame/src; then
+            echo "the frame reached for a view package"; exit 1
+          fi
+      - name: the kernel imports nothing outside itself
+        run: |
+          if grep -rnE "^import .* from '[^.]" packages/kernel/src; then
+            echo "the kernel reached outside itself"; exit 1
+          fi
+      - name: the board imports no frame
+        run: |
+          if grep -rn "@ssccsorg/skene-frame" packages/board/src; then
+            echo "the board reached for the frame"; exit 1
+          fi
