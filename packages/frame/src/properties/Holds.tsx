@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AtSign, ChevronRight } from 'lucide-react';
 import { Row } from '../components/Row';
 import { useHolds } from '../hooks/useHolds';
+import { CONSOLE, useCapability } from '../lib/capabilities';
 import { ROW } from '../lib/chrome';
 import { HELD_DEPTH, leafOf } from '../lib/holds';
 import { askable, type Part, type PartProps } from '../lib/kinds';
@@ -84,6 +85,7 @@ export const holds: Part = function Holds({ member }: PartProps) {
  */
 function Level({ member, path, depth }: { member: PartProps['member']; path: string; depth: number }) {
   const compose = useChat((state) => state.compose);
+  const console = useCapability(CONSOLE);
   const { rows, why, isOpen, toggle, ensure } = useHolds({ member: member.id, at: member.holdsAt });
   useEffect(() => {
     ensure(path);
@@ -98,7 +100,7 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
   // A level is read no further than the model does, and a directory standing at the bound is the last of it: what is
   // under it is what the reader stopped at rather than what is not there, so the level says so once.
   const bounded = depth >= HELD_DEPTH;
-  const nameable = askable(member.properties) !== null;
+  const nameable = askable(member.properties) !== null && console;
 
   return (
     <>

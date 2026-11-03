@@ -2,6 +2,7 @@ import { SquareTerminal } from 'lucide-react';
 import { Console } from '../Console';
 import { Splitter } from '../Splitter';
 import { useWorld } from '../../hooks/useWorld';
+import { CONSOLE } from '../../lib/capabilities';
 import { registerPanel } from '../../lib/panels';
 import { useSelection } from '../../stores/selection';
 import { useSizes } from '../../stores/sizes';
@@ -47,6 +48,9 @@ registerPanel({
   label: 'Console',
   title: 'the board as text, where a person types at it',
   starts: false,
+  // A console is a conversation with a room, and a deployment that has no live room has none to draw. The project says
+  // whether its deployment has one, so the panel and the controls that open it are one answer.
+  needs: CONSOLE,
   Icon: SquareTerminal,
   View: ConsolePane,
 });

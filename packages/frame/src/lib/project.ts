@@ -63,12 +63,27 @@ export interface BoardDocument {
  * the readings it stands. It is read here rather than by the store so that a project's arrangement is part of its bundle
  * like every other answer it gives about itself.
  *
+ * `abilities` is what a deployment can do beside drawing a run, and it is the project's answer rather than the frame's:
+ * a console that needs a live room is a deployment's fact, so the frame draws it where the project says the deployment
+ * has one and nowhere else.
+ *
  * `sims` is a resource the frame keeps and does not read. It is the machine vocabulary of whichever room answers for the
  * project, and the frame is one observer of a bundle among others, so a declaration that belongs to another observer is
  * carried rather than interpreted. It is a name rather than a form, and the cost of that is the frame's: a second
  * observer would add a second name here, where one carrier whose value names the observers would add none. The name is
  * kept because there is one observer, and the debt is written here so that the second one is the moment it is paid.
  */
+/**
+ * A project's capabilities: the names it states, and nothing that is not a name.
+ *
+ * One name and a list of them are one declaration, the same way a pack's name is, so a deployment that has one capability
+ * does not have to learn the list's shape.
+ */
+function abilitiesNamed(at: unknown): string[] {
+  const list = Array.isArray(at) ? at : at === undefined || at === null ? [] : [at];
+  return list.filter((name): name is string => typeof name === 'string' && name.trim().length > 0);
+}
+
 const READERS: Record<
   string,
   (at: unknown, projects: ProjectDocument[]) => unknown
@@ -87,6 +102,7 @@ const READERS: Record<
   sources: (at) => at as SourceSpec[],
   layout: (at) => at as Layout,
   views: (at) => at as Views,
+  abilities: (at) => abilitiesNamed(at),
   record: (at) => at as string,
   status: (at) => at as ProjectStatus,
   clock: (at) => at as Clock,
@@ -123,6 +139,7 @@ export function bundleOf(project: ProjectDocument, projects: ProjectDocument[] =
     title: project.id,
     channel: 'sim',
     layout: undefined as Layout | undefined,
+    abilities: [] as string[],
     record: '',
     status: undefined as ProjectStatus | undefined,
     clock: {} as Clock,

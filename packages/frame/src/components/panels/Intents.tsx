@@ -12,6 +12,7 @@ import { useWorld } from '../../hooks/useWorld';
 import { keyOf } from '../../lib/address';
 import { LABEL, ROW } from '../../lib/chrome';
 import { boundsOf, intentsOf } from '../../lib/intents';
+import { CONSOLE, useCapability } from '../../lib/capabilities';
 import { registerPanel } from '../../lib/panels';
 import { useReadingAt } from '../../lib/readings';
 import { cn } from '../../lib/utils';
@@ -96,6 +97,8 @@ function Intents() {
   const [said, setSaid] = useState('');
   const project = useScenario((state) => state.projectId);
   const offer = useChat((state) => state.offer);
+  // The line goes to the console's queue, so the form is drawn where the project has a console to say it in.
+  const console = useCapability(CONSOLE);
   // Who a declaration goes to is the pick, which is the member the pilot is looking at, and the project when nothing is
   // picked: a line said to no member is said to the work itself, and that is the one name a space always has.
   const addressee = unit ?? project ?? '';
@@ -117,29 +120,33 @@ function Intents() {
       {/* What declares work, because an instruction to a member is work declared and not a message beside it. The line goes
           to the console's queue rather than to a queue of this panel's: the console is where a turn is said, and a queue
           that delivered from here would be the second place a line is sent from. What the row adds is the way to say it
-          without leaving the reading that shows what has been declared. */}
-      <form
-        data-region="declare"
-        className={cn(ROW, 'gap-1.5 border-t')}
-        onSubmit={(event) => {
-          event.preventDefault();
-          const text = said.trim();
-          if (!text || !addressee) return;
-          offer(addressee, text);
-          setSaid('');
-          useSelection.getState().setOpen('console', true);
-        }}
-      >
-        <span className="shrink-0 font-mono text-[11.5px] text-muted-foreground">to {addressee || 'the work'}</span>
-        <input
-          data-region="declare-input"
-          value={said}
-          spellCheck={false}
-          placeholder="declare work"
-          onChange={(event) => setSaid(event.target.value)}
-          className="min-w-0 flex-1 bg-transparent text-[11.5px] outline-none placeholder:text-muted-foreground/70"
-        />
-      </form>
+          without leaving the reading that shows what has been declared.
+
+          A project with no console has no queue for the line, so the row is drawn where the line has somewhere to go. */}
+      {console ? (
+        <form
+          data-region="declare"
+          className={cn(ROW, 'gap-1.5 border-t')}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const text = said.trim();
+            if (!text || !addressee) return;
+            offer(addressee, text);
+            setSaid('');
+            useSelection.getState().setOpen('console', true);
+          }}
+        >
+          <span className="shrink-0 font-mono text-[11.5px] text-muted-foreground">to {addressee || 'the work'}</span>
+          <input
+            data-region="declare-input"
+            value={said}
+            spellCheck={false}
+            placeholder="declare work"
+            onChange={(event) => setSaid(event.target.value)}
+            className="min-w-0 flex-1 bg-transparent text-[11.5px] outline-none placeholder:text-muted-foreground/70"
+          />
+        </form>
+      ) : null}
       {/* What stood over the work. A hint judged the readings rather than belonging to a participant, so it is the
           whole queue's and not one row's, and a row that repeated it down the list would say it was each
           declaration's. The row says what it is in words because it is the one line here that is not a row of the

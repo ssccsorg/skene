@@ -476,6 +476,14 @@ export interface Bundle {
   layout?: Layout;
   /** Absent means the frame's own pack and its own order, which is what every project before the kind declared. */
   views?: Views;
+  /**
+   * What this project's deployment can do beside drawing its run.
+   *
+   * A capability is the deployment's own statement and the frame holds no list of what a project might be able to do, so a
+   * name here is read by whatever asks for it and an absent name is a feature the project does not have. It is a list
+   * rather than a field per capability because a capability the frame learns later must not change this shape.
+   */
+  abilities: string[];
   status?: ProjectStatus;
   clock: Clock;
   place: Place;

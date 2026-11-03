@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { COMMAND_MARK } from '../lib/channel';
 import { useAsks } from '../hooks/useAsks';
+import { CONSOLE, useCapability } from '../lib/capabilities';
 import { drawnAbilities } from '../lib/interface';
 import type { PartProps } from '../lib/kinds';
 import { useChat } from '../stores/chat';
@@ -41,12 +42,8 @@ export function Abilities({ member }: Pick<PartProps, 'member'>) {
     ensure(member.id);
   }, [ensure, member.id]);
 
-  // Nothing until the room has answered, and nothing where it answered nothing: a control drawn from a declaration would
-  // be a control that promised a command the member never said it could run. What draws as nothing is the reading's own
-  // rule rather than this row's, so the two places cannot come apart about it.
   const found = drawnAbilities(member, asks(member.id));
-  if (!found.length) return null;
-
+  const console = useCapability(CONSOLE);
   const [expanded, setExpanded] = useState(false);
   const line = useRef<HTMLDivElement>(null);
   const [more, setMore] = useState(false);
@@ -63,6 +60,14 @@ export function Abilities({ member }: Pick<PartProps, 'member'>) {
     observer.observe(element);
     return () => observer.disconnect();
   }, [names]);
+
+  // Nothing until the room has answered, and nothing where it answered nothing: a control drawn from a declaration would
+  // be a control that promised a command the member never said it could run. What draws as nothing is the reading's own
+  // rule rather than this row's, so the two places cannot come apart about it.
+  //
+  // Nothing either where the project has no console: a press composes a line into one, so the row is drawn where the line
+  // has somewhere to go.
+  if (!found.length || !console) return null;
 
   const chip = (asked: (typeof found)[number]): ReactNode => (
     <button

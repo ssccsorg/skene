@@ -1,5 +1,6 @@
 import { useMemo, useSyncExternalStore, type ComponentType } from 'react';
 import { useSelection } from '../stores/selection';
+import { useAbilities } from './capabilities';
 import type { Layout } from './types';
 
 /**
@@ -41,6 +42,13 @@ export interface PanelUnit {
   /** Whether the frame comes up with it out, when neither the pilot nor a project has said. */
   starts: boolean;
   /**
+   * The capability a project has to hold for this panel to stand.
+   *
+   * Absent means the panel is the frame's own drawing of a run and stands for every project. Present means the panel is a
+   * surface a deployment has to have shipped, so it is drawn where that project's bundle says the deployment has it.
+   */
+  needs?: string;
+  /**
    * What the bar's press for this panel does.
    *
    * A panel is drawn and put away, which is the default. A panel that stands for a whole edge of the frame is that
@@ -78,11 +86,23 @@ const subscribe = (listener: () => void) => {
   };
 };
 
-/** Every panel, in the order it stands where it stands. */
+/** The panels that stand for a project, in the order they stand where they stand. */
 function inOrder(panels: PanelUnit[]): PanelUnit[] {
   return [...panels].sort(
     (left, right) => left.at.localeCompare(right.at) || left.order - right.order || left.key.localeCompare(right.key),
   );
+}
+
+/**
+ * The panels a project stands: every one whose capability the project holds.
+ *
+ * A panel that names none stands always, which is every panel that was written before the field. A panel that names one is
+ * a surface the deployment may not have shipped, so it is drawn where that project says it did and nowhere else: a control
+ * that opened it would be a control into nothing.
+ */
+export function standingPanels(panels: PanelUnit[], abilities: string[]): PanelUnit[] {
+  const held = new Set(abilities);
+  return panels.filter((panel) => !panel.needs || held.has(panel.needs));
 }
 
 /** A panel with the frame's answer about it, which is what a control or a box is handed. */
@@ -110,13 +130,14 @@ export function usePanels(): Standing[] {
   );
   const said = useSelection((state) => state.open);
   const setOpen = useSelection((state) => state.setOpen);
+  const abilities = useAbilities();
   return useMemo(
     () =>
-      inOrder([...registered.values()]).map((unit) => {
+      inOrder(standingPanels([...registered.values()], abilities)).map((unit) => {
         const open = said[unit.key] ?? unit.starts;
         return { unit, open, toggle: () => setOpen(unit.key, !open) };
       }),
-    [stamp, said, setOpen],
+    [stamp, said, setOpen, abilities],
   );
 }
 
