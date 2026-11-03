@@ -22,8 +22,8 @@ jobs:
           cache: npm
       # `ci` and not `install`: the lockfile is the one the suite was run against, and a drift is a failure.
       - run: npm ci
-      - run: npm --workspace @ssccs/skene-frame run typecheck
-      - run: npm --workspace @ssccs/skene-frame run test:coverage
+      - run: npm --workspace @ssccsorg/skene-frame run typecheck
+      - run: npm --workspace @ssccsorg/skene-frame run test:coverage
       - uses: actions/upload-artifact@v5
         if: always()
         with:
