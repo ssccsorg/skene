@@ -1,9 +1,9 @@
-import { EntityGraph } from '../components/EntityGraph';
+import { EntityGraph } from './EntityGraph';
 import { ROW } from '@ssccsorg/skene-ui';
-import { registerReading } from '../lib/readings';
+import { registerReading } from '@ssccsorg/skene-frame/lib/readings';
 import { cn } from '@ssccsorg/skene-ui';
-import { useVolume } from '../hooks/useVolume';
-import { useScenario } from '../stores/scenario';
+import { useVolume } from '@ssccsorg/skene-frame/hooks/useVolume';
+import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
 import { Network } from 'lucide-react';
 
 /**
@@ -32,7 +32,7 @@ export function GraphView() {
   );
 }
 
-registerReading({
+export const GRAPH_READING = registerReading({
   key: 'graph',
   path: '/graph',
   View: GraphView,

@@ -1,0 +1,26 @@
+{
+  "name": "@ssccsorg/skene-view-graph",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "The run as a graph, as a reading for the skene frame: the nodes, the edges and the layout they are drawn in.",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "test": "vitest run", "typecheck": "tsc --noEmit -p ." },
+  "repository": { "type": "git", "url": "git+https://github.com/ssccsorg/skene.git", "directory": "packages/view-graph" },
+  "homepage": "https://github.com/ssccsorg/skene#readme",
+  "bugs": { "url": "https://github.com/ssccsorg/skene/issues" },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" },
+  "dependencies": {
+    "@ssccsorg/skene-frame": "0.1.0",
+    "@ssccsorg/skene-kernel": "0.1.0",
+    "@ssccsorg/skene-ui": "0.1.0",
+    "@xyflow/react": "^12.9.2",
+    "dagre": "^0.8.5",
+    "lucide-react": "^0.548.0"
+  },
+  "peerDependencies": { "react": "^19.0.0" },
+  "devDependencies": { "@types/dagre": "^0.7.53", "@types/react": "^19.2.2", "typescript": "^5.9.3", "vitest": "^3.2.4" }
+}

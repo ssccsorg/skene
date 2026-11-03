@@ -128,6 +128,7 @@ packages/view-map/    ground as a window kind and a reading: the picture on the 
                       the place drawn as a map
 packages/view-shell/  the cockpit as a reading: the space drawn on the shell, the windows standing on it, and the
                       wires control
+packages/view-graph/  the run as a graph, as a reading: the nodes, the edges and the layout they are drawn in
 examples/board/       the smallest deployment: a brand, a board, one run, and its own tests
 ```
 
@@ -137,10 +138,11 @@ record, a place and a scenario without a browser, and a test asserts that nothin
 The kit is a package because its consumers are not only the frame: a deployment's own form takes the same primitives,
 and the palette is the kit's, so a deployment that draws one control does not carry a second design system.
 
-A window kind is a package of its own, and so is the cockpit. The frame ships none of them: footage, ground and the
-space drawn on the shell are packages, and a deployment imports the pictures it draws. Importing one is what installs it,
-so a deployment with no footage carries neither a video element nor its sampler, one with no map carries no map library,
-and one that opens on a table carries no three.js scene.
+A window kind is a package of its own, and so is every picture the bar offers. The frame ships none of them: footage,
+ground, the space drawn on the shell and the run as a graph are packages, and a deployment imports the pictures it draws.
+Importing one is what installs it, so a deployment with no footage carries neither a video element nor its sampler, one
+with no map carries no map library, one that opens on a table carries no three.js scene, and one with no graph carries no
+graph layout engine.
 
 ## Consuming it
 
@@ -163,7 +165,8 @@ A deployment that draws footage or a map declares the packages that install them
 ```json
 "@ssccsorg/skene-view-media": "file:../skene/packages/view-media",
 "@ssccsorg/skene-view-map": "file:../skene/packages/view-map",
-"@ssccsorg/skene-view-shell": "file:../skene/packages/view-shell"
+"@ssccsorg/skene-view-shell": "file:../skene/packages/view-shell",
+"@ssccsorg/skene-view-graph": "file:../skene/packages/view-graph"
 ```
 
 A deployment that reads the kernel directly, in a node tool or in its own tests, declares it beside the frame:

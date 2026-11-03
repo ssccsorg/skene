@@ -8,7 +8,7 @@ import {
 } from '@xyflow/react';
 import dagre from 'dagre';
 import '@xyflow/react/dist/style.css';
-import { graphOf } from '../lib/graph';
+import { graphOf } from '@ssccsorg/skene-frame/lib/graph';
 import type { Entry } from '@ssccsorg/skene-kernel';
 import { UnitNode } from './UnitNode';
 

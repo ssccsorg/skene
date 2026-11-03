@@ -10,4 +10,5 @@
 @source '../../../packages/view-media/src';
 @source '../../../packages/view-map/src';
 @source '../../../packages/view-shell/src';
+@source '../../../packages/view-graph/src';
 @source './';

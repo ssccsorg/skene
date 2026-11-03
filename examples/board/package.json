@@ -14,6 +14,7 @@
     "@ssccsorg/skene-frame": "0.1.0",
     "@ssccsorg/skene-kernel": "0.1.0",
     "@ssccsorg/skene-ui": "0.1.0",
+    "@ssccsorg/skene-view-graph": "0.1.0",
     "@ssccsorg/skene-view-map": "0.1.0",
     "@ssccsorg/skene-view-media": "0.1.0",
     "@ssccsorg/skene-view-shell": "0.1.0",

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@ssccsorg/skene-view-media';
 import '@ssccsorg/skene-view-map';
 import '@ssccsorg/skene-view-shell';
+import '@ssccsorg/skene-view-graph';
 import { Frame } from '@ssccsorg/skene-frame';
 import { brand } from './brand';
 import './styles.css';
