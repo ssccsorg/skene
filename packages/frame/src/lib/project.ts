@@ -20,6 +20,15 @@ import type { Bundle, Clock, Layout, Place, ProjectStatus, SourceSpec, Views } f
  */
 export const PROJECT_FORMAT = 'project/1';
 
+/**
+ * What a project declares beside its resources: its name, and the format it is written in.
+ *
+ * Everything else a project says is a resource, so a field outside this list is a declaration the reader has no place
+ * for. It is refused rather than dropped: a capability written here instead of as a resource is a board that looks
+ * right and a panel that does not stand, which is the failure this list exists to make loud.
+ */
+export const PROJECT_FIELDS = ['format', 'id', 'resources'] as const;
+
 export interface ProjectDocument {
   /** The declaration's own version, when it carries one. A document without one is read as this build's format. */
   format?: string;
@@ -134,6 +143,14 @@ export function registerResource(kind: string, read: ResourceReader): void {
 
 /** Read one project's bundle, resolving every resource it declares. */
 export function bundleOf(project: ProjectDocument, projects: ProjectDocument[] = []): Bundle {
+  const extra = Object.keys(project).filter((key) => !(PROJECT_FIELDS as readonly string[]).includes(key));
+  if (extra.length) {
+    throw new Error(
+      `project ${String((project as { id?: unknown }).id ?? '?')}: declares ${extra.join(', ')} at the project ` +
+        'level, and a project is its id, its format, and its resources',
+    );
+  }
+
   const bundle = {
     id: project.id,
     title: project.id,

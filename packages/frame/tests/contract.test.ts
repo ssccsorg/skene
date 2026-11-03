@@ -250,3 +250,15 @@ test('a capability that is not a name is refused by the proof', () => {
   if (answer.ok) return;
   expect(answer.issues.map((issue) => issue.path)).toContain('resources[0].at');
 });
+
+test('a field beside the resources is a place to fix, and the proof names it', () => {
+  const answer = validateProject({
+    format: PROJECT_FORMAT,
+    id: 'trial',
+    abilities: ['console'],
+    resources: [{ kind: 'record', at: 'scenario/trial.txt' }],
+  });
+  expect(answer.ok).toBe(false);
+  if (answer.ok) return;
+  expect(answer.issues.map((issue) => issue.path)).toContain('abilities');
+});

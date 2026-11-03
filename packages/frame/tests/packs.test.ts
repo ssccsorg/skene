@@ -103,3 +103,14 @@ test('the native pack is the name the frame’s own readings are registered unde
   expect(reading('space').pack).toBeUndefined();
   expect(NATIVE).toBe('native');
 });
+
+test('a field beside the resources is refused by name rather than dropped', () => {
+  // The shape a capability was once written in: a board that looks right, opens, and silently has none, because the
+  // reader only ever looked at the resources.
+  const document = {
+    id: 'spec-four',
+    abilities: ['console'],
+    resources: [{ kind: 'record', at: 'scenario/four.txt' }],
+  } as unknown as ProjectDocument;
+  expect(() => bundleOf(document, [])).toThrow(/declares abilities at the project level/);
+});

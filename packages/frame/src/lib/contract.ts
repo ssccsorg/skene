@@ -12,7 +12,7 @@
 // proof is that a declaration written by a person or a model can be refused with a list before the board is touched.
 
 import { campaignsOf } from '@ssccsorg/skene-kernel';
-import type { ProjectDocument } from './project';
+import { PROJECT_FIELDS, type ProjectDocument } from './project';
 import { ATOM_KEYS, type Place, type SourceSpec } from '@ssccsorg/skene-kernel';
 
 /** The version of the declaration this build reads. A bundle may carry it; a bundle without one is read as this. */
@@ -273,6 +273,16 @@ export function validateProject(input: unknown, taken: string[] = []): ProjectPr
   if (input.format !== undefined && input.format !== PROJECT_FORMAT) {
     issues.push({ path: 'format', message: `is ${PROJECT_FORMAT} for this build` });
   }
+  // A field beside the resources is a declaration the reader has no place for, and dropping it silently is how a
+  // capability written at the project level became a console with no exchange under it. The proof names it instead.
+  for (const key of Object.keys(input)) {
+    if (!(PROJECT_FIELDS as readonly string[]).includes(key)) {
+      issues.push({
+        path: key,
+        message: 'is not a project-level field: a project declares its id, its format, and its resources',
+      });
+    }
+  }
   const id = input.id;
   if (typeof id !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(id)) {
     issues.push({ path: 'id', message: 'is a lower-case name of letters, digits and dashes' });
@@ -377,8 +387,12 @@ export function validateSubmission(
     ? input.resources.filter((resource) => !(isRecord(resource) && resource.kind === 'record'))
     : [];
   // The proof of a document wants a record resource; a submission's run is the text beside the resources, so the proof
-  // sees one and the submission keeps the text.
-  const proof = validateProject({ ...input, resources: [...resources, { kind: 'record', at: 'inline' }] }, taken);
+  // sees one and the submission keeps the text. The submission's own fields (`title` and `record`) stay outside it: a
+  // project is its id, its format, and its resources, and the proof now refuses anything else by name.
+  const proof = validateProject(
+    { format: input.format, id: input.id, resources: [...resources, { kind: 'record', at: 'inline' }] },
+    taken,
+  );
   if (!proof.ok) issues.push(...proof.issues);
   if (issues.length) return { ok: false, issues };
   return {
