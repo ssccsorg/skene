@@ -769,8 +769,8 @@ export function patchGrid(patch: Patch): [number, number, number][] {
 }
 
 /**
- * A patch's own rim, in order round it from its top left: the points its box on the frame is read from, and the outline its
- * press is clipped to.
+ * A patch's own rim, in order round it from its top left: the points its box on the frame is read from, the outline its
+ * press is clipped to, and the line a caller draws round the picture.
  */
 export function patchRim(patch: Patch): [number, number, number][] {
   const [across, up] = patch.quads;

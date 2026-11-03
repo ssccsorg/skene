@@ -148,6 +148,9 @@ export function ViewPatch({
       texture={texture}
       medium={aspect ?? undefined}
       order={order}
+      // The picture is what a medium window is: its cell is the pilot's shape and the footage is the camera's, so a line
+      // on the cell is a frame standing away from the picture on two of its sides.
+      edge={false}
     />
   );
 }

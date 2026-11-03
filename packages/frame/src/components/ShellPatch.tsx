@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { depthFade, framedCells, patchGrid, patchOf, shellAt, type Bearing } from '../lib/board';
-import { picture } from '../lib/board-geometry';
+import { depthFade, framedCells, patchGrid, patchOf, patchRim, shellAt, type Bearing } from '../lib/board';
+import { picture, ring } from '../lib/board-geometry';
 import { leaderPath } from '../lib/views';
 
-// A window's picture painted on the shell: the patch of surface it stands on and the line back to the entity that
-// carries it.
+// A window's picture painted on the shell: the patch of surface it stands on, the rim that says where it ends, and the
+// line back to the entity that carries it.
 //
 // The surface is the same for every kind of window, which is the point of this file, and it is one mapping: the picture's
 // columns are the room's meridians and its rows are the room's parallels, so a window's frame is made of the lines the
@@ -27,6 +27,8 @@ import { leaderPath } from '../lib/views';
 const LEAD_INK = '#c3ccdc';
 /** How far the line back to the entity is held off the surface, so it is read over the shell and not in it. */
 const OFF_SHELL = 1.001;
+/** How far the line round the picture is held off the surface, for the same reason and by less of it. */
+const PICTURE_EDGE = 1.0005;
 /** How many steps each of the line's two runs is drawn at. */
 const LEAD_STEPS = 20;
 
@@ -38,6 +40,7 @@ export function ShellPatch({
   texture,
   medium,
   order,
+  edge = true,
 }: {
   /** The bearing the window stands at on the shell, which is where its own patch of the surface is centred. */
   bearing: Bearing;
@@ -58,6 +61,14 @@ export function ShellPatch({
   medium?: number;
   /** The pilot's stack, so the pictures are drawn in the order their controls are stacked in. */
   order: number;
+  /**
+   * Whether the pilot's cell is drawn round the picture.
+   *
+   * The cell is the window's outer frame and the picture is the medium's own shape, so the line is drawn on the cell and
+   * not on the picture: a medium that is not the cell's shape leaves the frame standing away from its own edge. A caller
+   * that shows a picture alone says so here, and then nothing is built for the line at all.
+   */
+  edge?: boolean;
 }) {
   const at = useMemo(() => shellAt(bearing), [bearing]);
   const fade = depthFade(at);
@@ -65,9 +76,11 @@ export function ShellPatch({
   // The picture is its own patch of the shell, in the shell's own coordinates, so nothing here is turned or placed: a
   // patch is already where it stands and already the shape the room is. The cuts are the picture's own resolution, so a
   // patch that is sized up is cut more finely and its own curve stays a curve.
-  // The patch is the span the medium fills, and the medium's own shape is what decides how much of the pilot's cell that
-  // span takes.
+  // The frame is the pilot's shape and the picture inside it is the medium's, so the window is a
+  // frame that scales its contents rather than one that crops them. The rim follows the frame and
+  // the patch is the span the medium fills.
   const elevation = bearing[1];
+  const frame = useMemo(() => (edge ? patchOf(bearing, cells) : null), [edge, bearing, cells]);
   const shown = useMemo(
     () => patchOf(bearing, framedCells(cells, elevation, medium)),
     [bearing, cells, elevation, medium],
@@ -82,6 +95,23 @@ export function ShellPatch({
     texture.repeat.set(1, 1);
     texture.offset.set(0, 0);
   }, [texture]);
+  const rim = useMemo(
+    () =>
+      frame
+        ? ring(
+            patchRim(frame).map(
+              (point) => point.map((part) => part * PICTURE_EDGE) as [number, number, number],
+            ),
+          )
+        : null,
+    [frame],
+  );
+  useEffect(
+    () => () => {
+      rim?.dispose();
+    },
+    [rim],
+  );
 
   // The line back to the entity whose window this is: the pin's own bearing across the parallel to the entity's
   // meridian, and then down that meridian to the entity. Its geometry is made once and its points are written into it in
@@ -140,6 +170,11 @@ export function ShellPatch({
       <mesh geometry={surface} renderOrder={order}>
         <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} transparent opacity={fade} />
       </mesh>
+      {rim ? (
+        <lineSegments geometry={rim} renderOrder={order + 0.5}>
+          <lineBasicMaterial color={LEAD_INK} transparent opacity={0.26 * fade} depthWrite={false} />
+        </lineSegments>
+      ) : null}
       <primitive object={line} />
     </group>
   );
