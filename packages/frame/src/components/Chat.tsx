@@ -21,8 +21,8 @@ import { ChatEntry } from './ChatEntry';
  * It is the chat the layer is driven from, and it is a chat because driving a workspace is a conversation
  * with it: what the pilot types is a declaration, the agent named for it takes it, and what comes back is
  * what it did. The thing that is not like a chat room is who answers. The names here are the space's own, so a
- * servo-drive and a maintenance arm answer in the same exchange the project's files do, which is the whole claim: a
- * machine and a folder are two payloads under one envelope.
+ * machine and a person answer in the same exchange the project's files do, which is the whole claim: a machine and a
+ * folder are two payloads under one envelope.
  *
  * Who a line goes to is the pick, which is the whole of how this panel knows who is meant: the member a pilot has on the
  * board is the member they are talking to, and the mark above the field says which one that is. The space is what says a

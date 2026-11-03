@@ -16,11 +16,14 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ]
   },
   "include": [
     "src",
-    "vite.config.ts"
+    "tests",
+    "vite.config.ts",
+    "vitest.config.ts"
   ]
 }

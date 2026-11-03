@@ -8,10 +8,6 @@ import { expect, test } from 'vitest';
 
 import { boundsOf, intentsOf } from '@/lib/intents';
 import type { Entry } from '@/lib/types';
-import { example } from './board';
-
-const { model } = example();
-
 const declared = (label: string, extra: Partial<Entry> = {}): Entry => ({
   kind: 'intent',
   label,
@@ -73,17 +69,4 @@ test('a declaration with no name still stands in the queue by the second it was 
   expect(unnamed.id).toBe('intent-12');
   expect(unnamed.description).toBe('work');
   expect(unnamed.declaredBy).toBe('');
-});
-
-test('the example\'s run holds three declarations, in the three states a queue has', () => {
-  const queue = intentsOf(model.events);
-  expect(queue.map((each) => [each.id, each.state])).toEqual([
-    ['audit', 'open'],
-    ['inspect', 'claimed'],
-    ['answer', 'closed'],
-  ]);
-  expect(queue.map((each) => each.worker)).toEqual([null, 'machine-3', 'worker-1']);
-  // The queue reads in the order work can be taken, not the order the file declares it.
-  expect(queue.map((each) => each.declaredBy)).toEqual(['camera-1', 'worker-1', 'sensor-1']);
-  expect(boundsOf(model.records).map((hint) => hint.label)).toEqual(['bound']);
 });

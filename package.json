@@ -13,7 +13,7 @@
     "dev": "npm --workspace @ssccsorg/skene-example run dev",
     "build": "npm --workspace @ssccsorg/skene-example run build",
     "typecheck": "npm --workspace @ssccsorg/skene-frame run typecheck && npm --workspace @ssccsorg/skene-example run typecheck",
-    "test": "npm --workspace @ssccsorg/skene-frame run test",
+    "test": "npm --workspace @ssccsorg/skene-frame run test && npm --workspace @ssccsorg/skene-example run test",
     "test:coverage": "npm --workspace @ssccsorg/skene-frame run test:coverage"
   },
   "repository": {

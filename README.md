@@ -82,15 +82,19 @@ Three entries are the contract, and they are what a product's own code uses:
 
 | Entry | What it is |
 |:---|:---|
-| `@ssccsorg/skene-frame` | the frame, the brand, the registers, the host, and the room a deployment supplies |
+| `@ssccsorg/skene-frame` | the frame, the brand, the registers, the host, the room a deployment supplies, and the board's store |
 | `@ssccsorg/skene-frame/ui` | the buttons, the row and label tokens and `cn`, for the one form a deployment draws itself |
 | `@ssccsorg/skene-frame/tokens.css` | the palette, with `--mark` and `--board` as the tokens a product overrides |
-| `skene-shot` | the screenshot tool, at a viewport and a frame named on the command line |
+| `packages/frame/tools/shot.mjs` | the screenshot tool, at a viewport and a frame named on the command line |
 
 The layers below them (`lib/*`, `stores/*`, `hooks/*`, `views/*`, `components/*`) are exported on purpose and are
 not the frame's whole point of contact. They exist for a deployment's tests and tools, which read that deployment's
-board and parse its runs, and they carry the same compatibility promise as the module in them. A product's runtime
-code that reaches into `stores/*` is reaching past the contract, and it is the change that will be asked to move.
+board and parse its runs, and they carry the same compatibility promise as the module in them.
+
+Two stores are the exception, and they are exported from the root: `useScenario` and `useRecords`. Adding a project to
+the board while the surface is running is built in, not a pack's privilege, so a deployment with an import form writes
+through `useScenario` and reads a project's records through `useRecords` without reaching past the contract. Any other
+runtime reach into `stores/*` is the change that will be asked to move.
 
 What the frame remembers between visits is kept under `skene.*`, through `storageName`. A deployment that installs a
 store of its own adds its name to that namespace rather than opening a second one, because two builds that share an
@@ -109,7 +113,7 @@ one taken and not yet concluded, and one nobody has taken. The screenshot above 
 with the frame's own tool against a dev server:
 
 ```bash
-npx skene-shot 1600 1000 http://localhost:5290/ out.png
+node packages/frame/tools/shot.mjs 1600 1000 http://localhost:5290/ out.png
 ```
 
 ```bash
@@ -120,7 +124,7 @@ npm run build        # typecheck and a production bundle
 
 ```text
 packages/frame/      the frame: src/, tokens.css, index.ts
-packages/frame/tools/shot.mjs   the screenshot tool, installed as `skene-shot`
+packages/frame/tools/shot.mjs   the screenshot tool
 examples/board/      the smallest deployment: a brand, a board, one run
 ```
 
@@ -139,16 +143,16 @@ git clone --depth 1 https://github.com/ssccsorg/skene ../skene
 The path is relative to the deployment's own manifest, so it gains a `../` for every directory the
 manifest sits below its repository root (`es` writes `../../skene`, `kletos` writes `../../../skene`).
 
-A linked checkout resolves the frame's imports from the deployment's tree only while the link keeps its
-own name, so a deployment sets it:
+A deployment installs the frame packed rather than linked, which is one line in its `.npmrc`:
 
-```ts
-// vite.config.ts and tsconfig.json
-resolve: { preserveSymlinks: true }
+```text
+install-links=true
 ```
 
-An installed package replaces both the path and the setting with a version range and
-`resolve: { dedupe: ['react', 'react-dom'] }`.
+That is what lets a deployment declare only what it imports: the frame's own dependencies arrive with it, there is one
+React in the tree, and no bundler needs a symlink flag. The cost is that an edit here is picked up by the next
+`npm install` in the deployment rather than on the next render. A published package replaces the path with a version
+range and the `.npmrc` with nothing.
 
 ## Status
 

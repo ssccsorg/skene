@@ -42,6 +42,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm --workspace @ssccsorg/skene-example run typecheck
+      # This board's own assertions: its counts, its scenes, its queue. The frame's rules are held in the frame job.
+      - run: npm --workspace @ssccsorg/skene-example run test
       # The board is copied beside the assets by this build, so a build that succeeds is a build that can be served.
       - run: npm --workspace @ssccsorg/skene-example run build
       - name: the build carries the board

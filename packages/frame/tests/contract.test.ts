@@ -17,10 +17,27 @@ import {
   validateSubmission,
 } from '@/lib/contract';
 import type { ProjectDocument } from '@/lib/project';
-import { documents, scenario } from './board';
+/**
+ * A declaration with one of every resource this build reads, written here rather than read from a deployment's board.
+ *
+ * `views` is among them because it is the seam the whole surface is built on, and a proof that refused it would refuse
+ * the format's own plugin point.
+ */
+const DOCUMENT: ProjectDocument = {
+  id: 'fixture',
+  resources: [
+    { kind: 'channel', at: 'sim' },
+    { kind: 'kinds', at: { worker: ['reads', 'writes'] } },
+    { kind: 'record', at: 'fixture.txt' },
+    { kind: 'views', at: { pack: 'native', main: 'space' } },
+    { kind: 'clock', at: { record: 'the run' } },
+    { kind: 'status', at: 'running' },
+    { kind: 'place', at: { view: [0, 0, 10, 10], units: { worker: { icon: 'worker' } } } },
+  ],
+};
 
-/** The example's own declaration, which is the document a deployment's board holds. */
-const example = () => documents()[0];
+/** The run a submission carries. */
+const RECORD = 'fact one 8 worker/observation\ncount 1\n';
 
 const issuesOf = (input: unknown, taken: string[] = []) => {
   const proof = validateProject(input, taken);
@@ -39,11 +56,10 @@ test('a name is keyed the way the frame keys it', () => {
   expect(slugOf('')).toBe('');
 });
 
-test('the example a deployment is shown is a project this build proves', () => {
-  const proof = validateProject(example());
+test('a declaration with one of every resource is a project this build proves', () => {
+  const proof = validateProject(DOCUMENT);
   expect(proof.ok, proof.ok ? '' : JSON.stringify(proof.issues)).toBe(true);
-  // Its view pack is the seam the whole surface is built on, so a proof that refuses `views` would refuse its own example.
-  expect(example().resources.map((resource) => resource.kind)).toContain('views');
+  expect(DOCUMENT.resources.map((resource) => resource.kind)).toContain('views');
 });
 
 test('a declaration that is not an object is refused without a place to look', () => {
@@ -150,24 +166,24 @@ test('a view declaration is an object, and a pack the build does not have waits 
 });
 
 test('a document from another build is refused rather than read as this one', () => {
-  expect(issuesOf({ ...example(), format: 'project/2' })).toEqual([
+  expect(issuesOf({ ...DOCUMENT, format: 'project/2' })).toEqual([
     `format: is ${PROJECT_FORMAT} for this build`,
   ]);
-  expect(issuesOf({ ...example(), format: PROJECT_FORMAT })).toEqual([]);
+  expect(issuesOf({ ...DOCUMENT, format: PROJECT_FORMAT })).toEqual([]);
 });
 
 test('a submission carries its run, so the declaration does not have to name one', () => {
   const submission = {
     id: 'pasted',
     title: 'A pasted run',
-    record: scenario(),
+    record: RECORD,
     resources: [{ kind: 'status', at: 'running' }],
   };
   const proof = validateSubmission(submission);
   expect(proof.ok, proof.ok ? '' : JSON.stringify(proof.issues)).toBe(true);
   if (!proof.ok) return;
   expect(proof.submission.format).toBe(PROJECT_FORMAT);
-  expect(proof.submission.record).toBe(scenario());
+  expect(proof.submission.record).toBe(RECORD);
 
   // The document the frame holds is the declaration plus the inline record, which is what the loader reads.
   const document = documentOf(proof.submission);
@@ -186,7 +202,7 @@ test('a submission with no run is refused, because there is nothing to walk', ()
 test('a submission keeps the judgement calls the form made, and reads its place and sources back', () => {
   const proof = validateSubmission({
     id: 'pasted',
-    record: scenario(),
+    record: RECORD,
     resources: [
       { kind: 'place', at: { view: [0, 0, 10, 10] } },
       { kind: 'sources', at: [{ member: 'rover', kind: 'mock', tree: [] }] },
@@ -201,7 +217,7 @@ test('a submission keeps the judgement calls the form made, and reads its place 
 
 test('a submission whose declaration is wrong is refused with the declaration\'s own places', () => {
   const document: ProjectDocument = { id: 'Bad Name', resources: [] };
-  const proof = validateSubmission({ id: document.id, record: scenario(), resources: [] });
+  const proof = validateSubmission({ id: document.id, record: RECORD, resources: [] });
   expect(proof.ok).toBe(false);
   if (proof.ok) return;
   expect(proof.issues.map((issue) => issue.path)).toContain('id');

@@ -40,11 +40,11 @@ export interface Model {
 
 /**
  * Who a hint is by. A hint is what bounded a judgement rather than a participant's own record, so the
- * format gives it no entity: it belongs to the layer that set the bounds, which is the policy layer the
- * run was executed under. This is the one place that layer is named, so the feed, the envelope and any
- * other reading of a hint cannot disagree about who it is by.
+ * format gives it no entity: it belongs to the layer that set the bounds, and that layer's name is the
+ * deployment's. The frame knows the role and not the name, so what stands here is the role: a product
+ * that calls its policy layer something would be a product the frame was written for.
  */
-export const POLICY = 'Krisis';
+export const POLICY = 'policy';
 
 const TITLES: Record<SceneKey, string> = {
   record: 'The device records',
@@ -313,7 +313,9 @@ export function worldOf(
     const livePoint = livePointOf(id);
     const path: [number, number, number][] = [];
     for (let i = 0; i <= index && i < keys.length; i += 1) {
-      const declared = unit.at[keys[i]];
+      // A place may stand a unit only in the record, and the contract says `at` is optional: a unit the place does not
+      // stand in a scene is read from its own readings rather than from a declaration it never made.
+      const declared = unit.at?.[keys[i]];
       if (declared) path.push(fromPlace(place, declared[0], declared[1]));
     }
     // The place declares where a unit stands in each scene; the record declares every move it made. Both are the path, in

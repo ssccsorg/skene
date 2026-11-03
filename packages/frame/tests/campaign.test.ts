@@ -6,12 +6,8 @@
 
 import { expect, test } from 'vitest';
 
-import { campaignAt, campaignsNamed, campaignsOf, runsOf } from '@/lib/campaign';
+import { campaignsNamed, campaignsOf, runsOf } from '@/lib/campaign';
 import type { Campaign } from '@/lib/types';
-import { example } from './board';
-
-const { model } = example();
-
 const campaign = (extra: Record<string, unknown> = {}): Campaign =>
   ({
     id: 'run-one',
@@ -110,67 +106,4 @@ test('the runs a project holds are its record and each run a campaign names, onc
   ]);
   // A campaign over the project's own record is not a second run.
   expect(runsOf('scenario/example.txt', [campaign()])).toEqual(['scenario/example.txt']);
-});
-
-test('before its start a campaign is pending, and every objective waits', () => {
-  const progress = campaignAt(
-    campaign({ id: 'late', start: { fact: 'reading-2' } }),
-    model.events,
-    600,
-  );
-  expect(progress.state).toBe('pending');
-  expect(progress.startedAt).toBeNull();
-  expect(progress.endedAt).toBeNull();
-  expect(progress.objectives.map((each) => each.state)).toEqual(['waiting', 'waiting', 'waiting']);
-  expect(progress.failed).toBe(false);
-});
-
-test('a campaign starts and ends on the second the record says, not on a scene boundary', () => {
-  const progress = campaignAt(campaign(), model.events, 0);
-  expect(progress.state).toBe('ended');
-  expect(progress.startedAt).toBe(0);
-  expect(progress.endedAt).toBe(0);
-  expect(progress.objectives.map((each) => [each.objective.id, each.state])).toEqual([
-    ['take', 'met'],
-    ['answer', 'met'],
-    ['again', 'open'],
-  ]);
-  expect(progress.met).toBe(2);
-  expect(progress.total).toBe(3);
-  expect(progress.failed).toBe(false);
-});
-
-test('a window that closed without its objective is missed, and a mandatory one fails the campaign', () => {
-  const late = campaign({
-    objectives: [{ id: 'again', title: 'A second reading', when: { fact: 'reading-2' }, within: 0 }],
-  });
-  expect(campaignAt(late, model.events, 0).failed).toBe(true);
-  const optional = campaign({
-    objectives: [
-      { id: 'again', title: 'A second reading', when: { fact: 'reading-2' }, within: 0, optional: true },
-    ],
-  });
-  const progress = campaignAt(optional, model.events, 0);
-  expect(progress.objectives[0].state).toBe('missed');
-  expect(progress.failed, 'an optional window is not a failure').toBe(false);
-  // The objective is read at its deadline, so a record written after it does not take the miss back.
-  expect(campaignAt(late, model.events, 3600).objectives[0].state).toBe('missed');
-});
-
-test('a threshold is read at the second it names, even when no record stands there', () => {
-  const timed = campaign({ id: 'timed', start: { time: 3600 }, end: { fact: 'reading-2' } });
-  expect(campaignAt(timed, model.events, 1800).startedAt).toBeNull();
-  const progress = campaignAt(timed, model.events, 3600);
-  expect(progress.startedAt).toBe(3600);
-  expect(progress.state, 'the run ends on the same record it started at').toBe('ended');
-  expect(progress.objectives.map((each) => each.state)).toEqual(['met', 'met', 'met']);
-});
-
-test('a count is read over what arrived, so it cannot be met before the run writes it', () => {
-  const counted = campaign({
-    start: { count: { kind: 'fact', atLeast: 12 } },
-    end: { fact: 'work-done' },
-  });
-  expect(campaignAt(counted, model.events, 0).state).toBe('pending');
-  expect(campaignAt(counted, model.events, 900).startedAt).toBe(900);
 });

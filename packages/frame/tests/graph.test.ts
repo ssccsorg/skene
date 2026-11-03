@@ -8,25 +8,6 @@ import { expect, test } from 'vitest';
 
 import { graphOf } from '@/lib/graph';
 import type { Entry } from '@/lib/types';
-import { example } from './board';
-
-const { bundle, model } = example();
-
-test('a node is a participant the place declares, whether or not the run reached it', () => {
-  const graph = graphOf(model.events, bundle.place.units ?? {});
-  expect(graph.nodes.map((node) => node.id)).toEqual([
-    'blackboard',
-    'worker-1',
-    'worker-2',
-    'machine-3',
-    'sensor-1',
-    'rover-1',
-    'camera-1',
-    'reader-1',
-  ]);
-  expect(graph.nodes.map((node) => node.written)).toEqual([1, 4, 2, 1, 3, 7, 3, 1]);
-});
-
 test('a participant the place forgot is appended rather than dropped', () => {
   const entry: Entry = { kind: 'fact', label: 'stray', origin: 'stranger/observation', at: 0 };
   const graph = graphOf([entry], { 'rover-1': {} });
@@ -49,16 +30,6 @@ test('an edge is a declaration passed to someone else, and a claim is not a reco
   // The claim is a step of the stream, so it is neither a node's count nor an edge of its own. The declaration is
   // attributed to the reader whose reading it started from, so it is that party's record too.
   expect(graph.nodes.map((node) => node.written)).toEqual([2, 0]);
-});
-
-test('the example\'s edges are the declarations passed across two parties, and a claim is not a record', () => {
-  // Two chains have a taker: the sensor's reading goes to a worker, and the worker's answer goes to a machine. The
-  // third is nobody's, so it is a declaration with no edge rather than an edge to nowhere.
-  const graph = graphOf(model.events, bundle.place.units ?? {});
-  expect(graph.edges.map((edge) => `${edge.from}->${edge.to}:${edge.label}`)).toEqual([
-    'sensor-1->worker-1:answer',
-    'worker-1->machine-3:inspect',
-  ]);
 });
 
 test('a party that declares work and takes it itself is not an edge to itself', () => {
