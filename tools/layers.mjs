@@ -1,8 +1,9 @@
 // The README's Layers table, as data.
 //
-// Two rules hold the table. A package imports a package that stands above it in the table, and a picture imports
-// another picture nowhere. A bare import that its own package.json does not declare is the third rule, because a
-// package that only resolves because a sibling happens to be installed is the thing the boundaries exist to prevent.
+// Two rules hold the packages. A package imports a package that stands above it in the table, and a picture imports
+// another picture nowhere. A third rule holds both the packages and the deployments under `examples/`: a bare import
+// is a dependency the importing package.json declares, because a package that only resolves because a sibling happens
+// to be installed is the thing these boundaries exist to prevent.
 //
 // A directory under `packages/` this file does not name is a failure. A new picture is one entry in a list, and no
 // rule is written beside it.
@@ -13,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PACKAGES = join(ROOT, 'packages');
+const EXAMPLES = join(ROOT, 'examples');
 
 // Ordered foundation to pane: a row imports the rows above it and nothing below.
 const LAYERS = ['kernel', 'ui', 'board', 'frame'];
@@ -61,24 +63,44 @@ function filesIn(dir) {
   return out;
 }
 
-/** The rows a package may import. */
+/** The rows a package may import. A deployment stands above the table and may import any of them. */
 function allowedFor(pkg) {
   const layer = LAYERS.indexOf(pkg);
   if (layer !== -1) return new Set(LAYERS.slice(0, layer));
   if (PICTURES.includes(pkg)) return new Set(LAYERS);
+  if (pkg === null) return new Set([...LAYERS, ...PICTURES]);
   return null;
 }
 
 const failures = [];
 let checked = 0;
 
-const declared = (pkg) => {
-  const manifest = JSON.parse(readFileSync(join(PACKAGES, pkg, 'package.json'), 'utf8'));
-  return new Set([
+function check(dir, name, allowed, { self = null } = {}) {
+  const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+  const known = new Set([
     ...Object.keys(manifest.dependencies ?? {}),
     ...Object.keys(manifest.peerDependencies ?? {}),
+    ...Object.keys(manifest.devDependencies ?? {}),
   ]);
-};
+
+  for (const file of filesIn(join(dir, SOURCE))) {
+    for (const spec of specifiersIn(readFileSync(file, 'utf8'))) {
+      const imported = packageOf(spec);
+      if (!imported) continue;
+      if (imported === self) continue;
+      const at = relative(ROOT, file);
+      checked += 1;
+
+      if (!known.has(imported)) {
+        failures.push(`${name}: imports ${imported}, which its package.json does not declare (${at})`);
+      }
+      const target = ofSkene(imported);
+      if (target !== null && !allowed.has(target)) {
+        failures.push(`${name}: imports ${target}, which the layer table does not put above it (${at})`);
+      }
+    }
+  }
+}
 
 for (const pkg of readdirSync(PACKAGES).sort()) {
   const allowed = allowedFor(pkg);
@@ -86,27 +108,11 @@ for (const pkg of readdirSync(PACKAGES).sort()) {
     failures.push(`${pkg}: is a package the layer table does not name`);
     continue;
   }
+  check(join(PACKAGES, pkg), pkg, allowed, { self: `@ssccsorg/skene-${pkg}` });
+}
 
-  const known = declared(pkg);
-  for (const file of filesIn(join(PACKAGES, pkg, SOURCE))) {
-    for (const spec of specifiersIn(readFileSync(file, 'utf8'))) {
-      const name = packageOf(spec);
-      if (!name) continue;
-      const at = relative(ROOT, file);
-
-      const target = ofSkene(name);
-      if (target === pkg) continue;
-      checked += 1;
-
-      if (!known.has(name)) {
-        failures.push(`${pkg}: imports ${name}, which its package.json does not declare (${at})`);
-      }
-      if (target === null) continue;
-      if (!allowed.has(target)) {
-        failures.push(`${pkg}: imports ${target}, which the layer table does not put above it (${at})`);
-      }
-    }
-  }
+for (const example of readdirSync(EXAMPLES).sort()) {
+  check(join(EXAMPLES, example), `examples/${example}`, allowedFor(null));
 }
 
 if (failures.length) {
@@ -116,4 +122,4 @@ if (failures.length) {
 }
 
 console.log(`layer table: ${LAYERS.join(' < ')} | pictures: ${PICTURES.join(' ')}`);
-console.log(`${checked} imports checked, every one declared and above its importer`);
+console.log(`${checked} imports checked across the packages and the deployments, every one declared and above its importer`);

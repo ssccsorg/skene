@@ -60,7 +60,8 @@ A reading that names no pack stands for every project, so a picture a deployment
 
 | Boundary | Held by |
 |:---|:---|
-| the Layers table as data: only a row above, no picture to a picture, every bare import declared, every package named | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
+| the Layers table as data: a package imports only a row above it, and a picture imports no other picture | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
+| every bare import is a dependency the importer declares, in the packages and in the deployments under `examples/` | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
 | a deployment imports every picture its board names | [pictures.test.ts](examples/board/tests/pictures.test.ts) |
 
 ## Consuming
