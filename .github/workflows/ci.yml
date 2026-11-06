@@ -74,7 +74,7 @@ jobs:
         run: test -f examples/board/dist/projects.json && test -d examples/board/dist/scenario
 
   # The assembly a deployment performs, held to the two surfaces this repository cannot test for them: that every package
-  # resolves from the workspace, and that no package reaches up into another one's dependency graph.
+  # resolves from the workspace, and that the Layers table in the README holds as data.
   assembly:
     name: assembly
     runs-on: ubuntu-latest
@@ -87,18 +87,7 @@ jobs:
       - run: npm ci
       - name: every workspace is installed
         run: npm ls --workspaces --depth=0
-      - name: the frame imports no view package
-        run: |
-          if grep -rn "@ssccsorg/skene-view-" packages/frame/src; then
-            echo "the frame reached for a view package"; exit 1
-          fi
-      - name: the kernel imports nothing outside itself
-        run: |
-          if grep -rnE "^import .* from '[^.]" packages/kernel/src; then
-            echo "the kernel reached outside itself"; exit 1
-          fi
-      - name: the board imports no frame
-        run: |
-          if grep -rn "@ssccsorg/skene-frame" packages/board/src; then
-            echo "the board reached for the frame"; exit 1
-          fi
+      # One table, every row: a package imports only a package above it, a picture imports no other picture, and a bare
+      # import is a dependency the package declares. A package the table does not name is a failure.
+      - name: the layer table holds
+        run: npm run check:layers

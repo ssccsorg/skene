@@ -48,11 +48,19 @@ The dependency direction is one way, and each layer answers one kind of question
 
 A row imports only the rows above it. A new picture is a new row, and no existing row changes.
 
+What stands is decided at three levels, and the three are not interchangeable.
+
+| Who | Decides | How |
+|:---|:---|:---|
+| this repository | which perspectives exist to be installed | a package under `packages/` |
+| the deployment | which of them are in its build | `import '@ssccsorg/skene-view-map'` |
+| the project | which of the installed ones stand | its `views` resource and its `layout` |
+
+A reading that names no pack stands for every project, so a picture a deployment imports is offered to all of its projects until a project turns it off.
+
 | Boundary | Held by |
 |:---|:---|
-| the kernel imports nothing outside itself | `assembly` job |
-| the board imports no frame | `assembly` job |
-| the frame imports no view package | `assembly` job |
+| the Layers table as data: only a row above, no picture to a picture, every bare import declared, every package named | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
 | a deployment imports every picture its board names | [pictures.test.ts](examples/board/tests/pictures.test.ts) |
 
 ## Consuming
@@ -122,11 +130,12 @@ The example is one project, one run, one place, and three chains in the three st
 | Job | Holds |
 |:---|:---|
 | `package` matrix | one job a package: typecheck, then tests; `board` and `frame` also hold a coverage floor |
-| `assembly` | every workspace resolves, and the boundary table above is checked as text |
+| `assembly` | every workspace resolves, and the Layers table is checked as data by `npm run check:layers` |
 | `example` | the deployment's own assertions, and a build that carries its board |
 
 ```bash
 npm test                     # every package, in order
+npm run check:layers         # the Layers table, every row
 npm run test:coverage        # the two floors: board and frame
 ```
 
