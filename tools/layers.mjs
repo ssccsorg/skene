@@ -75,12 +75,14 @@ function allowedFor(pkg) {
 const failures = [];
 let checked = 0;
 
-function check(dir, name, allowed, { self = null } = {}) {
+function check(dir, name, allowed, { self = null, dev = false } = {}) {
   const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+  // A package ships to consumers who do not install its devDependencies, so those are allowed only where the source
+  // and the build are the same tree: a deployment under examples/.
   const known = new Set([
     ...Object.keys(manifest.dependencies ?? {}),
     ...Object.keys(manifest.peerDependencies ?? {}),
-    ...Object.keys(manifest.devDependencies ?? {}),
+    ...(dev ? Object.keys(manifest.devDependencies ?? {}) : []),
   ]);
 
   for (const file of filesIn(join(dir, SOURCE))) {
@@ -112,7 +114,7 @@ for (const pkg of readdirSync(PACKAGES).sort()) {
 }
 
 for (const example of readdirSync(EXAMPLES).sort()) {
-  check(join(EXAMPLES, example), `examples/${example}`, allowedFor(null));
+  check(join(EXAMPLES, example), `examples/${example}`, allowedFor(null), { dev: true });
 }
 
 if (failures.length) {
