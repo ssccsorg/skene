@@ -26,10 +26,10 @@ substrate's own record, in whichever perspective a project asks for.
 | [ui](packages/ui/src/index.ts) | primitives, chrome vocabulary, colour, the palette | kernel |
 | [board](packages/board/src/index.ts) | bearings, the projection onto the shell, the patch a window covers, the disc, the glyphs | kernel, ui |
 | [frame](packages/frame/src/index.ts) | the pane: window model, panels, registers, host, runtime | kernel, ui, board |
-| [view-media](packages/view-media/src/index.ts) | footage: the picture, the surface it fills, the row mark, the surface control | frame, board |
-| [view-map](packages/view-map/src/index.ts) | ground: the picture on the shell, the page toolbar, the place as a map | frame, board |
-| [view-shell](packages/view-shell/src/index.ts) | the cockpit: the space on the shell, the windows on it, the wires control | frame, board |
-| [view-graph](packages/view-graph/src/index.ts) | the run as a graph: nodes, edges, layout | frame |
+| [view-media](packages/view-media/src/index.ts) | footage: the picture, the surface it fills, the row mark, the surface control | kernel, ui, board, frame |
+| [view-map](packages/view-map/src/index.ts) | ground: the picture on the shell, the page toolbar, the place as a map | kernel, board, frame |
+| [view-shell](packages/view-shell/src/index.ts) | the cockpit: the space on the shell, the windows on it, the wires control | kernel, ui, board, frame |
+| [view-graph](packages/view-graph/src/index.ts) | the run as a graph: nodes, edges, layout | kernel, ui, frame |
 | [examples/board](examples/board/src/main.tsx) | the smallest deployment: a brand, a board, one run | all of the above |
 
 The frame ships no picture. A deployment with no footage carries neither a video element nor its sampler; one with no map carries no map library; one that opens on a table carries no three.js scene.
