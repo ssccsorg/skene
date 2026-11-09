@@ -45,6 +45,11 @@ export function Header() {
           >
             <span className={cn(TITLE, 'tracking-wide')}>{brand.title}</span>
             <span className="text-[11.5px] tabular-nums text-muted-foreground">{brand.version}</span>
+            {brand.status ? (
+              <span className="rounded-sm border px-1.5 py-px text-[10.5px] uppercase tracking-wide text-muted-foreground">
+                {brand.status}
+              </span>
+            ) : null}
           </button>
         </Hint>
         {about ? <VersionCard /> : null}

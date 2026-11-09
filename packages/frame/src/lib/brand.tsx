@@ -13,6 +13,13 @@ export interface Brand {
   /** What the frame is called under the mark, which is what its card is headed. */
   name: string;
   version: string;
+  /**
+   * What the deployment can do, when that is not everything: `read-only` on a board served from a committed run.
+   *
+   * It is a statement about this deployment rather than about the frame, so it is the brand's to carry and the bar
+   * draws it beside the version.
+   */
+  status?: string;
   /** The layers the surface is over, read bottom up. */
   layers: string[];
   /** The mark, drawn where a place puts one beside a name. */
