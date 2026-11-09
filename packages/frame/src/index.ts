@@ -26,6 +26,9 @@ export type { BoardDocument, ProjectDocument } from './lib/project';
 export { actors, chainFor, entityOf, INTENT, parseScenario, titleOf } from '@ssccsorg/skene-kernel';
 export { registerPanel } from './lib/panels';
 export { registerInstrument } from './lib/instruments';
+// A kind is the format's own vocabulary, and its mark is the frame's: a deployment that draws a record reads the mark
+// here rather than choosing a colour and a letter of its own, which is a second vocabulary free to disagree with it.
+export { KindTag } from './components/KindTag';
 export { useScenario } from './stores/scenario';
 export { useRecords } from './stores/records';
 
