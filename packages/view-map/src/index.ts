@@ -9,3 +9,7 @@ import './MapView';
 export { MAP } from './kind';
 export { MAP_VIEW } from './MapView';
 export { bindMapWindow, mapWindowOf } from './map-windows';
+// A deployment's own layers. The register exists so a scenario can draw what it wants over the ground without the map
+// learning what a mission, a boundary, or a route is; publishing it is what makes that possible from outside the package.
+export { collectionOf, overlaysOf, pointOf, polygonOf, registerOverlays } from './map-overlays';
+export type { Overlay, OverlayKind, OverlaySource } from './map-overlays';
