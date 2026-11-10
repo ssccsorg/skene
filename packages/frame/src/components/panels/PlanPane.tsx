@@ -62,6 +62,9 @@ registerPanel({
   label: 'Space',
   title: 'the map, the projects and the devices',
   starts: true,
+  // The minimap is the sphere seen from outside the pilot, so it stands only where the build draws from the seat: a
+  // board with no shell has no sphere for a disc to be a picture of, and a disc there would be a map of nothing.
+  needsSeat: true,
   Icon: PanelRight,
   View: PlanPane,
 });
