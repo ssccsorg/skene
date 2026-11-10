@@ -10,6 +10,8 @@
 // panel's place in the arrangement and the panel's size would be keyed differently, and it would show as a panel that
 // folds to the place another panel's measure says.
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
 import { declaredPanels } from '@/lib/panels';
@@ -17,6 +19,9 @@ import { declaredPanels } from '@/lib/panels';
 import '@/components/panels';
 
 import { LIMITS, limit, type Panel } from '@/stores/sizes';
+
+const ROOT = fileURLToPath(new URL('../src/', import.meta.url));
+const source = (path: string) => readFileSync(`${ROOT}${path}`, 'utf8');
 
 const PANELS = Object.keys(LIMITS) as Panel[];
 
@@ -85,4 +90,29 @@ test('a measure named for a panel is that panel own, and a section is not a pane
   for (const name of SECTIONS) {
     expect(keys, `${name} is a section of a panel and not a panel`).not.toContain(name);
   }
+});
+
+test('the split view is the measure the pilot set, and its rows scroll under it', () => {
+  // The one line is as tall as its own content and no shorter. The split view is a row per writer, and sixteen rows as a
+  // floor is a panel taller than the frame and one no drag can move, because both directions stop at the content: the
+  // measure was stored and never reached the box. Its box is the measure now, and the rows scroll inside it.
+  const pane = source('components/panels/TimelinePane.tsx');
+  expect(pane, 'the floor depends on which reading is drawn').toMatch(
+    /expanded \? 'min-h-0' : 'min-h-fit'/,
+  );
+});
+
+test('a split measure kept from before that is raised once, and the transport keeps the height it was dragged to', () => {
+  // The split measure was never honoured, so a stored one is the leftover of a floor rather than a size anyone chose. It
+  // is raised to the size the split opens at; the transport's own measure is not touched again, because a pilot who set
+  // it has already been through the migration that did.
+  const store = source('stores/sizes.ts');
+  expect(store, 'the store moved on').toMatch(/version: 2,/);
+  expect(store, 'the split measure is raised for a state from before it').toMatch(
+    /if \(from < 2\) held\.timelineSplit = DEFAULTS\.timelineSplit;/,
+  );
+  expect(store, 'and the transport measure only for a state older than that').toMatch(
+    /if \(from < 1\) held\.timeline = DEFAULTS\.timeline;/,
+  );
+  expect(store, 'a few writer rows plus the row above them').toMatch(/timelineSplit: 148,/);
 });

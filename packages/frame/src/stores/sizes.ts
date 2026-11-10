@@ -61,7 +61,10 @@ const DEFAULTS: Record<Panel, number> = {
   projects: 172,
   // The transport's floor: its own content, which `min-h-fit` holds it at, and the height it comes up at.
   timeline: 60,
-  timelineSplit: 60,
+  // Four writer rows and the row above them. The split view opens at a size a few writers are read at, and the pilot
+  // drags from there: its box is the measure and not its content, so what it opens at is a choice rather than the
+  // arithmetic of how many entities wrote.
+  timelineSplit: 148,
 };
 
 /** The measures there are, which is `DEFAULTS`' own list rather than a second one written out beside it. */
@@ -81,11 +84,19 @@ export const useSizes = create<SizesState>()(
     }),
     {
       name: storageName('sizes'),
-      version: 1,
+      version: 2,
       // The transport's measure used to be a height the panel was given whole. It is now the pilot's from the panel's
       // own content upward, so a height kept from before that is larger than that content is room nobody asked for:
       // the one value this changes is that one, brought back to the floor.
-      migrate: (state) => ({ ...(state as Record<Panel, number>), timeline: DEFAULTS.timeline }),
+      //
+      // The split view never honoured its measure at all: the panel took its content's height, so what was stored was the
+      // row the content left and not a size anyone chose. It opens at the size the split is read at instead.
+      migrate: (state, from) => {
+        const held = { ...(state as Record<Panel, number>) };
+        if (from < 1) held.timeline = DEFAULTS.timeline;
+        if (from < 2) held.timelineSplit = DEFAULTS.timelineSplit;
+        return held;
+      },
       // Only the measures travel: the actions are this module's, and a stored copy of them would be a stored copy
       // of a function. Which measures there are is `DEFAULTS`' own question, so it is asked rather than repeated.
       partialize: (state) => Object.fromEntries(MEASURES.map((panel) => [panel, state[panel]])),

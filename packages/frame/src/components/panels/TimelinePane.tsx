@@ -95,7 +95,13 @@ function TimelinePane() {
       ref={pane}
       data-region="timeline-pane"
       style={drawn ? { height: kept } : undefined}
-      className="relative flex min-h-fit shrink-0 flex-col overflow-hidden border-y"
+      className={cn(
+        'relative flex shrink-0 flex-col overflow-hidden border-y',
+        // The one line is as tall as its own content and no shorter: a track cut off in the middle is not a transport.
+        // The split view is a row per writer, and sixteen rows as a floor is a panel taller than the frame and one that
+        // cannot be dragged at all, so there its box is the measure the pilot set and the rows scroll inside it.
+        expanded ? 'min-h-0' : 'min-h-fit',
+      )}
     >
       {drawn ? (
         <Splitter
