@@ -105,8 +105,9 @@ function TimelinePane() {
           measure={() => pane.current?.getBoundingClientRect().height ?? kept}
           onChange={(value) => setSize(measure, value)}
           // The handle sits inside the pane's own box. Straddling the edge reads better on paper and does not work: the
-          // pane clips what leaves it, so half of a straddling handle is half a handle to grab.
-          className="inset-x-0 top-0 h-1.5"
+          // pane clips what leaves it, so half of a straddling handle is half a handle to grab. It is taller than the
+          // border it stands on because a hand aims at the line between two rows and the line is not where a press lands.
+          className="inset-x-0 top-0 h-2"
         />
       ) : null}
       <div className={cn(ROW, 'gap-2')}>
