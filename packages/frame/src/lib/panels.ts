@@ -1,7 +1,6 @@
 import { useMemo, useSyncExternalStore, type ComponentType } from 'react';
 import { useSelection } from '../stores/selection';
 import { useAbilities } from './capabilities';
-import { declaredReadings } from './readings';
 import type { Layout } from '@ssccsorg/skene-kernel';
 
 /**
@@ -49,16 +48,6 @@ export interface PanelUnit {
    * surface a deployment has to have shipped, so it is drawn where that project's bundle says the deployment has it.
    */
   needs?: string;
-  /**
-   * Whether this panel draws the sphere a seat reading looks through, and stands only where one is installed.
-   *
-   * The frame's own minimap is a picture of the shell seen from outside the pilot: the whole sphere, the patches on it,
-   * and the part of it the board holds. A deployment that ships no seat reading has no sphere for a board to be pointed
-   * at, so a minimap there would be a disc of a space the build cannot show. A panel that names this stands where the
-   * build draws from the seat and nowhere else, which is a fact about the build rather than about a project: every
-   * project on a board is read through the same installed readings.
-   */
-  needsSeat?: boolean;
   /**
    * What the bar's press for this panel does.
    *
@@ -111,15 +100,9 @@ function inOrder(panels: PanelUnit[]): PanelUnit[] {
  * a surface the deployment may not have shipped, so it is drawn where that project says it did and nowhere else: a control
  * that opened it would be a control into nothing.
  */
-export function standingPanels(
-  panels: PanelUnit[],
-  abilities: string[],
-  seated = true,
-): PanelUnit[] {
+export function standingPanels(panels: PanelUnit[], abilities: string[]): PanelUnit[] {
   const held = new Set(abilities);
-  return panels.filter(
-    (panel) => (!panel.needs || held.has(panel.needs)) && (!panel.needsSeat || seated),
-  );
+  return panels.filter((panel) => !panel.needs || held.has(panel.needs));
 }
 
 /** A panel with the frame's answer about it, which is what a control or a box is handed. */
@@ -148,17 +131,13 @@ export function usePanels(): Standing[] {
   const said = useSelection((state) => state.open);
   const setOpen = useSelection((state) => state.setOpen);
   const abilities = useAbilities();
-  // Whether this build draws from the seat is a fact about the readings it installed. A reading registers when its
-  // module is imported, which the entry does before the frame is drawn, so this is read rather than subscribed: the
-  // question is about the build and not about a moment in it.
-  const seated = declaredReadings().some((reading) => reading.seat);
   return useMemo(
     () =>
-      inOrder(standingPanels([...registered.values()], abilities, seated)).map((unit) => {
+      inOrder(standingPanels([...registered.values()], abilities)).map((unit) => {
         const open = said[unit.key] ?? unit.starts;
         return { unit, open, toggle: () => setOpen(unit.key, !open) };
       }),
-    [stamp, said, setOpen, abilities, seated],
+    [stamp, said, setOpen, abilities],
   );
 }
 

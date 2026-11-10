@@ -7,7 +7,7 @@ import { RowControl } from '@ssccsorg/skene-ui';
 import { useEntityState } from '../hooks/useEntityState';
 import { useMenu } from '../hooks/useMenu';
 import { CONTROL, LABEL, ROW } from '@ssccsorg/skene-ui';
-import { useReadingAt } from '../lib/readings';
+import { hasSeat, useReadingAt } from '../lib/readings';
 import { cn } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 import { LIMITS, useSizes } from '../stores/sizes';
@@ -81,8 +81,10 @@ export function SpacePanel({
   const setSize = useSizes((size) => size.set);
 
   // Whether the disc stands. It is the column's own reading rather than a panel of the frame, so it folds here and not
-  // through the arrangement the bar draws.
+  // through the arrangement the bar draws. It needs a sphere to be a picture of, so a build that installs no seat reading
+  // draws the column's lists and no disc: the minimap is the shell seen from outside the pilot, and there is no shell.
   const [map, setMap] = useState(true);
+  const disc = map && hasSeat();
   // The form that adds a project, on the row that names the projects rather than in a dialog: a project is one record and
   // one source, and both are read where the list of projects is.
   const [adding, setAdding] = useState(false);
@@ -111,11 +113,11 @@ export function SpacePanel({
 
   // The most the projects may stand at: the column less what the map and the members may not give up. A map that is away
   // guarantees nothing, which is the whole of what folding it is for.
-  const most = Math.max(height - (map ? MAP_MIN : 0) - MEMBERS_MIN, LIMITS.projects[0]);
+  const most = Math.max(height - (disc ? MAP_MIN : 0) - MEMBERS_MIN, LIMITS.projects[0]);
 
   return (
     <div ref={column} className="relative flex h-full min-h-0 flex-col overflow-hidden">
-      {map ? (
+      {disc ? (
         <SpaceMap
           world={world}
           neighbours={neighbours}
@@ -168,17 +170,20 @@ export function SpacePanel({
             </Button>
           </Hint>
           {/* The disc's own control, on the row under it because that is the row that stands whichever way the disc
-              stands: a section away is a section with no row to carry its way back. */}
-          <Hint label={map ? 'hide map' : 'map'}>
-            <RowControl
-              at="end"
-              data-region="map-fold"
-              data-on={map}
-              onClick={() => setMap(!map)}
-            >
-              <Map />
-            </RowControl>
-          </Hint>
+              stands: a section away is a section with no row to carry its way back. A build with no sphere draws no
+              disc, so it draws no control into one. */}
+          {map && hasSeat() ? (
+            <Hint label={map ? 'hide map' : 'map'}>
+              <RowControl
+                at="end"
+                data-region="map-fold"
+                data-on={map}
+                onClick={() => setMap(!map)}
+              >
+                <Map />
+              </RowControl>
+            </Hint>
+          ) : null}
         </div>
         {adding ? <AddProject onAdd={add} onClose={() => setAdding(false)} /> : null}
         <div className="min-h-0 flex-1 overflow-y-auto">

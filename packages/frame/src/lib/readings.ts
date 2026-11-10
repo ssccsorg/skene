@@ -224,6 +224,17 @@ export function declaredReadings(): Reading[] {
 }
 
 /**
+ * Whether this build draws the space from the pilot's own seat.
+ *
+ * The frame's minimap is a picture of the sphere a seat reading looks through: the whole shell, the patches on it, and
+ * the part of it the board holds. A build that installs no such reading has no sphere, so there is nothing for a disc
+ * to be a picture of and the panel that would draw one is left to its lists.
+ */
+export function hasSeat(readings: Reading[] = declaredReadings()): boolean {
+  return readings.some((reading) => reading.seat);
+}
+
+/**
  * The reading in force at an address: the one whose path it is, and the frame's own first otherwise.
  *
  * An address the frame does not hold is the shell rather than nothing, which is what makes a link into the cockpit from
