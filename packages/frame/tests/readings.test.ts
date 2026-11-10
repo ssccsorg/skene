@@ -96,3 +96,15 @@ test('a view the frame has not settled waits to be asked for', () => {
     expect(reading?.asked, `${key} is a view a project has to ask for`).toBe(true);
   }
 });
+
+test('a kept arrangement is dropped once, because two hands had written it', () => {
+  // The kept map held the pilot's presses and a project's declarations, which were written into the same field. A map
+  // that holds both cannot tell them apart, so a project's close read as the pilot's and outlived the project that asked
+  // for it. The map is dropped once; from then on what is kept is what the pilot said.
+  const store = readFileSync(`${ROOT}src/stores/selection.ts`, 'utf8');
+  expect(store, 'the arrangement moved on').toMatch(/version: 2,/);
+  expect(store, 'and the map and what it brought forward are dropped for a state from before').toMatch(
+    /from < 2 \? \{ \.\.\.kept, open: \{\}, front: null \}/,
+  );
+  expect(store, 'a state from this version is kept as it is').toMatch(/return from < 2 .* : kept;/);
+});

@@ -219,6 +219,15 @@ export const useSelection = create<SelectionState>()(
         bottom: state.bottom,
         bar: state.bar,
       }),
+      version: 2,
+      // The kept arrangement was written by two hands: the pilot's press and a project's declaration, which used to be
+      // laid over what was kept. A map that holds both cannot tell them apart, so a project's close reads as the pilot's
+      // and survives the project that asked for it. Both are dropped once, and the frame comes up in the arrangement each
+      // panel answers for itself until the pilot says otherwise.
+      migrate: (state, from) => {
+        const kept = (state ?? {}) as Record<string, unknown>;
+        return from < 2 ? { ...kept, open: {}, front: null } : kept;
+      },
     },
   ),
 );
