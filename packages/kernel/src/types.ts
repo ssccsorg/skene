@@ -35,6 +35,19 @@ export type Properties = Record<Property, boolean>;
 /** The three kinds the format gives a record. */
 export type Kind = 'fact' | 'intent' | 'hint';
 
+/**
+ * What a project calls the format's three kinds.
+ *
+ * `fact`, `intent` and `hint` are the engine's names for the three things a run is made of, and they are the names an
+ * engine needs. A reader needs their own: a compliance record calls the same three things evidence, a calculation and a
+ * requirement, and a screen that wrote the engine's words would be explaining the engine to the person it is for.
+ *
+ * It is a projection and not a translation, so it is partial on purpose: a project that names one kind leaves the other
+ * two to the deployment, and a deployment that names none leaves them to the format. Nothing downstream branches on the
+ * words, so a name is free to be one word or three and to change without a record moving.
+ */
+export type KindWords = Partial<Record<Kind, string>>;
+
 /** A claim is not a record: it is a step a declaration takes, and the stream says so. */
 export type NodeKind = Kind | 'claim';
 
@@ -513,6 +526,14 @@ export interface Bundle {
    * atoms here, and a name the project leaves out takes the frame's own reading.
    */
   kinds?: Record<string, Property[]>;
+  /**
+   * What this project calls the three kinds of record, where its domain has words of its own.
+   *
+   * Absent means the deployment's words, and then the format's. It is the project's declaration because two projects on
+   * one board can be two domains: a compliance run and a mission are made of the same three kinds and are not read in
+   * the same words.
+   */
+  words?: KindWords;
   /** The entity sources the project declares, by member. A member with no entry is read from the room. */
   sources?: SourceSpec[];
   /** The campaigns the project declares. A project with none is read as a space rather than as a mission. */

@@ -1,4 +1,5 @@
 import { createContext, useContext, type ComponentType, type ReactNode } from 'react';
+import type { KindWords } from '@ssccsorg/skene-kernel';
 
 /**
  * What the frame is called, and the mark it draws.
@@ -13,6 +14,13 @@ export interface Brand {
   /** What the frame is called under the mark, which is what its card is headed. */
   name: string;
   version: string;
+  /**
+   * What this deployment calls the three kinds of record, which is what its projects inherit.
+   *
+   * The format's names for its three kinds are the engine's, and a product drawn for a domain names them its own way. A
+   * project may say its own over these, because two domains on one board are two vocabularies over one model.
+   */
+  words?: KindWords;
   /**
    * What the deployment can do, when that is not everything: `read-only` on a board served from a committed run.
    *

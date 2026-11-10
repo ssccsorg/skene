@@ -34,6 +34,9 @@ export { registerInstrument } from './lib/instruments';
 // A kind is the format's own vocabulary, and its mark is the frame's: a deployment that draws a record reads the mark
 // here rather than choosing a colour and a letter of its own, which is a second vocabulary free to disagree with it.
 export { KindTag } from './components/KindTag';
+// What a screen calls the three kinds is the project's projection, so a deployment that draws a record reads the words
+// here rather than choosing a vocabulary of its own beside the frame's.
+export { FORMAT_WORDS, useKindWords, wordsOf } from './lib/words';
 export { useScenario } from './stores/scenario';
 export { useRecords } from './stores/records';
 

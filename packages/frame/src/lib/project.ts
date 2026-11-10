@@ -9,7 +9,16 @@
 import { channelNamed } from './channel';
 import { campaignsNamed } from '@ssccsorg/skene-kernel';
 import { kindsNamed } from './kinds';
-import type { Bundle, Clock, Layout, Place, ProjectStatus, SourceSpec, Views } from '@ssccsorg/skene-kernel';
+import type {
+  Bundle,
+  Clock,
+  KindWords,
+  Layout,
+  Place,
+  ProjectStatus,
+  SourceSpec,
+  Views,
+} from '@ssccsorg/skene-kernel';
 
 /**
  * The document format this build reads.
@@ -93,6 +102,23 @@ function abilitiesNamed(at: unknown): string[] {
   return list.filter((name): name is string => typeof name === 'string' && name.trim().length > 0);
 }
 
+/**
+ * A project's words for the three kinds of record, where it names them.
+ *
+ * A kind is one of the format's three and nothing else: a name that is not one of them is not a word about a record, and
+ * an empty string is a project saying nothing rather than a mark with no letter in it.
+ */
+function wordsNamed(at: unknown): KindWords | undefined {
+  if (!at || typeof at !== 'object') return undefined;
+  const held = at as Record<string, unknown>;
+  const words: KindWords = {};
+  for (const kind of ['fact', 'intent', 'hint'] as const) {
+    const word = held[kind];
+    if (typeof word === 'string' && word.trim()) words[kind] = word.trim();
+  }
+  return Object.keys(words).length ? words : undefined;
+}
+
 const READERS: Record<
   string,
   (at: unknown, projects: ProjectDocument[]) => unknown
@@ -111,6 +137,7 @@ const READERS: Record<
   sources: (at) => at as SourceSpec[],
   layout: (at) => at as Layout,
   views: (at) => at as Views,
+  words: (at) => wordsNamed(at),
   abilities: (at) => abilitiesNamed(at),
   record: (at) => at as string,
   status: (at) => at as ProjectStatus,
