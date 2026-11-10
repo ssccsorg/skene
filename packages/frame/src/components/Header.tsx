@@ -50,6 +50,9 @@ export function Header() {
                 {brand.status}
               </span>
             ) : null}
+            {brand.note ? (
+              <span className="text-[10.5px] text-muted-foreground">{brand.note}</span>
+            ) : null}
           </button>
         </Hint>
         {about ? <VersionCard /> : null}

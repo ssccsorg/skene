@@ -28,6 +28,13 @@ export interface Brand {
    * draws it beside the version.
    */
   status?: string;
+  /**
+   * A line the deployment says about itself, drawn after the status on the same bar.
+   *
+   * A demonstration that renders records is one reading of them, so it says what it is here rather than leaving a reader
+   * to take the screen for the model. The frame draws the words and knows nothing about what they mean.
+   */
+  note?: string;
   /** The layers the surface is over, read bottom up. */
   layers: string[];
   /** The mark, drawn where a place puts one beside a name. */
