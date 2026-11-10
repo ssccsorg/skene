@@ -1,3 +1,8 @@
+/// <reference path="./r3f.d.ts" />
+// The reference above is the frame's own typing contract: a patch it draws uses three's JSX elements, and a deployment
+// that installs no 3D view must still be able to compile the frame. Leaving it to whichever view package a deployment
+// happens to import made the frame's types depend on an extension it does not own.
+
 // What a deployment reaches for: the frame, the brand it is drawn under, and the registers a domain plugs into.
 
 export { Frame } from './Frame';
