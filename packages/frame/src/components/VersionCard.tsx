@@ -38,7 +38,30 @@ export function VersionCard() {
       ) : null}
       <Separator className="my-2" />
       <span className={cn(LABEL, 'block pb-1')}>Stack</span>
-      <span className="block text-[11.5px] text-muted-foreground">{brand.layers.join(' · ')}</span>
+      <span className="block text-[11.5px] text-muted-foreground">
+        {brand.layers.map((layer, at) => {
+          const name = typeof layer === 'string' ? layer : layer.name;
+          const href = typeof layer === 'string' ? undefined : layer.href;
+          return (
+            <span key={name}>
+              {at > 0 ? ' · ' : null}
+              {href ? (
+                // A link opens beside the board rather than in it: the card is what a reader opened to leave.
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-border underline-offset-2 hover:text-foreground"
+                >
+                  {name}
+                </a>
+              ) : (
+                name
+              )}
+            </span>
+          );
+        })}
+      </span>
     </div>
   );
 }

@@ -8,6 +8,14 @@ import type { KindWords } from '@ssccsorg/skene-kernel';
  * layers the card under the mark says the surface is over, and the mark itself. Everything else about a deployment is
  * data, so a second product is a brand and a board rather than a second frame.
  */
+/**
+ * One layer of the stack: its name, and where it is kept when a deployment wants it linked.
+ *
+ * A bare name is the whole of it for most deployments. The address is the deployment's, because the frame knows no
+ * hosting: a link written here would be the frame naming an organisation it does not own.
+ */
+export type Layer = string | { name: string; href?: string };
+
 export interface Brand {
   /** What the bar carries, as it is drawn. */
   title: string;
@@ -43,7 +51,7 @@ export interface Brand {
    */
   about?: string[];
   /** The layers the surface is over, read bottom up. */
-  layers: string[];
+  layers: Layer[];
   /** The mark, drawn where a place puts one beside a name. */
   Mark: ComponentType<{ className?: string }>;
   /**
