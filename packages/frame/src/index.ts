@@ -8,7 +8,7 @@
 export { Frame } from './Frame';
 export { BrandMark, BrandProvider, useBrand } from './lib/brand';
 export type { Brand } from './lib/brand';
-export { deviceViews, feed, frontUrl, host, NO_SHELL } from './lib/host';
+export { deviceViews, feed, frontUrl, host, NO_SHELL, offTheShelf } from './lib/host';
 export { registerRoom } from './lib/channel';
 export type { Host, Screen } from './lib/host';
 // The room is the second seam a deployment supplies, and a deployment that writes one reads these: exporting the
@@ -35,6 +35,10 @@ export { registerInstrument } from './lib/instruments';
 // A kind is the format's own vocabulary, and its mark is the frame's: a deployment that draws a record reads the mark
 // here rather than choosing a colour and a letter of its own, which is a second vocabulary free to disagree with it.
 export { KindTag } from './components/KindTag';
+// A screen that does not fit is every deployment's first screen on a phone, so the notice is the frame's: the words are
+// the deployment's, and the element that states them is not.
+export { NarrowNotice } from './components/NarrowNotice';
+export type { NarrowNoticeProps } from './components/NarrowNotice';
 // What a screen calls the three kinds is the project's projection, so a deployment that draws a record reads the words
 // here rather than choosing a vocabulary of its own beside the frame's.
 export { FORMAT_WORDS, useKindWords, wordsOf } from './lib/words';

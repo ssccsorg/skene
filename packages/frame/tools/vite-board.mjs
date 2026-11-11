@@ -8,8 +8,23 @@
 // It is plain ESM rather than TypeScript because a `vite.config.ts` is loaded by Node, and Node does not load a `.ts`
 // file out of `node_modules`.
 
-import { copyFile, cp } from 'node:fs/promises';
+import { copyFile, cp, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+
+/**
+ * The one rule every deployment's host needs.
+ *
+ * A reading is an address, so the router owns the paths and the server owns the files: a request that names no file is
+ * the page, which is what lets a link into a reading land in the cockpit instead of on a 404. A deployment that ships
+ * its own `_redirects` keeps it, because a host rule it adds is its own.
+ */
+const SPA_FALLBACK = [
+  '# A reading is an address, so the router owns the paths and the server owns the files. A request that names no',
+  '# file is the page, which is what lets a link into a reading land in the cockpit instead of on a 404.',
+  '/*    /index.html    200',
+  '',
+].join('\n');
 
 /**
  * Copy a deployment's board and its runs into the build.
@@ -33,6 +48,10 @@ export function boardIntoBuild(options = {}) {
     async closeBundle() {
       await copyFile(join(root, board), join(root, outDir, board));
       await cp(join(root, runs), join(root, outDir, runs), { recursive: true });
+      // A host that carries the board carries the fallback with it. A deployment with rules of its own shipped one and
+      // is left alone, because the files on a host are the deployment's to decide.
+      const fallback = join(root, outDir, '_redirects');
+      if (!existsSync(fallback)) await writeFile(fallback, SPA_FALLBACK);
     },
   };
 }

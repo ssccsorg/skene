@@ -83,6 +83,20 @@ const BROWSER: Host = {
   listen: async () => () => {},
 };
 
+/**
+ * The host a deployment that ships its board stands over.
+ *
+ * The board and the runs it names are the files beside the assets, so there is no shell, no room and no feed to follow.
+ * It is the browser's answers plus the one declaration that matters: `static` is what stops the frame dialling the
+ * demonstration's loopback address for a server this deployment never had.
+ */
+export const offTheShelf: Host = {
+  reachable: false,
+  static: true,
+  ask: () => Promise.reject(new Error(NO_SHELL)),
+  listen: async () => () => {},
+};
+
 let current: Host = BROWSER;
 
 /** Install the host this window is drawn over. A window with none is drawn over the browser's answers. */
