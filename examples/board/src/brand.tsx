@@ -15,7 +15,9 @@ export const brand: Brand = {
   title: 'SKENE',
   name: 'Skene',
   version: 'v0.1.0',
-  layers: ['nexus', 'chton', 'tagma'],
+  // What this surface is made of, bottom up. An example names the packages it is drawn with rather than a product the
+  // frame happens to serve: the reference is the one deployment that must not teach a domain.
+  layers: ['kernel', 'board', 'frame'],
   Mark,
   mark: { path: MARK, viewBox: 32 },
 };

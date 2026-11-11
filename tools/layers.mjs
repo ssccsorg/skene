@@ -8,7 +8,7 @@
 // A directory under `packages/` this file does not name is a failure. A new picture is one entry in a list, and no
 // rule is written beside it.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -53,14 +53,56 @@ function specifiersIn(text) {
   return out;
 }
 
-function filesIn(dir) {
+function filesIn(dir, extensions = EXTENSIONS) {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const at = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...filesIn(at));
-    else if (EXTENSIONS.some((extension) => entry.name.endsWith(extension))) out.push(at);
+    if (entry.isDirectory()) out.push(...filesIn(at, extensions));
+    else if (extensions.some((extension) => entry.name.endsWith(extension))) out.push(at);
   }
   return out;
+}
+
+// ── the vocabulary ──────────────────────────────────────────────────────
+//
+// The layer table holds what may import what. This holds what may be *said*. The frame is a general surface, so a
+// deployment's name inside it, or the name of the engine beneath it, is a boundary that has already leaked; the
+// reference example is the one deployment that must not teach one.
+//
+// `delta` is not on the list: it is also the word for an interval, and a drag is two of them. Tests are not read, because
+// a fixture speaks in a deployment's words to stand in for one.
+const NOT_HERE = [
+  'alpine',
+  'chton',
+  'cva6',
+  'esg',
+  'ibex',
+  'kletos',
+  'ktema',
+  'kwai',
+  'nexus',
+  'penang',
+  'spiderpi',
+  'spiderwing',
+  'syntagma',
+  'tagma',
+  'villa',
+];
+const NAMED = new RegExp(`\\b(?:${NOT_HERE.join('|')})\\b`, 'i');
+const SPOKEN = ['.ts', '.tsx', '.mjs'];
+
+/** Every line of a package's source that names something the frame is not. */
+function vocabulary(dir) {
+  if (!existsSync(dir)) return;
+  for (const file of filesIn(dir, SPOKEN)) {
+    spoken += 1;
+    readFileSync(file, 'utf8')
+      .split('\n')
+      .forEach((line, index) => {
+        const found = line.match(NAMED);
+        if (found) failures.push(`${relative(ROOT, file)}:${index + 1} names ${found[0]}`);
+      });
+  }
 }
 
 /** The rows a package may import. A deployment stands above the table and may import any of them. */
@@ -74,6 +116,7 @@ function allowedFor(pkg) {
 
 const failures = [];
 let checked = 0;
+let spoken = 0;
 
 function check(dir, name, allowed, { self = null, dev = false } = {}) {
   const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
@@ -111,10 +154,13 @@ for (const pkg of readdirSync(PACKAGES).sort()) {
     continue;
   }
   check(join(PACKAGES, pkg), pkg, allowed, { self: `@ssccsorg/skene-${pkg}` });
+  vocabulary(join(PACKAGES, pkg, SOURCE));
+  vocabulary(join(PACKAGES, pkg, 'tools'));
 }
 
 for (const example of readdirSync(EXAMPLES).sort()) {
   check(join(EXAMPLES, example), `examples/${example}`, allowedFor(null), { dev: true });
+  vocabulary(join(EXAMPLES, example, SOURCE));
 }
 
 if (failures.length) {
@@ -125,3 +171,4 @@ if (failures.length) {
 
 console.log(`layer table: ${LAYERS.join(' < ')} | pictures: ${PICTURES.join(' ')}`);
 console.log(`${checked} imports checked across the packages and the deployments, every one declared and above its importer`);
+console.log(`${spoken} files read for a name the frame is not: a deployment's, or the engine's beneath it`);
