@@ -137,6 +137,9 @@ function paintUnit(element: HTMLElement, unit: Standing, picked: boolean): void 
 
 /** Draw the layers the register was given, adding each source and layer once and updating its data after. */
 function drawOverlays(map: MapLibreMap, place: Place): void {
+  // A source goes onto a style that has loaded: before that there is no style to add it to, and the load handler draws
+  // the place in hand rather than this effect failing on a map that is still reading its own.
+  if (!map.isStyleLoaded()) return;
   for (const overlay of overlaysOf(place)) {
     const source = `overlay:${overlay.id}`;
     const held = map.getSource(source) as GeoJSONSource | undefined;
