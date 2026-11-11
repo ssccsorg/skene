@@ -35,6 +35,9 @@ test('each engine is its own chunk and the frame gathers the rest', () => {
   expect(skeneChunks('/app/node_modules/@react-three/fiber/dist/index.js')).toBe('skene');
   expect(skeneChunks('/app/node_modules/react-dom/client.js')).toBe('react');
   expect(skeneChunks('/app/node_modules/@ssccsorg/skene-frame/src/Frame.tsx')).toBe('skene');
+  // This repository's example builds against the checkout, where a package is `packages/<name>`.
+  expect(skeneChunks('/repo/packages/frame/src/Frame.tsx')).toBe('skene');
+  expect(skeneChunks('/repo/packages/view-media/src/kind.tsx')).toBe('skene');
   expect(skeneChunks('/app/src/main.tsx')).toBeUndefined();
 });
 

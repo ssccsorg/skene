@@ -18,6 +18,14 @@
 export const SKENE_DEDUPE = ['react', 'react-dom', 'three', 'zustand'];
 
 /**
+ * The size above which a build warns.
+ *
+ * The number is a fact about the engines rather than about an application: the map is the largest of them, and a chunk
+ * that grows past this one is the application's own weight and should be said so.
+ */
+export const SKENE_CHUNK_LIMIT = 1200;
+
+/**
  * Which file a module is emitted into.
  *
  * `@react-three` travels with the frame because those bindings are how the frame's shell reading is drawn; separating
@@ -32,5 +40,8 @@ export function skeneChunks(id) {
   if (id.includes('node_modules/@react-three')) return 'skene';
   if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
   if (id.includes('node_modules/@ssccsorg/')) return 'skene';
+  // This repository's own example builds against the checkout rather than an installed copy, so its packages resolve to
+  // `packages/<name>`. Naming them is what lets the example be built the way a deployment is.
+  if (/(^|\/)packages\/(board|frame|kernel|ui|view-[a-z]+)\//.test(id)) return 'skene';
   return undefined;
 }
