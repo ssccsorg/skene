@@ -35,6 +35,13 @@ export interface Brand {
    * to take the screen for the model. The frame draws the words and knows nothing about what they mean.
    */
   note?: string;
+  /**
+   * What the deployment is, as lines, drawn under the name when the card opens.
+   *
+   * A view that is not the infrastructure it runs on has to say so where a reader looks before reading the screen. The
+   * frame draws the lines and knows nothing about what they mean; a brand that states none has the stack drawn alone.
+   */
+  about?: string[];
   /** The layers the surface is over, read bottom up. */
   layers: string[];
   /** The mark, drawn where a place puts one beside a name. */

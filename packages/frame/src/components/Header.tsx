@@ -1,4 +1,4 @@
-import { Settings } from 'lucide-react';
+import { Info, Settings } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
 import { RowControl } from '@ssccsorg/skene-ui';
 import { useMenu } from '../hooks/useMenu';
@@ -30,7 +30,7 @@ export function Header() {
   return (
     <header data-region="header" className={cn(ROW, 'border-b bg-sidebar')}>
       <div ref={aboutBox} className="relative z-[100]">
-        <Hint label="about">
+        <Hint label="about this view">
           <button
             type="button"
             data-region="brand"
@@ -44,6 +44,7 @@ export function Header() {
             )}
           >
             <span className={cn(TITLE, 'tracking-wide')}>{brand.title}</span>
+            <Info aria-hidden className="size-3.5 shrink-0 text-muted-foreground" />
             <span className="text-[11.5px] tabular-nums text-muted-foreground">{brand.version}</span>
             {brand.status ? (
               <span className="rounded-sm border px-1.5 py-px text-[10.5px] uppercase tracking-wide text-muted-foreground">

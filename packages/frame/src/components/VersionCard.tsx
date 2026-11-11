@@ -18,10 +18,24 @@ export function VersionCard() {
   return (
     <div
       data-region="version"
-      className="absolute top-full left-0 z-[100] mt-1 w-[248px] rounded-md border border-border/70 bg-card/95 p-3 shadow-lg backdrop-blur-sm"
+      className={cn(
+        'absolute top-full left-0 z-[100] mt-1 rounded-md border border-border/70 bg-card/95 p-3 shadow-lg backdrop-blur-sm',
+        brand.about?.length ? 'w-[304px]' : 'w-[248px]',
+      )}
     >
       <span className="block text-[11.5px] text-foreground">{brand.name}</span>
       <span className="block text-[11.5px] tabular-nums text-muted-foreground">{brand.version}</span>
+      {brand.about?.length ? (
+        <>
+          <Separator className="my-2" />
+          <span className={cn(LABEL, 'block pb-1')}>About</span>
+          <ul className="list-disc space-y-1 pl-4 text-[11.5px] text-muted-foreground">
+            {brand.about.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
       <Separator className="my-2" />
       <span className={cn(LABEL, 'block pb-1')}>Stack</span>
       <span className="block text-[11.5px] text-muted-foreground">{brand.layers.join(' · ')}</span>
