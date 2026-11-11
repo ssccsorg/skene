@@ -25,6 +25,7 @@ export type {
 } from './lib/channel';
 
 export { NATIVE, registerPack, registerReading, standing } from './lib/readings';
+export { declaredReadings, hasSeat } from './lib/readings';
 export type { Board, Pack, Reading, Want } from './lib/readings';
 export { bundleOf, PROJECT_FORMAT, registerResource } from './lib/project';
 export type { BoardDocument, ProjectDocument } from './lib/project';

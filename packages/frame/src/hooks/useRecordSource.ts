@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { keyOf } from '@ssccsorg/skene-kernel';
+import { host } from '../lib/host';
 import { useRecords, volumeOf } from '../stores/records';
 import { source, useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
@@ -61,6 +62,9 @@ export function useRecordSource(): Frame {
   const stream = useVolume().stream;
   // A volume is read here rather than streamed, so this window opens no socket for it.
   const volume = Boolean(import.meta.env.VITE_RECORDS);
+  // A board that shipped its own runs has no feed to follow and no socket to refuse: the fallback below is the whole of
+  // how its records arrive, so it is asked for rather than waited for.
+  const shipped = host().static === true;
 
   useEffect(() => {
     void load('./', frame.project);
@@ -80,7 +84,7 @@ export function useRecordSource(): Frame {
     // the run arrive is one that names a pace in its address.
     pace: frame.pace ?? 0,
     at: frame.at ?? undefined,
-    enabled: status === 'ready' && !volume,
+    enabled: status === 'ready' && !volume && !shipped,
     // A socket replays its project's run from the start, so the volume it fills is emptied first: a project
     // opened again is a new reading of it and not a second copy of the same records.
     onOpen: reset,
@@ -108,7 +112,7 @@ export function useRecordSource(): Frame {
   // to: a frame names a place in the run and not a place in what has been read of it.
   useEffect(() => {
     if (status !== 'ready' || !model || !projectId) return undefined;
-    if (!volume && stream !== 'error' && stream !== 'closed') return undefined;
+    if (!volume && !shipped && stream !== 'error' && stream !== 'closed') return undefined;
     if (volumeOf(projectId).received.length > 0) return undefined;
 
     setSource(projectId, 'local');
@@ -130,7 +134,7 @@ export function useRecordSource(): Frame {
     return () => {
       gone = true;
     };
-  }, [status, model, projectId, stream, frame.at, pushAll, seek, setSource, setStream, setFollowing, volume]);
+  }, [status, model, projectId, stream, frame.at, pushAll, seek, setSource, setStream, setFollowing, volume, shipped]);
 
   // A frame can name the record it picked, so an envelope is as reproducible as a figure: the pick is
   // applied when the record it names has arrived, and only when nothing has been picked by hand.

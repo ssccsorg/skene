@@ -48,6 +48,15 @@ export interface Host {
    */
   screen?: Screen;
   /**
+   * Whether the board and its runs are the files this window shipped with.
+   *
+   * A bundle has no room to ask and no feed to follow: the board stands beside the assets and every run is one of the
+   * texts that board names. A deployment that says so is never dialled for either, and the frame's loopback defaults do
+   * not apply to it. Absent means the window expects the demonstration's room on loopback, which is what a build served
+   * with one does.
+   */
+  static?: boolean;
+  /**
    * Where this deployment's record stream and chat answer, when they are not the frame's own defaults.
    *
    * The frame's defaults are the demonstration's, on loopback, because that is what an example needs. A deployment

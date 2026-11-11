@@ -33,6 +33,9 @@ export function App() {
   const status = useScenario((state) => state.status);
   const error = useScenario((state) => state.error);
   const projectId = useScenario((state) => state.projectId);
+  // A bundle has no room to load a conversation from; the store's fetch would be a window dialling a server it does
+  // not ship with.
+  const shipped = host().static === true;
   // The arrangement the open project declares, taken as the bundle's own object rather than rebuilt, so a render
   // that changed nothing else does not read as a project that asked for a different arrangement.
   const layout = useScenario((state) => state.projects.find((each) => each.id === state.projectId)?.layout);
@@ -63,8 +66,8 @@ export function App() {
   // what is held belongs to the one that was left.
   useRoom(projectId);
   useEffect(() => {
-    if (projectId) void load(projectId);
-  }, [projectId, load]);
+    if (projectId && !shipped) void load(projectId);
+  }, [projectId, load, shipped]);
 
   // A project declares where the frame starts for it, because what is on screen follows from what the project
   // is: the fields the demonstration runs are read from a record the board draws, and a project whose work is a

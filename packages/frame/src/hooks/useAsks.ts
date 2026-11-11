@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import type { Asked } from '../lib/channel';
+import { host } from '../lib/host';
 import { roomOf } from '../stores/chat';
 import { useAskStore } from '../stores/asks';
 import { useScenario } from '../stores/scenario';
@@ -45,7 +46,8 @@ export function useAsks(): Asks {
    * as "there is nothing to draw" rather than as a member with no abilities.
    */
   const lower = useMemo(() => {
-    if (!project) return null;
+    // A board that shipped its own files has no room to ask, so every control is drawn from the declaration alone.
+    if (!project || host().static === true) return null;
     const room = roomOf(project);
     const asks = room.asks?.bind(room);
     return asks ? (member: string) => asks(project, member) : null;

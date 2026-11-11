@@ -182,8 +182,12 @@ export const useScenario = create<ScenarioState>()(
           // record it carries and the stack it is over is the one given to it in the frame's own settings. The two are
           // not told apart here, because a window cannot tell a room that refused from a room that is not running: what
           // says which it is is the frame's own link state, which is drawn from the room's subscription.
-          const room = defaultRoom(host().prove ?? (async () => {}));
-          const document = (await room.board?.().catch(() => null)) ?? (await boardFile(base));
+          //
+          // A board that says it shipped its own is never asked: the room's loopback address is the demonstration's, and
+          // a bundle reaching for it would be a window reporting a failure it was never going to answer.
+          const shipped = host().static === true;
+          const room = shipped ? null : defaultRoom(host().prove ?? (async () => {}));
+          const document = (room ? await room.board?.().catch(() => null) : null) ?? (await boardFile(base));
           // Whichever board answered, the addresses this host's devices give are applied here: a
           // room declares the view and cannot know the token this host holds, so a board from the
           // room would otherwise carry an address that answers 401.
@@ -201,7 +205,7 @@ export const useScenario = create<ScenarioState>()(
             const texts: Record<string, string> = {};
             for (const path of runsOf(bundle.record, bundle.campaigns)) {
               const served =
-                path === bundle.record && room.record
+                !shipped && path === bundle.record && room?.record
                   ? await room.record(bundle.id).catch(() => null)
                   : null;
               texts[path] = served ?? (await recordFile(base, path));

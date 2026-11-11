@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Message } from '../lib/channel';
+import { host } from '../lib/host';
 import { roomOf, useChat } from '../stores/chat';
 import { useLive } from '../stores/live';
 
@@ -38,7 +39,9 @@ export function useRoom(project: string | null): void {
   }, [project]);
 
   useEffect(() => {
-    if (!project) return undefined;
+    // A board that shipped its own files has no room: the room's address is the demonstration's loopback, and watching
+    // it would be a panel reporting a refusal the deployment never had.
+    if (!project || host().static === true) return undefined;
     const here = handlers.current;
     return roomOf(project).watch(project, {
       link: (link, detail) => here.setLink(link, detail ?? null),
