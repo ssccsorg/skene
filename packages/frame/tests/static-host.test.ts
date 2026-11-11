@@ -94,8 +94,10 @@ test('a window that shipped its board asks no room for it', async () => {
   expect(asked.filter((url) => url.includes('/v1/')), 'and no room was dialled').toEqual([]);
 });
 
-test('a window that expects a room still asks for it', async () => {
+test('a window that says it expects a room still asks for it', async () => {
   stand();
+  // A window with no host is a page, so a window that expects a room says so.
+  setHost({ reachable: false, static: false, ask: async () => null, listen: async () => () => {} });
 
   await scenario.useScenario.getState().load('./', null);
 

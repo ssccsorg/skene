@@ -18,11 +18,10 @@ test('a shipped board has no shell and no feed', async () => {
   expect(typeof (await offTheShelf.listen('stack-state', () => {}))).toBe('function');
 });
 
-test('a shipped board is not the browser default, which may still expect a room', () => {
-  setHost(offTheShelf);
-  expect(host().static).toBe(true);
+test('a window with no host is a page, and a page has no room', () => {
   setHost(undefined);
-  expect(host().static).toBeUndefined();
+  expect(host()).toBe(offTheShelf);
+  expect(host().static).toBe(true);
 });
 
 test('one copy of the renderer, React, and the store', () => {
@@ -67,10 +66,10 @@ test('footage is fetched from the bucket under the path that was asked for', asy
   expect(response.status).toBe(200);
 });
 
-test('the range a player asked for is the range the bucket is asked for', async () => {
-  const asked = [];
+test('the range a player asked for is the range the bucket is asked for, and a part is not cached', async () => {
+  const seen = [];
   vi.stubGlobal('fetch', async (url, init) => {
-    asked.push(init?.headers?.range ?? null);
+    seen.push({ range: init?.headers?.range ?? null, cache: init?.cf?.cacheEverything ?? false });
     return answer(206, { 'content-range': 'bytes 0-1023/177339359' });
   });
   const proxy = mediaProxy(bucket);
@@ -78,9 +77,20 @@ test('the range a player asked for is the range the bucket is asked for', async 
     request: new Request('https://demo/media/robot_2.mp4', { headers: { range: 'bytes=0-1023' } }),
     params: { path: 'robot_2.mp4' },
   });
-  expect(asked).toEqual(['bytes=0-1023']);
+  expect(seen).toEqual([{ range: 'bytes=0-1023', cache: false }]);
   expect(response.status).toBe(206);
   expect(response.headers.get('content-range')).toBe('bytes 0-1023/177339359');
+  expect(response.headers.get('cache-control')).toBe('no-store');
+});
+
+test('a missing file is not cached, so one published later is found', async () => {
+  vi.stubGlobal('fetch', async () => answer(404, { 'content-type': 'text/plain' }, 'not here'));
+  const response = await mediaProxy(bucket).onRequest({
+    request: new Request('https://demo/media/robot_3.mp4'),
+    params: { path: 'robot_3.mp4' },
+  });
+  expect(response.status).toBe(404);
+  expect(response.headers.get('cache-control')).toBe('no-store');
 });
 
 test('a request that names no file is refused', async () => {

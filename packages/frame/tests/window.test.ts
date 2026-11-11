@@ -8,9 +8,10 @@
 // The room is stubbed at the one place the frame meets it, which is the fetch the sim's channel is written against, so
 // what is driven here is the real store over the real channel rather than a mock of either.
 
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 import { EARLIER, useChat } from '@/stores/chat';
+import { setHost } from '@/lib/host';
 
 const real = globalThis.fetch;
 /** What the room was asked, one entry a request, so a test can hold the questions as well as the answers. */
@@ -40,9 +41,15 @@ function sim(total: number, cap = 40) {
   }) as typeof fetch;
 }
 
+beforeEach(() => {
+  // The store reaches a room, so the window says it has one: a page that names no host ships its board and asks nothing.
+  setHost({ reachable: false, static: false, ask: async () => null, listen: async () => () => {} });
+});
+
 afterEach(() => {
   globalThis.fetch = real;
   asked.length = 0;
+  setHost(undefined);
   useChat.setState({ project: null, open: null, messages: [], from: 0, total: 0, turn: null, queue: [], error: null });
 });
 

@@ -25,9 +25,11 @@ export function mediaProxy(bucket) {
       if (path.split('/').includes('..')) return new Response('that path is not footage', { status: 400 });
 
       const range = request.headers.get('range');
+      // A ranged request is not cached at either end: the cache is keyed by the URL, so a part of a file stored under it
+      // would answer a request that asked for the whole.
       const upstream = await fetch(`${base}/${path}`, {
         headers: range ? { range } : {},
-        cf: { cacheEverything: true },
+        cf: range ? {} : { cacheEverything: true },
       });
 
       // The body streams through as it arrives, so a large file costs the response and not the request that started it.
@@ -43,7 +45,10 @@ export function mediaProxy(bucket) {
         const value = upstream.headers.get(name);
         if (value) headers.set(name, value);
       }
-      headers.set('cache-control', 'public, max-age=86400');
+      // A whole file is worth caching and nothing else is: an error cached for a day is a file published after a 404 that
+      // stays missing for as long as the entry lives.
+      const whole = upstream.status === 200 && !range;
+      headers.set('cache-control', whole ? 'public, max-age=86400' : 'no-store');
 
       return new Response(upstream.body, {
         status: upstream.status,
