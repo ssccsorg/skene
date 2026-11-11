@@ -191,7 +191,7 @@ export const useScenario = create<ScenarioState>()(
           // Whichever board answered, the addresses this host's devices give are applied here: a
           // room declares the view and cannot know the token this host holds, so a board from the
           // room would otherwise carry an address that answers 401.
-          applyLocalSources(document, await localSources(base));
+          applyLocalSources(document, shipped ? {} : await localSources(base));
 
           // Every project's record is read, not only the open one's: the rail names the projects, and a
           // project's name is the one its own record carries, so a list of names is a list of reads.
