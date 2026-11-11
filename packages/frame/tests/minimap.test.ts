@@ -13,6 +13,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 import { hasSeat, type Reading } from '@/lib/readings';
+import { standing } from '@/lib/packs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const source = (path: string) => readFileSync(`${ROOT}${path}`, 'utf8');
@@ -26,6 +27,20 @@ test('a set of readings draws from the seat when one of them looks through it', 
   expect(hasSeat([]), 'no readings, no sphere').toBe(false);
   expect(hasSeat([reading({ key: 'records' })])).toBe(false);
   expect(hasSeat([reading({ key: 'records' }), reading({ key: 'shell', seat: true })])).toBe(true);
+});
+
+test('a project keeps the sphere out by enumerating its readings or by naming it off', () => {
+  // The two declarations a bundle has for this: `views.on` names the readings it stands, and a `layout` entry of false
+  // hides one by key. The disc is drawn on the post-declaration list, so either one withdraws it.
+  const all = [reading({ key: 'records' }), reading({ key: 'shell', seat: true })];
+  expect(hasSeat(standing(all, { views: { on: ['records'] } })), 'the enumeration leaves it out').toBe(
+    false,
+  );
+  expect(hasSeat(standing(all, { layout: { shell: false } })), 'the layout names it off').toBe(false);
+  expect(
+    hasSeat(standing(all, { views: { on: ['records', 'shell'] } })),
+    'and naming it on keeps it',
+  ).toBe(true);
 });
 
 test('the space column asks the readings the project stands', () => {
