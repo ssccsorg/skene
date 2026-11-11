@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Crosshair, Minus, Plus } from 'lucide-react';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '@ssccsorg/skene-board';
 import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '@ssccsorg/skene-board';
 import { useMapDrag } from '../hooks/useMapDrag';
+import { useReadings } from '../lib/readings';
 import { UNIT_STATE } from '../hooks/useEntityState';
 import { useFrame } from '../stores/frame';
 import { useScenario } from '../stores/scenario';
@@ -126,6 +128,11 @@ export function SpaceMap({
   const releaseView = useView((store) => store.release);
   const projectId = useScenario((store) => store.projectId);
   const returnToTogether = useFrame((store) => store.returnToTogether);
+  const readings = useReadings();
+  const navigate = useNavigate();
+  // The reading drawn from the seat, which is the sphere this disc is a picture of. The column draws no disc where the
+  // project stands none, so a turn always has one to land on.
+  const sphere = readings.find((reading) => reading.seat) ?? null;
   const aspect = world.aspect;
   const sector = world.sector;
   // The pilot's own bearing, which the disc is centred on: the map shows the half of the shell they face.
@@ -172,6 +179,11 @@ export function SpaceMap({
     // The map draws the pilot's own bearing at its middle, so a hand that pushes the disc turns the space the other way
     // from the hand: the sphere moves under the marker rather than the marker under the sphere.
     sense: -1,
+    // The disc turns the space, and the space is the reading drawn from the seat: the first push of the hand is the
+    // moment the board has to be looking through it, or a pilot turns the map and nothing they can see moves.
+    onTurn: () => {
+      if (!seat && sphere) navigate(sphere.path);
+    },
   });
 
   // The wheel is the map's own zoom, at the same range the buttons hold. It is a listener of its own because a wheel

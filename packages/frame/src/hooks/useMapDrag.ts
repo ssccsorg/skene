@@ -41,6 +41,14 @@ export interface MapDragOptions {
    * A surface with no frame leaves this out, and then every press turns.
    */
   turnable?: (event: ReactPointerEvent<Element>) => boolean;
+  /**
+   * What the surface does the moment a press becomes a turn.
+   *
+   * The minimap is read from outside the sphere and the board from inside it, so a hand that turns the disc is a hand
+   * asking to see the space: a surface drawn from anywhere else says so here and lands on the reading that is. A
+   * surface already drawn from the seat needs nothing, so it leaves this out.
+   */
+  onTurn?: () => void;
   /** How much the disc is magnified in its box, which the rate the drag is worth follows. */
   scale?: number;
   /**
@@ -81,6 +89,7 @@ export function useMapDrag(box: RefObject<Element | null>, options: MapDragOptio
       if (!was || was.id !== event.pointerId) return;
       const [dx, dy] = [event.clientX - was.at[0], event.clientY - was.at[1]];
       if (!turned.current && Math.hypot(dx, dy) < DRAG) return;
+      if (!turned.current) options.onTurn?.();
       turned.current = true;
       dragging.current = { id: was.id, at: [event.clientX, event.clientY] };
       const rect = box.current?.getBoundingClientRect();

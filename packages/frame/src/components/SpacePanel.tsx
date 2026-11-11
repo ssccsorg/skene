@@ -7,7 +7,7 @@ import { RowControl } from '@ssccsorg/skene-ui';
 import { useEntityState } from '../hooks/useEntityState';
 import { useMenu } from '../hooks/useMenu';
 import { CONTROL, LABEL, ROW } from '@ssccsorg/skene-ui';
-import { hasSeat, useReadingAt } from '../lib/readings';
+import { hasSeat, useReadings, useReadingAt } from '../lib/readings';
 import { cn } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 import { LIMITS, useSizes } from '../stores/sizes';
@@ -72,6 +72,9 @@ export function SpacePanel({
 }) {
   const { pathname } = useLocation();
   const reading = useReadingAt(pathname);
+  // The readings this project stands, which is what the disc is drawn on: a build that installs a seat reading tells
+  // nothing about a project whose bundle does not stand it.
+  const readings = useReadings();
   const projects = useScenario((state) => state.projects);
   const projectId = useScenario((state) => state.projectId);
   const open = useScenario((state) => state.open);
@@ -81,10 +84,12 @@ export function SpacePanel({
   const setSize = useSizes((size) => size.set);
 
   // Whether the disc stands. It is the column's own reading rather than a panel of the frame, so it folds here and not
-  // through the arrangement the bar draws. It needs a sphere to be a picture of, so a build that installs no seat reading
-  // draws the column's lists and no disc: the minimap is the shell seen from outside the pilot, and there is no shell.
+  // through the arrangement the bar draws. It is a picture of the sphere a seat reading looks through, so it stands
+  // only where the project in force stands one: a project read as a chain, a table or a record keeps the column's lists
+  // and no disc, because there is no sphere in it for a disc to be a picture of.
   const [map, setMap] = useState(true);
-  const disc = map && hasSeat();
+  const sphere = hasSeat(readings);
+  const disc = map && sphere;
   // The form that adds a project, on the row that names the projects rather than in a dialog: a project is one record and
   // one source, and both are read where the list of projects is.
   const [adding, setAdding] = useState(false);
@@ -170,9 +175,9 @@ export function SpacePanel({
             </Button>
           </Hint>
           {/* The disc's own control, on the row under it because that is the row that stands whichever way the disc
-              stands: a section away is a section with no row to carry its way back. A build with no sphere draws no
-              disc, so it draws no control into one. */}
-          {map && hasSeat() ? (
+              stands: a section away is a section with no row to carry its way back. A project with no sphere stands no
+              disc, so it stands no control into one. */}
+          {map && sphere ? (
             <Hint label={map ? 'hide map' : 'map'}>
               <RowControl
                 at="end"
