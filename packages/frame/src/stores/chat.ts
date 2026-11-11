@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import {
   commandOf,
+  defaultChannel,
   noteOf,
   roomFor,
   type Agent,
@@ -196,6 +197,31 @@ interface ChatState {
 const rooms: Record<string, Room> = {};
 
 /**
+ * Why a shipped bundle has no room.
+ *
+ * Said once, so a panel that asks a bundle for a roster and a panel that asks it to run a line report the same fact.
+ */
+const SHIPPED = 'this build shipped its board and its runs, so it has no room to ask';
+
+/**
+ * The room a shipped bundle is answered by, which is none.
+ *
+ * A host that says its board and its runs are the files it shipped with has no server behind it. A read or a write here
+ * is refused with the reason rather than sent to an address this build never had, which is the difference between a
+ * panel that says why it is empty and a console filling with refused connections. The subscription answers with a stop
+ * that stops nothing, because a panel mounts one either way.
+ */
+const NO_ROOM: Room = {
+  read: () => Promise.reject(new Error(SHIPPED)),
+  open: () => Promise.reject(new Error(SHIPPED)),
+  say: () => Promise.reject(new Error(SHIPPED)),
+  note: () => Promise.reject(new Error(SHIPPED)),
+  cancel: () => Promise.reject(new Error(SHIPPED)),
+  decide: () => Promise.reject(new Error(SHIPPED)),
+  watch: () => () => {},
+};
+
+/**
  * The room a project is answered by, made once and kept.
  *
  * One room an implementation, not one a project: the sim is stateless, and the stack's room is the frame's own
@@ -206,8 +232,12 @@ const rooms: Record<string, Room> = {};
  * that read the stores for itself would be a second opinion about whether this window is connected.
  */
 export function roomOf(project: string): Room {
+  // A shipped bundle names a channel in a board written for a deployment that had one. The files are all this build has,
+  // so the declaration is answered with the reason rather than with a room resolved to an address that is not here.
+  if (host().static === true) return NO_ROOM;
   const declared = useScenario.getState().projects.find((each) => each.id === project)?.channel;
-  const key = declared ?? 'sim';
+  // The key is the room `roomFor` resolves, so a deployment that names its own default room is not cached under the sim.
+  const key = declared ?? defaultChannel();
   rooms[key] ??= roomFor(declared, host().prove ?? (async () => {}));
   return rooms[key];
 }

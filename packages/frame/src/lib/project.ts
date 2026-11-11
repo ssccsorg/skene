@@ -7,6 +7,7 @@
 // the title a project carries is its own record's.
 
 import { channelNamed } from './channel';
+import { host } from './host';
 import { campaignsNamed } from '@ssccsorg/skene-kernel';
 import { kindsNamed } from './kinds';
 import type {
@@ -123,7 +124,10 @@ const READERS: Record<
   string,
   (at: unknown, projects: ProjectDocument[]) => unknown
 > = {
-  channel: (at) => channelNamed(at),
+  // A board a bundle shipped is read for what it says and is not routed: it may name the room its deployment had, and a
+  // build with no rooms did not fail to register one. A live window still refuses a channel it cannot answer, because
+  // there the declaration is where a project's work is sent.
+  channel: (at) => (typeof at === 'string' && host().static === true ? at : channelNamed(at)),
   kinds: (at) => kindsNamed(at),
   // A project's own machine vocabulary, which the frame keeps and does not read. A bundle is read by more than one
   // observer, and what stands in for a machine is the room's business: the frame refusing this would be the frame

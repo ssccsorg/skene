@@ -153,6 +153,25 @@ export function wantedProject(
   return Object.keys(models)[0] ?? null;
 }
 
+/**
+ * What a stored board restores: the project that was open and the ones standing, and nothing that was read from a file.
+ *
+ * The store writes the pilot's choice and not the bundles. `partialize` says what is written now; this says what is read,
+ * so a payload from a build that wrote more cannot restore a copy of a board that has since changed. Such a copy carried
+ * a channel name this build may no longer answer for, and one stored name was enough to take the window down.
+ */
+export function chosenOnly(persisted: unknown): Pick<ScenarioState, 'projectId' | 'opened'> {
+  // A stored value is the choice itself, and an envelope that holds it is the same answer one level down.
+  const envelope = (persisted ?? {}) as { state?: unknown; projectId?: unknown };
+  const held = (envelope.state ?? envelope) as { projectId?: unknown; opened?: unknown };
+  return {
+    projectId: typeof held.projectId === 'string' ? held.projectId : null,
+    opened: Array.isArray(held.opened)
+      ? held.opened.filter((each): each is string => typeof each === 'string')
+      : [],
+  };
+}
+
 /** The projects that stand open, with the ones this board no longer holds dropped and the open one among them. */
 export function openedFrom(opened: string[], models: Record<string, Model>, here: string | null): string[] {
   const held = opened.filter((id) => models[id]);
@@ -312,6 +331,9 @@ export const useScenario = create<ScenarioState>()(
       // Only what the pilot chose: the bundles are read from the board on every load, and a stored copy of a run would be
       // a copy that goes stale against the file the engine wrote, which is the one thing the board is not.
       partialize: (state) => ({ projectId: state.projectId, opened: state.opened }),
+      // And only that is read back. A payload written before this store partialized held the board itself, and a board
+      // read from a store is a board this build never chose.
+      merge: (persisted, current) => ({ ...current, ...chosenOnly(persisted) }),
     },
   ),
 );

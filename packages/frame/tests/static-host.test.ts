@@ -10,9 +10,29 @@ import { setHost } from '@/lib/host';
 type Scenario = typeof import('@/stores/scenario');
 let scenario: Scenario;
 
-const BOARD = {
+const PLAIN = {
   note: 'one project, for this test',
-  projects: [{ format: 'project/1', id: 'one', resources: [{ kind: 'record', at: 'run.txt' }] }],
+  projects: [
+    {
+      format: 'project/1',
+      id: 'one',
+      resources: [{ kind: 'record', at: 'run.txt' }],
+    },
+  ],
+};
+
+/** The same board taken from another deployment, which names the room that deployment had. */
+const STACKED = {
+  ...PLAIN,
+  projects: [
+    {
+      ...PLAIN.projects[0],
+      resources: [
+        { kind: 'channel', at: 'stack' },
+        { kind: 'record', at: 'run.txt' },
+      ],
+    },
+  ],
 };
 
 const RUN = `# One run
@@ -39,12 +59,12 @@ beforeAll(async () => {
 });
 
 /** Answer the window's own files and refuse everything else, which is what a static host has. */
-function stand(): void {
+function stand(board: unknown = PLAIN): void {
   asked = [];
   globalThis.fetch = (async (input: RequestInfo | URL) => {
     const url = String(input);
     asked.push(url);
-    if (url.endsWith('projects.json')) return new Response(JSON.stringify(BOARD), { status: 200 });
+    if (url.endsWith('projects.json')) return new Response(JSON.stringify(board), { status: 200 });
     if (url.endsWith('run.txt')) return new Response(RUN, { status: 200 });
     return new Response('', { status: 404 });
   }) as typeof fetch;
@@ -56,7 +76,7 @@ afterEach(() => {
 });
 
 test('a window that shipped its board asks no room for it', async () => {
-  stand();
+  stand(STACKED);
   setHost({
     reachable: false,
     static: true,
@@ -66,7 +86,9 @@ test('a window that shipped its board asks no room for it', async () => {
 
   await scenario.useScenario.getState().load('./', null);
 
-  expect(scenario.useScenario.getState().status).toBe('ready');
+  expect(scenario.useScenario.getState().status, 'a channel this build lacks is still read').toBe(
+    'ready',
+  );
   expect(asked, 'the board is the file beside the assets').toContain('./projects.json');
   expect(asked, 'and so is every run it names').toContain('./run.txt');
   expect(asked.filter((url) => url.includes('/v1/')), 'and no room was dialled').toEqual([]);
