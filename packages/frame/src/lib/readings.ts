@@ -4,7 +4,7 @@ import { standing, type Pack } from './packs';
 import type { Bundle, Place, World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from './world';
 
-export { NATIVE, standing } from './packs';
+export { NATIVE, landingOf, standing } from './packs';
 export type { Pack, Want } from './packs';
 
 /**

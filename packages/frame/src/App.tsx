@@ -8,7 +8,7 @@ import { useRoom } from './hooks/useRoom';
 import { host } from './lib/host';
 import { useRecordSource } from './hooks/useRecordSource';
 import { declaredIn, declaredPanels } from './lib/panels';
-import { useReadings } from './lib/readings';
+import { landingOf, useReadings } from './lib/readings';
 import { Space } from './views/Space';
 import { useChat } from './stores/chat';
 import { useScenario } from './stores/scenario';
@@ -47,12 +47,11 @@ export function App() {
   const remembered = useSelection((state) => state.reading);
   const remember = useSelection((state) => state.remember);
   const load = useChat((state) => state.load);
-  // The address the cockpit opens on, asked of the register rather than written here, and where the frame comes back to:
-  // an address that names a reading is the pilot asking for that one, and the window opened from the dock names none, so
-  // it comes back to the reading they were last in rather than to the register's first.
+  // The reading the cockpit opens on. A project that names one opens there, which is the project saying which picture it
+  // is; a project that names none comes back to the reading the pilot was last in, and to the register's first after that.
   const readings = useReadings();
   const { pathname } = useLocation();
-  const home = readings.find((reading) => reading.key === remembered) ?? readings.find((reading) => reading.key === views?.main) ?? readings[0] ?? null;
+  const home = landingOf(readings, views, remembered);
   // The frame's bottom edge reaches the width of the window or stops between the columns. What spans is drawn here and
   // not by the space, because a bar wider than the middle of the frame is not the middle's to draw.
   const spanning = useSelection((state) => state.bottom === 'full');

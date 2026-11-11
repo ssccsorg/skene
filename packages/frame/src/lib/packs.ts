@@ -36,6 +36,25 @@ export interface Want {
 }
 
 /**
+ * The reading a window opens on: the project's own declaration, then the pilot's last one, then the register's first.
+ *
+ * A project that names a main reading opens there, because the project has said which picture it is. The pilot's memory
+ * answers a project that names none, which is what makes a window opened from the dock come back where it was.
+ */
+export function landingOf(
+  readings: Reading[],
+  views: Views | undefined,
+  remembered: string | null,
+): Reading | null {
+  return (
+    readings.find((reading) => reading.key === views?.main) ??
+    readings.find((reading) => reading.key === remembered) ??
+    readings[0] ??
+    null
+  );
+}
+
+/**
  * The readings that stand for a project.
  *
  * One filter, in the order the questions come. A project that names the readings it stands gets exactly those. A

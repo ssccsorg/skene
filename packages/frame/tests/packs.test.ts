@@ -5,7 +5,7 @@
 // it: a project names a pack, stands the readings it wants, and declares a resource the frame has never heard of.
 
 import { expect, test } from 'vitest';
-import { NATIVE, standing } from '@/lib/packs';
+import { NATIVE, landingOf, standing } from '@/lib/packs';
 import { bundleOf, registerResource, type ProjectDocument } from '@/lib/project';
 import type { Reading } from '@/lib/readings';
 
@@ -31,6 +31,17 @@ test('the frame’s own readings are a pack, and one that asks to be asked for s
   expect(keys, 'a native reading stands for a project that says nothing').toContain('space');
   expect(keys, 'a native reading that declares itself asked waits').not.toContain('hex');
   expect(keys, 'another pack’s reading waits for the project').not.toContain('field');
+});
+
+test('a project that names a main reading opens on it, before the pilot’s last one', () => {
+  const landed = landingOf(READINGS, { pack: 'spec', main: 'ledger' }, 'space');
+  expect(landed?.key, 'the project has said which picture it is').toBe('ledger');
+});
+
+test('a project that names none opens where the pilot was, then on the register’s first', () => {
+  expect(landingOf(READINGS, undefined, 'space')?.key, 'the pilot’s last reading').toBe('space');
+  expect(landingOf(READINGS, undefined, 'gone')?.key, 'a reading that is no longer there').toBe('space');
+  expect(landingOf([], undefined, 'space'), 'no readings, no landing').toBeNull();
 });
 
 test('a project that does not name the pack does not get its readings', () => {
