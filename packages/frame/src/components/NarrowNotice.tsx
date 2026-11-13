@@ -44,10 +44,14 @@ export function NarrowNotice({ title, children, dismissible = false, below = 'md
   const [read, setRead] = useState(false);
   // A notice that is put away stays away for this window: the screen it describes has not changed.
   if (read) return null;
+  // Where the deployment lets a reader put it away, the whole bar is the target, because a
+  // notice a phone has to aim at is one more thing between the reader and the screen.
+  const putAway = dismissible ? () => setRead(true) : undefined;
   return (
     <div
       role="note"
       data-region="narrow"
+      onClick={putAway}
       className={`fixed inset-x-0 bottom-0 z-[300] flex items-start gap-2 border-t border-border bg-sidebar px-3 py-2 text-[11.5px] leading-snug text-muted-foreground ${BELOW[below]}`}
     >
       <Warning className="mt-px size-3.5 shrink-0 text-idle" />
@@ -58,9 +62,20 @@ export function NarrowNotice({ title, children, dismissible = false, below = 'md
         <button
           type="button"
           onClick={() => setRead(true)}
+          aria-label="Dismiss this notice"
           className="shrink-0 rounded-sm border border-border px-1.5 py-px text-foreground"
         >
-          dismiss
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            aria-hidden="true"
+            className="size-3"
+          >
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
         </button>
       ) : null}
     </div>
