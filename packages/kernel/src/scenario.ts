@@ -98,6 +98,23 @@ export function parseScenario(text: string): Parsed {
       facts += 1;
       continue;
     }
+    if (verb === 'measured') {
+      // `measured <name> <value> <unit> <origin>`: a fact that reports a measurement, which is not the size of anything
+      // and so does not belong in `bytes`.
+      const [name, value, unit, origin] = args;
+      const entry: Entry = {
+        kind: FACT,
+        label: name,
+        origin,
+        measure: { value: Number(value ?? 0), unit: unit ?? '' },
+        at: clock,
+      };
+      records.push(entry);
+      events.push(entry);
+      named.set(name, entry);
+      facts += 1;
+      continue;
+    }
     if (verb === 'position') {
       const [unit, at] = args;
       const [x, y] = pointOf(at, 'a position');

@@ -50,7 +50,16 @@ export function InspectorPanel({ selected }: { selected: Entry | null }) {
     ['kind', selected.kind === 'claim' ? 'claim' : words[selected.kind]],
     ['written at', `${selected.at}s`],
   ];
-  if (selected.origin) rows.push(['origin', selected.origin], ['payload', `${selected.bytes ?? 0} bytes`]);
+  if (selected.origin) {
+    rows.push(['origin', selected.origin]);
+    // A measurement is what the record observed; bytes is what it holds. Saying bytes about a traded volume is the
+    // misreading this row exists to avoid.
+    rows.push(
+      selected.measure
+        ? ['measured', `${selected.measure.value} ${selected.measure.unit}`]
+        : ['payload', `${selected.bytes ?? 0} bytes`],
+    );
+  }
   rows.push(...FIELDS[selected.kind](selected));
   if (selected.producedBy) rows.push(['produced by', selected.producedBy.label ?? '']);
 

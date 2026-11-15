@@ -63,6 +63,14 @@ export interface Entry {
   cycle?: number;
   /** The name a `fact`, `hint` or `intent` step wrote under, which is its address. */
   label?: string;
+  /**
+   * A measurement the record observed rather than a payload it stored: the number, and what it counts.
+   *
+   * A record's `bytes` is the size of what it holds, which is the wrong reading for a fact that reports a
+   * measurement such as a traded volume or a security status. The two are separate so a screen never has to say
+   * "bytes" about a number that is not one.
+   */
+  measure?: { value: number; unit: string };
   content?: string;
   from?: Entry | null;
   fromLabel?: string;

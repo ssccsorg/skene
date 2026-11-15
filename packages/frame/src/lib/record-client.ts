@@ -18,6 +18,7 @@ export interface WireRecord {
   at: number;
   origin?: string;
   bytes?: number;
+  measure?: { value: number; unit: string };
   cycle?: number;
   label?: string;
   content?: string;
@@ -75,6 +76,7 @@ export function linkRecord({ named, waiting }: Links, wire: WireRecord): Entry |
     at: wire.at,
     origin: wire.origin,
     bytes: wire.bytes,
+    measure: wire.measure,
     cycle: wire.cycle,
     label: wire.label,
     content: wire.content,
