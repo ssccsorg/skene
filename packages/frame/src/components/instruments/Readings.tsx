@@ -16,7 +16,7 @@ import { useScenario } from '../../stores/scenario';
  * is being looked at and what could be.
  *
  * A reading that declares itself a pane is not in this row. Its control belongs with the arrangements that size it, so
- * the map and its four arrangements stand together in `MapSplit` and this row stays a row of pictures.
+ * the pane and its arrangements stand together in `PaneSplit` and this row stays a row of pictures.
  *
  * The shell is not in this row either. It is the sphere itself, so its control stands with the sphere's own projection
  * controls (`SphereView`) and a turn of the frame's field is read beside the picture it changes rather than across a
@@ -58,14 +58,14 @@ function Readings() {
 /**
  * The shell's own control, drawn where the sphere's projection is.
  *
- * The sphere is a pane of the board, not a reading that replaces the map: the map can stand beside it, above it, or take
- * the whole frame. So this control is a visibility reading and not only an address. It is on while the sphere is drawn,
- * which is every arrangement but the map alone, and it is off in the map alone and on the map's own page.
+ * The sphere is a pane of the board, not a reading that replaces the pane beside it: the pane can stand beside it, above
+ * it, or take the whole frame. So this control is a visibility reading and not only an address. It is on while the sphere
+ * is drawn, which is every arrangement but the pane alone, and it is off in the pane alone and on the pane's own page.
  *
- * A press has one job: bring the sphere back. From the map alone it returns to the last arrangement that drew both panes,
- * so the map's icon stays on because the map is still there. From the map's own page it comes back to that arrangement as
- * well, rather than to a split that would hide the sphere again. A press while the sphere is already on changes nothing:
- * the control says where the pilot is, and the map's pin is the one that puts the map away.
+ * A press has one job: bring the sphere back. From the pane alone it returns to the last arrangement that drew both panes,
+ * so the pane's own icon stays on because the pane is still there. From the pane's own page it comes back to that
+ * arrangement as well, rather than to a split that would hide the sphere again. A press while the sphere is already on
+ * changes nothing: the control says where the pilot is, and the pane's own button is the one that puts the pane away.
  */
 function SphereView() {
   const { pathname } = useLocation();
@@ -88,7 +88,7 @@ function SphereView() {
         data-on={drawn}
         onClick={() => {
           navigate(seat.path);
-          // The map alone is the one arrangement a return must not keep, because it would hide the sphere again.
+          // The pane alone is the one arrangement a return must not keep, because it would hide the sphere again.
           returnToTogether(projectId);
         }}
       >

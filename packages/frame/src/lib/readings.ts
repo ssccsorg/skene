@@ -139,6 +139,23 @@ export interface Reading {
    * this, and the frame holds it without knowing which reading it is.
    */
   pane?: boolean;
+  /**
+   * Whether this reading has a picture of the board in force.
+   *
+   * It is a pane's own question, because what a pane can draw is a fact about the pane: a map needs a ground and a member
+   * standing on it, while a sphere of a project's own needs neither and draws whatever the run has placed. A frame that
+   * answered for either would have to name the reading it was answering about. Absent means yes, for a pane that is a
+   * picture of a board wherever there is one.
+   */
+  can?: (world: World | null, place: Place | null) => boolean;
+  /**
+   * The controls for the ways this pane itself can be drawn, where it has more than one.
+   *
+   * A ground is read flat or on the earth and this is where that choice stands. They are the pane's own and not the
+   * frame's, so the bar draws them beside the arrangements without knowing what they do, and a pane that has one way of
+   * being drawn brings none.
+   */
+  controls?: ComponentType;
 }
 
 const registered = new Map<string, Reading>();

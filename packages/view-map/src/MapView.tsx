@@ -11,6 +11,7 @@
 
 import { MapPin } from 'lucide-react';
 import { EarthMap } from './GroundMap';
+import { MapProjections } from './MapProjections';
 import { registerReading, type Board } from '@ssccsorg/skene-frame/lib/readings';
 import { mappable } from '@ssccsorg/skene-frame/lib/world';
 import { useFrame } from '@ssccsorg/skene-frame/stores/frame';
@@ -52,5 +53,10 @@ export const MAP_VIEW = registerReading({
   path: '/map',
   View: MapReading,
   pane: true,
+  // A map is a picture of a ground with members standing on it, so it is offered where the place declares one and a
+  // member presents a location, and not over a board of continuous positions.
+  can: (world, place) => mappable(place, world),
+  // The flat page and the earth are two ways of drawing this ground, so the controls for them arrive with the map.
+  controls: MapProjections,
   button: { order: 14, title: 'map', Icon: MapPin },
 });

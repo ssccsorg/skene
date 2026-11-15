@@ -1,8 +1,8 @@
 // The map is a view mode a place offers, not one the frame offers every place.
 //
 // A map needs two declarations: a ground with a real span, and at least one member whose kind presents a location. The
-// button is disabled where either is missing, so an empty picture is not a mode a pilot can enter. The same predicate is
-// what the split layout reads, which is what keeps the button and the pane from disagreeing about a project.
+// map's reading declares this predicate as its own answer (`Reading.can`), so the control, the pane and the map's own
+// page cannot disagree about a project.
 
 import { expect, test } from 'vitest';
 import { mappable } from '@/lib/world';

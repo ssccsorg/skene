@@ -2,8 +2,8 @@
 //
 // A control on the bar is a mark, so the only place its name can be is the rollover. The scan below holds every
 // instrument to that one answer: it uses the hint rather than a native title, because two rollovers on one control are
-// two answers. The rule between runs is drawn by the control's own box, which is empty when the control is absent, so a
-// map a place does not offer is absent from the bar without leaving a separator behind.
+// The rule between runs is drawn by the control's own box, which is empty when the control is absent, so a pane the board
+// has no picture for is absent from the bar without leaving a separator behind.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -31,9 +31,10 @@ test('a control that draws nothing leaves no rule between runs', () => {
   expect(display, 'and an empty box is hidden').toContain('empty:hidden');
 });
 
-test('the map control is absent where the place has no map', () => {
-  const map = source('src/components/instruments/MapSplit.tsx');
-  expect(map, 'the control asks whether the place offers a map').toContain('mappable(');
-  expect(map, 'and returns nothing when it does not').toContain('if (!available) return <></>;');
-  expect(map, 'it is not a disabled control').not.toMatch(/disabled=\{/);
+test('the pane control is absent where the pane has no picture of the board', () => {
+  const pane = source('src/components/instruments/PaneSplit.tsx');
+  expect(pane, 'the control asks the pane whether it has one').toContain('pane.can ?');
+  expect(pane, 'and does not ask whether the place offers a map').not.toContain('mappable(');
+  expect(pane, 'and returns nothing when it does not').toContain('if (!available) return <></>;');
+  expect(pane, 'it is not a disabled control').not.toMatch(/disabled=\{/);
 });

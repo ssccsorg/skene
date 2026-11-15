@@ -4,45 +4,45 @@ import { storageName } from '../lib/persist';
 
 // What the frame shows of one project, kept by project.
 //
-// A project is a place, and a pilot who arranged one place has said nothing about another. The map's arrangement and the
+// A project is a place, and a pilot who arranged one place has said nothing about another. The pane's arrangement and the
 // reading in force are therefore two answers per project and not two answers for the cockpit: going from a space with a
-// map to one without and back returns the map to the arrangement it had. A single answer would be a map the pilot opens
-// again on every visit, or one that stays open over a place with no ground.
+// pane to one without and back returns the pane to the arrangement it had. A single answer would be a pane the pilot opens
+// again on every visit, or one that stays open over a board it has no picture of.
 //
-// The map is open by default where a project has one. A place that declares a location is a place the map is a reading of,
-// and a reading that is present is not one the pilot has to switch on to find. The default is the store's answer here and
-// not the panel's, so the frame and the map's own controls read the same one.
+// The pane is open by default where a project brings one. A picture of the space is not one the pilot has to switch on to
+// find, and the default is the store's answer here rather than a panel's, so the frame and the pane's own controls read
+// the same one.
 //
-// `last` is the open arrangement a press returns to. Closing the map and opening it again should not also forget which
+// `last` is the open arrangement a press returns to. Closing the pane and opening it again should not also forget which
 // arrangement the pilot chose.
 //
-// The orbit is not an arrangement. It is the projection the map is read through, so it stands beside the arrangement and
-// both are kept per project: pressing the orbit changes how the map is drawn and not how much of the frame it takes.
+// The orbit and the tone are not arrangements. They are how a map is drawn, so the map brings the controls for them and
+// they are kept per project beside the arrangement.
 
 export type Split = 'globe' | 'vertical' | 'horizontal' | 'full';
 
-/** The arrangements that draw the sphere beside the map, or the map alone. */
+/** The arrangements that draw the sphere beside the pane, or the pane alone. */
 export type OpenSplit = Exclude<Split, 'globe'>;
 
 /** The map's own tone: the page's dark ground, or the ground as the tiles draw it. */
 export type Tone = 'dark' | 'light';
 
-/** The map's own default where a project has not said otherwise: a place with a ground opens beside the globe. */
-const MAP_ON: OpenSplit = 'vertical';
+/** The pane's own default where a project has not said otherwise: a project that brings a pane opens it beside the sphere. */
+const PANE_ON: OpenSplit = 'vertical';
 
 /**
  * The arrangement a sphere return comes back to.
  *
- * The last arrangement is where the map pane opens again, and it may be the map taking the whole frame. A sphere return
- * must not come back to that one, because it would hide the sphere it was pressed to show: the map alone falls back to
- * the two-pane default, and a stacked pair comes back stacked.
+ * The last arrangement is where the pane opens again, and it may be the pane taking the whole frame. A sphere return must
+ * not come back to that one, because it would hide the sphere it was pressed to show: the pane alone falls back to the
+ * two-pane default, and a stacked pair comes back stacked.
  */
 export function togetherOf(mode: Split): OpenSplit {
   return mode === 'horizontal' ? 'horizontal' : 'vertical';
 }
 
 interface FrameState {
-  /** The map's arrangement, by project. Absent means the default. */
+  /** The pane's arrangement, by project. Absent means the default. */
   modes: Record<string, Split>;
   /** The reading in force, by project, as the address it is reached at. */
   paths: Record<string, string>;
@@ -73,7 +73,7 @@ export const useFrame = create<FrameState>()(
     (set, get) => ({
       modes: {},
       paths: {},
-      last: MAP_ON,
+      last: PANE_ON,
       tone: 'dark',
       orbits: {},
 
@@ -82,7 +82,7 @@ export const useFrame = create<FrameState>()(
       splitOf: (project) => {
         if (!project) return 'globe';
         const raw = get().modes[project] as Split | 'orbit' | undefined;
-        return raw === 'orbit' ? get().last : raw ?? MAP_ON;
+        return raw === 'orbit' ? get().last : raw ?? PANE_ON;
       },
 
       orbitOf: (project) => {
@@ -125,7 +125,7 @@ export const useFrame = create<FrameState>()(
         set((state) => ({ paths: { ...state.paths, [project]: path } }));
       },
 
-      reset: () => set({ modes: {}, paths: {}, last: MAP_ON, orbits: {} }),
+      reset: () => set({ modes: {}, paths: {}, last: PANE_ON, orbits: {} }),
     }),
     {
       name: storageName('frame'),
@@ -143,12 +143,12 @@ export const useFrame = create<FrameState>()(
         for (const [id, mode] of Object.entries(state.modes ?? {})) {
           if (mode === 'orbit') {
             orbits[id] = true;
-            modes[id] = state.last === 'horizontal' || state.last === 'full' ? state.last : MAP_ON;
+            modes[id] = state.last === 'horizontal' || state.last === 'full' ? state.last : PANE_ON;
           } else {
             modes[id] = mode;
           }
         }
-        const last = state.last === 'horizontal' || state.last === 'full' ? state.last : MAP_ON;
+        const last = state.last === 'horizontal' || state.last === 'full' ? state.last : PANE_ON;
         return { ...state, modes, orbits, last, tone: state.tone === 'light' ? 'light' : 'dark' } as unknown as FrameState;
       },
       partialize: (state) => ({

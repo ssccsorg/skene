@@ -35,7 +35,7 @@ test('the sphere, the graph, and the wires share a band, and the map control ope
   expect(source('src/components/instruments/Readings.tsx'), 'the other pictures stand beside it').toMatch(
     /key: 'readings',\s*order: 30,\s*band: 0,/,
   );
-  expect(source('src/components/instruments/MapSplit.tsx'), 'the map opens its own band').toMatch(/band: 1/);
+  expect(source('src/components/instruments/PaneSplit.tsx'), 'the pane opens its own band').toMatch(/band: 1/);
   for (const path of ['src/components/instruments/FoldPanels.tsx', 'src/components/instruments/FillScreen.tsx']) {
     expect(source(path), `${path} stands with the frame's own controls`).toMatch(/band: 2/);
   }
@@ -43,9 +43,9 @@ test('the sphere, the graph, and the wires share a band, and the map control ope
   expect(source('src/components/instruments/index.ts'), 'the fit and the notches are not in the bar').not.toMatch(
     /FitToSpace/,
   );
-  // The pin is the one control that closes the pane, so the arrangements do not carry a second globe that would be the
-  // same state under another icon.
-  expect(source('src/components/instruments/MapSplit.tsx')).not.toMatch(/mode: 'globe'/);
+  // The pane's own button is the one control that closes it, so the arrangements do not carry a second globe that would be
+  // the same state under another icon.
+  expect(source('src/components/instruments/PaneSplit.tsx')).not.toMatch(/mode: 'globe'/);
 });
 
 test('every reading is reached at an address of its own', () => {

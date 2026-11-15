@@ -5,6 +5,6 @@
 // for the readings. A control added as a file is a control added here, and nothing else in the frame changes.
 import './FillScreen';
 import './FoldPanels';
-import './MapSplit';
+import './PaneSplit';
 import './Panels';
 import './Readings';

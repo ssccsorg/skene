@@ -8,7 +8,7 @@ import { FloatingPanels } from '../components/FloatingPanels';
 import { useWorld } from '../hooks/useWorld';
 import { BAR_INSET, ROW_SHAPE, TITLE } from '@ssccsorg/skene-ui';
 import { useReadingAt, useReadings, type Board } from '../lib/readings';
-import { mappable, neighboursOf, toPlace } from '../lib/world';
+import { neighboursOf, toPlace } from '../lib/world';
 import { cn } from '@ssccsorg/skene-ui';
 import { useRecords } from '../stores/records';
 import { useScenario } from '../stores/scenario';
@@ -43,15 +43,15 @@ export function Space() {
   const { pathname } = useLocation();
   const reading = useReadingAt(pathname);
   // A reading that declares itself a pane is held beside the reading in force rather than navigated to. The split is
-  // the pilot's, so the address keeps naming the picture and the map is how much of the frame it is drawn with.
+  // the pilot's, so the address keeps naming the picture and the split is how much of the frame it is drawn with.
   const readings = useReadings();
   const pane = readings.find((each) => each.pane) ?? null;
   const navigate = useNavigate();
   const pathOf = useFrame((state) => state.pathOf);
   const rememberPath = useFrame((state) => state.rememberPath);
-  // A place with no ground or no located member has no map to offer, so the stored split is not drawn there even if the
-  // pilot left the pane open on another project.
-  const mapAvailable = mappable(model?.project.place ?? null, world);
+  // A pane that has no picture of this board is not drawn there even if the pilot left it open on another project.
+  // Whether it has one is the pane's own answer: a map needs a ground and a sphere of a project's own does not.
+  const paneDrawn = pane ? (pane.can ? pane.can(world, model?.project.place ?? null) : true) : false;
   const seek = useRecords((state) => state.seek);
   const unit = useSelection((state) => state.unit);
   const moving = useSelection((state) => state.moving);
@@ -69,8 +69,8 @@ export function Space() {
   // the store for the mode rather than for its function, because a function is the same value when the modes move and the
   // board would keep the arrangement it first drew.
   const split = useFrame((state) => state.splitOf(projectId));
-  // The map taking the frame is one picture of the place, in whichever projection the map is read through.
-  const mapOnly = split === 'full';
+  // The pane taking the frame is one picture of the place, in whichever projection the pane is read through.
+  const paneOnly = split === 'full';
   // A move belongs to the place it was opened in, so another project closes the context rather than carrying it over.
   useEffect(() => setMoving(null), [projectId, setMoving]);
 
@@ -162,7 +162,7 @@ export function Space() {
       <div
         data-region="board"
         data-standing={world ? world.standing.map((unit) => unit.id).join(',') : ''}
-        data-split={pane && mapAvailable && reading?.key !== pane.key ? split : undefined}
+        data-split={pane && paneDrawn && reading?.key !== pane.key ? split : undefined}
         className="relative min-h-[30vh] min-w-0 flex-1 md:min-h-0"
       >
         {/* One thing stands here and it is a reading of the space: the shell itself, the participants as a graph, the
@@ -174,9 +174,9 @@ export function Space() {
             What stands in it is asked of the register rather than switched on here. The frame does not hold the list
             of readings and does not know one from another: it has the address, it asks which reading that is, and it
             hands that reading the board. */}
-        {pane && mapAvailable && reading?.key !== pane.key && split !== 'globe' ? (
+        {pane && paneDrawn && reading?.key !== pane.key && split !== 'globe' ? (
           <div className={cn('absolute inset-0 flex', split === 'vertical' ? 'flex-row' : 'flex-col')}>
-            {mapOnly ? null : (
+            {paneOnly ? null : (
               <div className="relative min-h-0 min-w-0 flex-1">
                 {reading ? (
                   <div className={PICTURE}>
@@ -188,7 +188,7 @@ export function Space() {
             <div
               className={cn(
                 'relative min-h-0 min-w-0 flex-1',
-                !mapOnly && (split === 'vertical' ? 'border-l' : 'border-t'),
+                !paneOnly && (split === 'vertical' ? 'border-l' : 'border-t'),
               )}
             >
               <div className={PICTURE}>
