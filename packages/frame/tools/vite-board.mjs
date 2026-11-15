@@ -53,9 +53,19 @@ export function boardIntoBuild(options = {}) {
       const runsDir = join(root, runs);
       if (existsSync(runsDir)) await cp(runsDir, join(root, outDir, runs), { recursive: true });
       const document = JSON.parse(await readFile(source, 'utf8'));
+      const paths = [];
       for (const project of document.projects ?? []) {
-        const at = project?.resources?.find((resource) => resource?.kind === 'record')?.at;
-        if (typeof at !== 'string' || !at.trim()) continue;
+        for (const resource of project?.resources ?? []) {
+          if (resource?.kind === 'record' && typeof resource.at === 'string') paths.push(resource.at);
+          if (resource?.kind === 'campaigns' && Array.isArray(resource.at)) {
+            for (const campaign of resource.at) {
+              if (typeof campaign?.record === 'string') paths.push(campaign.record);
+            }
+          }
+        }
+      }
+      for (const at of paths) {
+        if (!at.trim()) continue;
         const from = join(root, at);
         if (!existsSync(from)) continue;
         const to = join(root, outDir, at);
