@@ -459,6 +459,13 @@ export interface Views {
   main?: string;
   /** The readings it stands, by key, when it wants to name them itself. */
   on?: string[];
+  /**
+   * The reading that draws this project's own view of the space from the pilot's seat, by key.
+   *
+   * The seat is a role a reading declares, and a project that brings its own sphere names it here. A project that names
+   * none keeps the one that declares the role among the readings it stands.
+   */
+  seat?: string;
 }
 
 /** A project's bundle: the record it runs, the clock of its own story and the place it stands on. */

@@ -64,9 +64,7 @@ test('the column keeps its lists when the disc is withdrawn', () => {
 
 test('a hand that turns the disc lands on the sphere', () => {
   const map = source('src/components/SpaceMap.tsx');
-  expect(map, 'the reading drawn from the seat').toMatch(
-    /const sphere = readings\.find\(\(reading\) => reading\.seat\)/,
-  );
+  expect(map, 'the project\u2019s own sphere').toMatch(/const sphere = useSeat\(\);/);
   expect(map, 'the first turn opens it').toMatch(
     /onTurn: \(\) => \{[\s\S]*?navigate\(sphere\.path\);/,
   );

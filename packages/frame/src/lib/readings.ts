@@ -1,10 +1,10 @@
 import { useMemo, useSyncExternalStore, type ComponentType } from 'react';
 import { useScenario } from '../stores/scenario';
-import { standing, type Pack } from './packs';
+import { seatOf, standing, type Pack } from './packs';
 import type { Bundle, Place, World } from '@ssccsorg/skene-kernel';
 import type { Neighbour } from './world';
 
-export { NATIVE, landingOf, standing } from './packs';
+export { NATIVE, landingOf, seatOf, standing } from './packs';
 export type { Pack, Want } from './packs';
 
 /**
@@ -232,6 +232,20 @@ export function declaredReadings(): Reading[] {
  */
 export function hasSeat(readings: Reading[] = declaredReadings()): boolean {
   return readings.some((reading) => reading.seat);
+}
+
+/**
+ * The reading that draws the project in force from the pilot's seat.
+ *
+ * The seat is asked of the project's declaration and the readings it stands rather than of the register alone: a build
+ * that installs two spheres is one answer per project, and not the order two modules happened to be imported in.
+ */
+export function useSeat(): Reading | null {
+  const readings = useReadings();
+  const views = useScenario(
+    (state) => state.projects.find((each) => each.id === state.projectId)?.views,
+  );
+  return useMemo(() => seatOf(readings, views), [readings, views]);
 }
 
 /**

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useReadings } from '@ssccsorg/skene-frame/lib/readings';
+import { useSeat } from '@ssccsorg/skene-frame/lib/readings';
 import { useFrame } from '@ssccsorg/skene-frame/stores/frame';
 import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
 import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
@@ -22,8 +22,8 @@ export function useSurfaceForward(): (origin: string) => void {
   const selectUnit = useSelection((state) => state.selectUnit);
   const activate = useSurface((state) => state.activate);
   const returnToTogether = useFrame((state) => state.returnToTogether);
-  const readings = useReadings();
-  const path = readings.find((reading) => reading.seat)?.path ?? '/';
+  const seat = useSeat();
+  const path = seat?.path ?? '/';
 
   return useCallback(
     (origin: string) => {

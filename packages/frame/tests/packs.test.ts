@@ -5,7 +5,7 @@
 // it: a project names a pack, stands the readings it wants, and declares a resource the frame has never heard of.
 
 import { expect, test } from 'vitest';
-import { NATIVE, landingOf, standing } from '@/lib/packs';
+import { NATIVE, landingOf, seatOf, standing } from '@/lib/packs';
 import { bundleOf, registerResource, type ProjectDocument } from '@/lib/project';
 import type { Reading } from '@/lib/readings';
 
@@ -42,6 +42,34 @@ test('a project that names none opens where the pilot was, then on the registerâ
   expect(landingOf(READINGS, undefined, 'space')?.key, 'the pilotâ€™s last reading').toBe('space');
   expect(landingOf(READINGS, undefined, 'gone')?.key, 'a reading that is no longer there').toBe('space');
   expect(landingOf([], undefined, 'space'), 'no readings, no landing').toBeNull();
+});
+
+/** Two spheres and a reading that is not one, which is the question a project's seat answers. */
+const SEATS = [
+  reading('space', { seat: true }),
+  reading('orbit', { pack: 'flight', seat: true }),
+  reading('records'),
+];
+
+test('a project that names its own seat has it, and one that names none keeps the frame own', () => {
+  expect(seatOf(SEATS, undefined)?.key, 'the frame own sphere').toBe('space');
+  expect(seatOf(SEATS, { pack: 'flight', seat: 'orbit' })?.key, 'the project own sphere').toBe('orbit');
+});
+
+test('a project whose landing reading is its seat has that seat', () => {
+  expect(seatOf(SEATS, { pack: 'flight', main: 'orbit' })?.key, 'the landing declares the role').toBe(
+    'orbit',
+  );
+});
+
+test('a project that opens elsewhere keeps the seat it did not name', () => {
+  expect(seatOf(SEATS, { pack: 'flight', main: 'records' })?.key, 'the landing is not a seat').toBe(
+    'space',
+  );
+});
+
+test('a seat a project names but does not stand is none of its own', () => {
+  expect(seatOf(SEATS, { seat: 'gone' }), 'a name that is not among the readings is no seat').toBeNull();
 });
 
 test('a project that does not name the pack does not get its readings', () => {

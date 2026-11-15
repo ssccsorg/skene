@@ -55,6 +55,21 @@ export function landingOf(
 }
 
 /**
+ * The reading that draws this project's space from the pilot's seat.
+ *
+ * The seat is a role a reading declares, and a project may fill it with its own sphere: one that names a seat has that
+ * one, and one whose landing reading declares the role has that. Otherwise it is the first standing reading that
+ * declares it, which is the frame's own. A project that names a seat it does not stand has none, rather than another
+ * project's sphere drawn under its name.
+ */
+export function seatOf(readings: Reading[], views: Views | undefined): Reading | null {
+  const seats = readings.filter((reading) => reading.seat);
+  if (views?.seat) return seats.find((reading) => reading.key === views.seat) ?? null;
+  const main = views?.main ? seats.find((reading) => reading.key === views.main) : undefined;
+  return main ?? seats[0] ?? null;
+}
+
+/**
  * The readings that stand for a project.
  *
  * One filter, in the order the questions come. A project that names the readings it stands gets exactly those. A

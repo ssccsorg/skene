@@ -3,7 +3,7 @@ import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import { CONTROL } from '@ssccsorg/skene-ui';
 import { registerInstrument } from '../../lib/instruments';
-import { useReadings, type Reading } from '../../lib/readings';
+import { useReadings, useSeat, type Reading } from '../../lib/readings';
 import { cn } from '@ssccsorg/skene-ui';
 import { useFrame } from '../../stores/frame';
 import { useScenario } from '../../stores/scenario';
@@ -70,30 +70,29 @@ function Readings() {
 function SphereView() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const readings = useReadings();
-  const shell = readings.find((reading) => reading.button && reading.seat);
+  const seat = useSeat();
   const projectId = useScenario((state) => state.projectId);
   const split = useFrame((state) => state.splitOf(projectId));
   const returnToTogether = useFrame((state) => state.returnToTogether);
-  if (!shell?.button) return <></>;
+  if (!seat?.button) return <></>;
 
-  const here = pathname === shell.path;
+  const here = pathname === seat.path;
   const drawn = here && split !== 'full';
 
   return (
-    <Hint label={shell.button.title}>
+    <Hint label={seat.button.title}>
       <Button
         size="icon-xs"
         variant="ghost"
         className={cn(CONTROL)}
         data-on={drawn}
         onClick={() => {
-          navigate(shell.path);
+          navigate(seat.path);
           // The map alone is the one arrangement a return must not keep, because it would hide the sphere again.
           returnToTogether(projectId);
         }}
       >
-        <shell.button.Icon />
+        <seat.button.Icon />
       </Button>
     </Hint>
   );

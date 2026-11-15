@@ -6,7 +6,7 @@ import { Hint } from '@ssccsorg/skene-ui';
 import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '@ssccsorg/skene-board';
 import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '@ssccsorg/skene-board';
 import { useMapDrag } from '../hooks/useMapDrag';
-import { useReadings } from '../lib/readings';
+import { useSeat } from '../lib/readings';
 import { UNIT_STATE } from '../hooks/useEntityState';
 import { useFrame } from '../stores/frame';
 import { useScenario } from '../stores/scenario';
@@ -128,11 +128,10 @@ export function SpaceMap({
   const releaseView = useView((store) => store.release);
   const projectId = useScenario((store) => store.projectId);
   const returnToTogether = useFrame((store) => store.returnToTogether);
-  const readings = useReadings();
   const navigate = useNavigate();
-  // The reading drawn from the seat, which is the sphere this disc is a picture of. The column draws no disc where the
-  // project stands none, so a turn always has one to land on.
-  const sphere = readings.find((reading) => reading.seat) ?? null;
+  // The project's own sphere, which is the picture this disc is seen from. The column draws no disc where the project
+  // stands none, so a turn always has one to land on.
+  const sphere = useSeat();
   const aspect = world.aspect;
   const sector = world.sector;
   // The pilot's own bearing, which the disc is centred on: the map shows the half of the shell they face.

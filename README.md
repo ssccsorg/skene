@@ -58,6 +58,8 @@ What stands is decided at three levels, and the three are not interchangeable.
 
 A reading that names no pack stands for every project, so a picture a deployment imports is offered to all of its projects until a project turns it off.
 
+A project that brings its own sphere names it as its seat with `views.seat`, and a reading declares the role with `seat: true`. A project that names none keeps the first standing reading that declares it, which is the frame's own.
+
 | Boundary | Held by |
 |:---|:---|
 | the Layers table as data: a package imports only a row above it, and a picture imports no other picture | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
