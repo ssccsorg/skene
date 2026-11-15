@@ -20,6 +20,9 @@ export function VersionCard() {
       data-region="version"
       className={cn(
         'absolute top-full left-0 z-[100] mt-1 rounded-md border border-border/70 bg-card/95 p-3 shadow-lg backdrop-blur-sm',
+        // A brand says as much as its deployment needs to, so the card scrolls rather than running off the bottom of a
+        // short window and leaving the last lines unreadable.
+        'max-h-[calc(100vh-4.5rem)] overflow-y-auto',
         brand.about?.length ? 'w-[304px]' : 'w-[248px]',
       )}
     >
