@@ -8,9 +8,9 @@
 // It is plain ESM rather than TypeScript because a `vite.config.ts` is loaded by Node, and Node does not load a `.ts`
 // file out of `node_modules`.
 
-import { copyFile, cp, writeFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 /**
  * The one rule every deployment's host needs.
@@ -46,8 +46,22 @@ export function boardIntoBuild(options = {}) {
       outDir = config.build.outDir;
     },
     async closeBundle() {
-      await copyFile(join(root, board), join(root, outDir, board));
-      await cp(join(root, runs), join(root, outDir, runs), { recursive: true });
+      const source = join(root, board);
+      await copyFile(source, join(root, outDir, board));
+      // A deployment's runs may stand in one directory or in a project's own folder. The directory is copied when it is
+      // there, and every run the board names is copied wherever it stands, so a project that keeps its own folder ships.
+      const runsDir = join(root, runs);
+      if (existsSync(runsDir)) await cp(runsDir, join(root, outDir, runs), { recursive: true });
+      const document = JSON.parse(await readFile(source, 'utf8'));
+      for (const project of document.projects ?? []) {
+        const at = project?.resources?.find((resource) => resource?.kind === 'record')?.at;
+        if (typeof at !== 'string' || !at.trim()) continue;
+        const from = join(root, at);
+        if (!existsSync(from)) continue;
+        const to = join(root, outDir, at);
+        await mkdir(dirname(to), { recursive: true });
+        await copyFile(from, to);
+      }
       // A host that carries the board carries the fallback with it. A deployment with rules of its own shipped one and
       // is left alone, because the files on a host are the deployment's to decide.
       const fallback = join(root, outDir, '_redirects');
