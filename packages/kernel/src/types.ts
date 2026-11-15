@@ -265,6 +265,13 @@ export interface UnitAttributes {
 export interface UnitPlace {
   icon?: string;
   /**
+   * What the space calls this unit on screen, when its address is not what a reader should read.
+   *
+   * The id is the address a record's origin names, so it is a token; a name is what a person recognises, and the two
+   * are not the same string. A unit that declares none is drawn by its id.
+   */
+  label?: string;
+  /**
    * What the place says this unit is drawn as, when it is drawn as a body rather than as a point.
    *
    * The interface carries a small set of bodies and the project names the one that stands for its own device, so a mark
@@ -577,6 +584,8 @@ export interface Point {
 
 export interface Standing {
   id: string;
+  /** What the space calls this unit, or nothing when its address is what it reads as. */
+  label: string | null;
   icon: string | null;
   /** The body the place says this unit is, or nothing when the unit is a point. */
   model: string | null;

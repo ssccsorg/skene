@@ -333,6 +333,7 @@ export function worldOf(
     const watch = subpoint ? fromPlace(place, subpoint[0], subpoint[1]) : null;
     return {
       id,
+      label: unit.label ?? null,
       icon: unit.icon ?? null,
       model: unit.model ?? null,
       role: roles.get(id) ?? null,

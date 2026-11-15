@@ -97,6 +97,13 @@ export const GLYPHS: Record<string, [string, Record<string, number | string>][]>
     ['path', { d: 'M4.4 6.2a5 5 0 0 1 7.2 0' }],
     ['circle', { cx: 8, cy: 5, r: 1.3 }],
   ],
+  // The ring a stargate opens and the axis a hull crosses it on, which is what separates a gate standing on the way
+  // from the station waiting at the end of it.
+  gate: [
+    ['ellipse', { cx: 8, cy: 8, rx: 4.8, ry: 4.8 }],
+    ['path', { d: 'M3.2 8h9.6' }],
+    ['path', { d: 'M8 3.2v9.6' }],
+  ],
   // A body with two panels and the antenna it downlinks on: the one shape that says a unit is above the ground rather
   // than on it.
   satellite: [
