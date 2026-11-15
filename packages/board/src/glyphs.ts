@@ -104,6 +104,12 @@ export const GLYPHS: Record<string, [string, Record<string, number | string>][]>
     ['path', { d: 'M3.2 8h9.6' }],
     ['path', { d: 'M8 3.2v9.6' }],
   ],
+  // A star: the body, and the eight points a map draws round it. A system is not a station on the way through it.
+  system: [
+    ['circle', { cx: 8, cy: 8, r: 2.4 }],
+    ['path', { d: 'M8 1.4v2.2M8 12.4v2.2M1.4 8h2.2M12.4 8h2.2' }],
+    ['path', { d: 'M3.6 3.6l1.6 1.6M11.2 11.2l1.6 1.6M12.4 3.6l-1.6 1.6M4.8 11.2l-1.6 1.6' }],
+  ],
   // A body with two panels and the antenna it downlinks on: the one shape that says a unit is above the ground rather
   // than on it.
   satellite: [
