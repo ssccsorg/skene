@@ -4,7 +4,7 @@
 # It carries three chains, which is what a queue can be in: one closed in the fact it produced, one
 # taken and not yet concluded, and one nobody has taken.
 #
-#   ktema-sim scenario/example.txt /tmp/example-volume --reset
+#   This board example plays it: projects.json points at this file.
 
 seed 7
 
