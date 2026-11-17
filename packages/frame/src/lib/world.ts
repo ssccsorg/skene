@@ -315,9 +315,14 @@ export function worldOf(
     for (let i = 0; i <= index && i < keys.length; i += 1) {
       // A place may stand a unit only in the record, and the contract says `at` is optional: a unit the place does not
       // stand in a scene is read from the declaration it made for another scene before the layout is taken as its place.
-      // The board's own interface still stands it in its cell; this is the ground the map follows.
+      // The board's own interface still stands it in its cell; this is the ground the map follows. A declaration that
+      // repeats the one before it is the same stand and not a second step of a route.
       const declared = unit.at?.[keys[i]] ?? Object.values(unit.at ?? {})[0];
-      if (declared) path.push(fromPlace(place, declared[0], declared[1]));
+      if (!declared) continue;
+      const point = fromPlace(place, declared[0], declared[1]);
+      const last = path[path.length - 1];
+      if (last && last[0] === point[0] && last[1] === point[1] && last[2] === point[2]) continue;
+      path.push(point);
     }
     // The place declares where a unit stands in each scene; the record declares every move it made. Both are the path, in
     // the order they happened, so the last step is the unit's own newest reading rather than a place written ahead of it.
