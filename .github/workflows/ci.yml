@@ -91,3 +91,7 @@ jobs:
       # import is a dependency the package declares. A package the table does not name is a failure.
       - name: the layer table holds
         run: npm run check:layers
+        env:
+          # A comma-separated list of deployment and engine names the frame must not carry. The list is a secret, so
+          # the public tree does not publish what it refuses. Absent, the check reports that no name was supplied.
+          SKENE_DENIED_NAMES: ${{ secrets.SKENE_DENIED_NAMES }}
