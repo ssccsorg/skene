@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, Search, X } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
 import { RowControl } from '@ssccsorg/skene-ui';
@@ -33,8 +33,11 @@ import { Glyph } from './Glyph';
 //
 // The filter is a line of the panel rather than a field that is always there: the space is read by name
 // and by kind, and a field that is open all the time is a field that takes a row from a list of thirty.
-// What it matches is a unit's own words, its name and what it is, and every word typed has to match, so
-// "camera 3" finds the third camera and "pump" finds the pumps.
+// A list longer than that is one a reader searches rather than walks, so the search stands open from the
+// first draw where the space is that large (see `SEARCHABLE`). What it matches is a unit's own words, its
+// name and what it is, and every word typed has to match, so "camera 3" finds the third camera and "pump"
+// finds the pumps. Return takes the first member the search leaves, which is what makes it a way to go
+// somewhere rather than only a way to shorten a list, and `/` opens it from anywhere that is not a field.
 //
 // What a row says a member can be asked is the room's answer and not the place's declaration of it (`lib/interface`), so
 // the row of controls under a picked member and the words the list is filtered by are one reading: a member the room
@@ -49,6 +52,15 @@ import { Glyph } from './Glyph';
  * whoever holds the column: a floor written at one place and used at another is the drift this avoids.
  */
 export const MEMBERS_MIN = 80;
+
+/**
+ * How many members a space holds before its list is one a reader searches rather than walks.
+ *
+ * Two screens of rows is the point the panel stops being read down and starts being asked: the search stands open from
+ * the first draw, because a control a reader has to know about is no help to the reader who is looking for one name in a
+ * hundred.
+ */
+const SEARCHABLE = 40;
 
 const STATE = {
   working: 'animate-pulse bg-working',
@@ -82,7 +94,10 @@ export function EntityPanel({
   onPick: (id: string) => void;
 }) {
   const [query, setQuery] = useState('');
-  const [filtering, setFiltering] = useState(false);
+  const [filtering, setFiltering] = useState(() => world.standing.length > SEARCHABLE);
+  // Whether the search that is open is one the reader asked for, which is what decides where the caret goes: a search that
+  // stands open because the space is large is a line of the panel, and a search a press opened is one they are typing in.
+  const wanted = useRef(false);
   // A member the reader has folded shut stays shut while it is the pick: the toggle is about the detail under the row,
   // and folding it does not deselect the member the board and the console are still addressed to.
   const [folded, setFolded] = useState<string | null>(null);
@@ -103,6 +118,22 @@ export function EntityPanel({
     () => members.filter((unit) => matches(unit.id, wordsOf(unit, asks(unit.id)), query)),
     [asks, members, query],
   );
+
+  // The search is a key away as well as a control, because the space this panel draws is a hundred marks and a reader who
+  // knows the name of one should not have to find the icon first. A field being typed in keeps its own keys.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable) return;
+      if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+      event.preventDefault();
+      wanted.current = true;
+      setFiltering(true);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const counts = useMemo(() => {
     const working = members.filter((unit) => state[unit.id] === 'working').length;
@@ -135,11 +166,12 @@ export function EntityPanel({
           {' \u00b7 '}
           <span className="text-offline">{counts.offline} offline</span>
         </p>
-        <Hint label={filtering ? 'close filter' : 'filter'}>
+        <Hint label={filtering ? 'close search' : 'search (/)'}>
           <RowControl
             at="end"
             data-on={filtering}
             onClick={() => {
+              wanted.current = !filtering;
               setFiltering((open) => !open);
               if (filtering) setQuery('');
             }}
@@ -153,12 +185,25 @@ export function EntityPanel({
         <div className={cn(ROW, 'border-b')}>
           <input
             data-region="entity-filter"
-            autoFocus
+            autoFocus={wanted.current}
             value={query}
             spellCheck={false}
-            placeholder="a name or a kind: camera, pump, person"
+            placeholder="a name or a kind: nuken, gate, person"
             className="w-full bg-transparent text-[11.5px] outline-none placeholder:text-muted-foreground/70"
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                setQuery('');
+                setFiltering(false);
+                return;
+              }
+              // A list narrowed to what the reader asked for is a list whose first row is the answer: return takes it.
+              if (event.key === 'Enter' && shown[0]) {
+                event.preventDefault();
+                setFolded(null);
+                onPick(shown[0].id);
+              }
+            }}
           />
           <span className="shrink-0 text-[11.5px] text-muted-foreground tabular-nums">
             {shown.length}/{members.length}

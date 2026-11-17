@@ -1,11 +1,16 @@
-// The participants' filter, held to the two things it is asked for: a name and a kind.
+// The participants' filter, held to the three things it is asked for: a name, a kind, and the way to a member.
 //
 // The list is thirty rows and the field is one line, so what it matches has to be the unit's own words
 // and nothing about where the field happens to be: a word typed that no word of the unit carries is a
-// row that is not in the answer.
+// row that is not in the answer. A space of a hundred marks is one a reader searches rather than walks, so
+// the field is open from the first draw there, and return goes to the first member it leaves.
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 import { matches } from '@/components/EntityPanel';
+
+const panel = readFileSync(fileURLToPath(new URL('../src/components/EntityPanel.tsx', import.meta.url)), 'utf8');
 
 const camera = ['camera', 'writes', '', 'frame-capture', 'inspection'];
 const person = ['person', 'acts', 'admin', 'approve', 'assign', 'acknowledge'];
@@ -27,4 +32,12 @@ test('every word typed has to match, so a filter narrows rather than widens', ()
   expect(matches('vision-camera-3', camera, 'camera frame')).toBe(true);
   expect(matches('vision-camera-3', camera, 'camera person')).toBe(false);
   expect(matches('line-manager-1', person, '  person   admin ')).toBe(true);
+});
+
+test('a long list keeps its search open, and return goes to the first member it leaves', () => {
+  expect(panel, 'the search opens where the list is one a reader searches').toContain(
+    'useState(() => world.standing.length > SEARCHABLE)',
+  );
+  expect(panel, 'a press of return takes the first row').toContain('onPick(shown[0].id)');
+  expect(panel, 'and a slash opens the field from anywhere else').toContain("event.key !== '/'");
 });
