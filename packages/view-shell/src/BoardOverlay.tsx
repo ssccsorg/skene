@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
-import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, orbitalAt, placed as onShell, project, spreadOnEdge, unfold } from '@ssccsorg/skene-board';
+import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, onShell, orbitalAt, project, spreadOnEdge, unfold } from '@ssccsorg/skene-board';
 import { fanTree, heldUnder, treeAt } from '@ssccsorg/skene-frame/lib/holds';
 import { useHolds } from '@ssccsorg/skene-frame/hooks/useHolds';
 import { MARK, MARK_INSET } from '@ssccsorg/skene-board';
@@ -113,7 +113,7 @@ export function BoardOverlay({
   };
   const setMoving = useSelection((state) => state.setMoving);
 
-  const centre = useMemo(() => onShell([0, 0, 0], world.aspect, world.sector), [world.aspect, world.sector]);
+  const centre = useMemo(() => onShell([0, 0, 0], world), [world]);
 
   // Every mark of the open field, projected. A mark the frame holds is named where it stands. A mark it does not is
   // not gone: the space is a shell the pilot stands inside, so a unit behind them or beside them is a unit they turn
@@ -124,7 +124,7 @@ export function BoardOverlay({
     if (size[0] === 0 || size[1] === 0) return [];
     const view = { yaw, pitch, fov };
     return world.present.map((unit) => {
-      const base = unfold(onShell(unit.at, world.aspect, world.sector), centre, arrival);
+      const base = unfold(onShell(unit.at, world), centre, arrival);
       const lift = liftOf(unit);
       const where = lift ? orbitalAt(base, lift) : base;
       const [x, y, depth] = project(where, size[0], size[1], view);
@@ -175,8 +175,13 @@ export function BoardOverlay({
     () =>
       neighbours
         .map((neighbour) => {
+          // A place that names its own mark is read at the mark: the place is one ground and the unit stands on it,
+          // so a group drawn at the cell's middle would name the ground rather than what the place is.
+          const mark = neighbour.mark
+            ? neighbour.units.find((unit) => unit.id === neighbour.mark)
+            : undefined;
           const [x, y, depth] = project(
-            onShell([0, 0, 0], world.aspect, neighbour.sector),
+            onShell(mark ? mark.at : [0, 0, 0], neighbour),
             size[0],
             size[1],
             { yaw, pitch, fov },
@@ -234,7 +239,7 @@ export function BoardOverlay({
 
   const storeView = { yaw, pitch, fov };
   const storeAt = project(
-    onShell(world.store ?? [0, 0, 0], world.aspect, world.sector),
+    onShell(world.store ?? [0, 0, 0], world),
     size[0],
     size[1],
     storeView,

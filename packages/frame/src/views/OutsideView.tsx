@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react';
-import { capRim, glyphPath, placed, zoneOf } from '@ssccsorg/skene-board';
+import { bearingOf, capRim, cellCentre, glyphPath, onShell, zoneOf } from '@ssccsorg/skene-board';
 import { ROW } from '@ssccsorg/skene-ui';
-import { DISC, onDisc, onEdge, onMap, outlineOfPoints } from '@ssccsorg/skene-board';
+import { DISC, onDisc, onEdge, outlineOfCell, outlineOfPoints } from '@ssccsorg/skene-board';
 import { UNIT_STATE, useEntityState } from '../hooks/useEntityState';
 import { useMapDrag } from '../hooks/useMapDrag';
 import { MinimapMark } from '../components/MinimapMark';
@@ -50,33 +50,46 @@ export function OutsideView({ world, neighbours, pickedId, onPick, onOpenProject
   // inward from that edge rather than through it, and it is moved in by its own length so that it stands whole.
   const places = useMemo(() => {
     if (!world) return [];
-    const patch = (centre: [number, number, number], radius: number) => ({
-      d: outlineOfPoints(capRim(centre, radius)),
-      label: onEdge(centre),
-    });
-    const here = zoneOf(world.standing.map((unit) => placed(unit.at, world.aspect, world.sector)), world.sector);
+    // A place is the ground it declares: the cell it holds when it declares one, and the cap its own members reach when
+    // it does not. The two are the same reading at two scales, and the disc draws whichever the place holds.
+    const patch = (cell: [number, number][] | null, centre: [number, number, number], radius: number) =>
+      cell
+        ? { d: outlineOfCell(cell) ?? '', label: onDisc(...cellCentre(cell)) }
+        : { d: outlineOfPoints(capRim(centre, radius)), label: onEdge(centre) };
+    const here = world.cell
+      ? null
+      : zoneOf(world.standing.map((unit) => onShell(unit.at, world)), world.sector);
     return [
       {
         id: model?.project.id ?? '',
         title: model?.title ?? '',
         mine: true,
-        ...patch(here.centre, here.radius),
+        ...patch(world.cell, here?.centre ?? [0, 0, 0], here?.radius ?? 0),
         units: world.present.map((unit) => ({
           unit,
-          at: onMap(unit.at, world.aspect, world.sector),
+          at: onDisc(...bearingOf(onShell(unit.at, world))),
         })),
       },
       ...neighbours.map((each) => {
-        const zone = zoneOf(each.units.map((unit) => placed(unit.at, each.aspect, each.sector)), each.sector);
+        const zone = each.cell
+          ? null
+          : zoneOf(each.units.map((unit) => onShell(unit.at, each)), each.sector);
+        const mark = each.mark
+          ? each.units.find((unit) => unit.id === each.mark)
+          : undefined;
         return {
           id: each.id,
           title: each.title,
           mine: false,
-          ...patch(zone.centre, zone.radius),
+          ...patch(
+            each.cell,
+            mark ? onShell(mark.at, each) : (zone?.centre ?? [0, 0, 0]),
+            zone?.radius ?? 0,
+          ),
           units: [],
         };
       }),
-    ];
+    ].filter((place) => place.d);
   }, [world, neighbours, model]);
 
   const here = onDisc(yaw, pitch);

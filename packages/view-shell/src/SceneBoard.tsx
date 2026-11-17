@@ -2,7 +2,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Crosshair, Minus, Plus } from 'lucide-react';
 import * as THREE from 'three';
-import { DIM, GRATICULE, LEVEL, aimAt, blackboardInk, fitView, forwardOf, liftOf, orbitalAt, placed, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
+import { DIM, GRATICULE, LEVEL, aimAt, blackboardInk, fitView, forwardOf, liftOf, onShell, orbitalAt, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
 import { dashes, dotTexture, line, ring, segments } from '@ssccsorg/skene-board';
 import { routeOf, writerOf } from '@ssccsorg/skene-frame/lib/world';
 import { graphOf } from '@ssccsorg/skene-frame/lib/graph';
@@ -19,6 +19,7 @@ import type { Neighbour } from '@ssccsorg/skene-frame/lib/world';
 import { viewKindOf, viewKinds } from '@ssccsorg/skene-frame/lib/view-kinds';
 import { Hint } from '@ssccsorg/skene-ui';
 import { BoardOverlay } from './BoardOverlay';
+import { CellRegion } from './CellRegion';
 import { CockpitFrame } from './CockpitFrame';
 import { FieldRegion } from './FieldRegion';
 import { GroupMark } from './GroupMark';
@@ -210,24 +211,29 @@ export function SceneBoard({
   const sector = world.sector;
   // The place the open project's group is: the middle of its own patch, which is where its marks come out
   // from while it opens and where a group mark stands for any project the pilot is not inside.
-  const centre = useMemo(() => placed([0, 0, 0], aspect, sector), [aspect, sector]);
+  const centre = useMemo(() => onShell([0, 0, 0], world), [world]);
   // Every unit the place declares, which is the field's own ground and not only the part of it that is drawn:
   // the frame opens holding it and the zone is fitted to it, and a zone is the field's whether or not the
   // field is the one being read.
   const ground = useMemo(
-    () => world.standing.map((unit) => placed(unit.at, aspect, sector)),
-    [world.standing, aspect, sector],
+    () => world.standing.map((unit) => onShell(unit.at, world)),
+    [world],
   );
-  const mine = useMemo(() => zoneOf(ground, sector), [ground, sector]);
+  // A place that holds a cell is drawn as that cell, and a place that holds none keeps the cap its members reach.
+  // The two are the same claim at two scales: the ground a place takes, read from what it declares.
+  const mine = useMemo(() => (world.cell ? null : zoneOf(ground, sector)), [world.cell, ground, sector]);
   const theirs = useMemo(
     () =>
       neighbours.map((neighbour) => ({
         id: neighbour.id,
         tint: states[neighbour.status ?? 'offline'],
-        zone: zoneOf(
-          neighbour.units.map((unit) => placed(unit.at, neighbour.aspect, neighbour.sector)),
-          neighbour.sector,
-        ),
+        cell: neighbour.cell,
+        zone: neighbour.cell
+          ? null
+          : zoneOf(
+              neighbour.units.map((unit) => onShell(unit.at, neighbour)),
+              neighbour.sector,
+            ),
       })),
     [neighbours, states],
   );
@@ -287,9 +293,9 @@ export function SceneBoard({
   useEffect(() => {
     const unit = world.present.find((entry) => entry.id === pickedId);
     if (!unit) return;
-    const where = aimAt(placed(unit.at, aspect, sector));
+    const where = aimAt(onShell(unit.at, world));
     useView.getState().aim(where.yaw, where.pitch);
-  }, [look, pickedId, world, aspect, sector]);
+  }, [look, pickedId, world]);
 
   useEffect(() => {
     const element = box.current;
@@ -315,14 +321,17 @@ export function SceneBoard({
     const out = (point: [number, number, number]) => unfold(point, centre, arrival);
 
 
-    // The projects that are not open: their units, on their own patches, as one cloud of dim points. A
-    // place is a declaration and the run is the open one's, so what the rest of the shell says is where
-    // the other places are, not what they did. The cloud is drawn spread and not gathered onto the
-    // project's group mark, because the projects do share the one space: what the mark summarises is the
-    // members that are already there, and not a pile the board has swept up.
+    // The projects that are not open: their own mark where the place declares one, and otherwise their members,
+    // on their own patches, as one cloud of dim points. A place is a declaration and the run is the open one's,
+    // so what the rest of the shell says is where the other places are, not what they did. A cell that names its
+    // mark is one point, because the place is one ground and one thing standing for it.
     const elsewhere: number[] = [];
     for (const neighbour of neighbours) {
-      for (const unit of neighbour.units) elsewhere.push(...placed(unit.at, aspect, neighbour.sector));
+      const mark = neighbour.mark
+        ? neighbour.units.find((unit) => unit.id === neighbour.mark)
+        : undefined;
+      if (mark) elsewhere.push(...onShell(mark.at, neighbour));
+      else for (const unit of neighbour.units) elsewhere.push(...onShell(unit.at, neighbour));
     }
     const rest = new THREE.BufferGeometry();
     rest.setAttribute('position', new THREE.Float32BufferAttribute(elsewhere, 3));
@@ -349,7 +358,7 @@ export function SceneBoard({
     // The middle is where the place says it is, at once. A project's blackboard is its own and is already there
     // when the pilot arrives, so it takes no part in the entry motion that unfolds the members: a middle that grew
     // out of the frame's centre would read as a store carried in from the project before this one.
-    const blackboard = placed(world.store ?? [0, 0, 0], aspect, sector);
+    const blackboard = onShell(world.store ?? [0, 0, 0], world);
     // A declaration joins two units the place stands, and both have to be on the board: a worker whose mark is not drawn
     // is a place the pilot is not reading, and a line to it would leave the frame.
     const here = new Map(world.present.map((unit) => [unit.id, unit]));
@@ -365,8 +374,8 @@ export function SceneBoard({
       if (!from || !to) continue;
       const run =
         wires === 'cells'
-          ? routeOf(aspect, from.at, to.at).map((point) => out(placed(point, aspect, sector)))
-          : [out(placed(from.at, aspect, sector)), out(placed(to.at, aspect, sector))];
+          ? routeOf(aspect, from.at, to.at).map((point) => out(onShell(point, world)))
+          : [out(onShell(from.at, world)), out(onShell(to.at, world))];
       // How hot a declaration is follows the unit that took it: a line said in the console runs a turn per machine, and
       // the machines it reaches write in order, so the wires brighten one after another as the work moves through them.
       const age = newest - (lastAt.get(to.id) ?? Number.NEGATIVE_INFINITY);
@@ -386,8 +395,8 @@ export function SceneBoard({
     const tethers: [[number, number, number], [number, number, number]][] = [];
     for (const unit of world.present) {
       if (!unit.orbital) continue;
-      const base = out(placed(unit.at, aspect, sector));
-      const watch = unit.watch ? out(placed(unit.watch, aspect, sector)) : base;
+      const base = out(onShell(unit.at, world));
+      const watch = unit.watch ? out(onShell(unit.watch, world)) : base;
       tethers.push([orbitalAt(base, liftOf(unit)), watch]);
     }
     const orbits = dashes(segments(tethers));
@@ -398,7 +407,7 @@ export function SceneBoard({
       orbits,
       blackboard,
     };
-  }, [world, neighbours, ink, aspect, sector, centre, arrival, wires]);
+  }, [world, neighbours, ink, aspect, centre, arrival, wires]);
 
   const { lastOf, working, tints } = useUnitMarks(world, pickedId, ink);
   // The kind that fills the room, when this build holds one. Which picture the surface is, and which views fill it, is
@@ -460,19 +469,27 @@ export function SceneBoard({
             surface's and the media are the place's, so a drone's cameras can be the room without a second reading. */}
         {Surface ? <Surface world={world} pickedId={pickedId} /> : null}
 
-        {/* The fields themselves, as the zones their places take on the shell: the open one lit and the
-            others at the weight of context. Drawn first, under everything, because they are the ground the
-            marks stand on. */}
-        <FieldRegion centre={mine.centre} radius={mine.radius} tint={state} lit />
-        {theirs.map((theirs) => (
-          <FieldRegion
-            key={`region-${theirs.id}`}
-            centre={theirs.zone.centre}
-            radius={theirs.zone.radius}
-            tint={theirs.tint}
-            lit={false}
-          />
-        ))}
+        {/* The fields themselves, as the ground each place takes on the shell: a cell where the place holds
+            one, and the cap its own members reach where it holds none. Drawn first, under everything, because
+            they are the ground the marks stand on. */}
+        {world.cell ? (
+          <CellRegion cell={world.cell} tint={state} lit />
+        ) : mine ? (
+          <FieldRegion centre={mine.centre} radius={mine.radius} tint={state} lit />
+        ) : null}
+        {theirs.map((theirs) =>
+          theirs.cell ? (
+            <CellRegion key={`region-${theirs.id}`} cell={theirs.cell} tint={theirs.tint} lit={false} />
+          ) : theirs.zone ? (
+            <FieldRegion
+              key={`region-${theirs.id}`}
+              centre={theirs.zone.centre}
+              radius={theirs.zone.radius}
+              tint={theirs.tint}
+              lit={false}
+            />
+          ) : null,
+        )}
 
         {/* The shell the pilot stands inside, drawn as the graticule a globe is read by: a horizon at the
             pilot's own eye level, parallels above and below it, and a meridian at every bearing. It is the
@@ -529,7 +546,7 @@ export function SceneBoard({
 
         {world.present.map((unit) => {
           const ringed = unit.id === world.claimedBy || unit.id === pickedId;
-          const base = unfold(placed(unit.at, aspect, sector), centre, arrival);
+          const base = unfold(onShell(unit.at, world), centre, arrival);
           const lift = liftOf(unit);
           return (
             <Unit
@@ -578,17 +595,39 @@ export function SceneBoard({
           );
         })}
 
-        {/* The projects the pilot is not inside, each as the one mark that summarises it. Drawn over the
-            open project's records and under its units, because a group is a place the pilot can enter and
-            the place they are in is the one being read. */}
-        {neighbours.map((neighbour) => (
-          <GroupMark
-            key={neighbour.id}
-            at={placed([0, 0, 0], aspect, neighbour.sector)}
-            tint={states[neighbour.status ?? 'offline']}
-            members={neighbour.units.length}
-          />
-        ))}
+        {/* The projects the pilot is not inside, each as the one mark that summarises it. A place that names
+            its own mark is drawn as that unit, because a place of many members is one thing from here. Drawn
+            over the open project's records and under its units, because a group is a place the pilot can
+            enter and the place they are in is the one being read. */}
+        {neighbours.map((neighbour) => {
+          const mark = neighbour.mark
+            ? neighbour.units.find((unit) => unit.id === neighbour.mark)
+            : undefined;
+          const tint = states[neighbour.status ?? 'offline'];
+          if (mark) {
+            return (
+              <Unit
+                key={neighbour.id}
+                id={mark.id}
+                model={mark.model}
+                at={onShell(mark.at, neighbour)}
+                tint={tint}
+                working={false}
+                ringed={false}
+                written
+                still
+              />
+            );
+          }
+          return (
+            <GroupMark
+              key={neighbour.id}
+              at={onShell([0, 0, 0], neighbour)}
+              tint={tint}
+              members={neighbour.units.length}
+            />
+          );
+        })}
       </Canvas>
 
       {/* The frame is over the space and under the names: it darkens the space's own edges, and the names

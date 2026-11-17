@@ -6,7 +6,7 @@ import { FACT, HINT, INTENT, actors, chainFor, entityOf, parseScenario, titleOf 
 import { fillsIn, viewsIn } from './carried';
 import { propertiesOf } from './kinds';
 import { readView } from './windows';
-import { sectorOf } from '@ssccsorg/skene-board';
+import { cellOfPlace, sectorOf } from '@ssccsorg/skene-board';
 import type {
   Actor,
   Bundle,
@@ -390,6 +390,8 @@ export function worldOf(
   return {
     aspect,
     sector: sectorOf(place),
+    cell: cellOfPlace(place),
+    mark: place.mark ?? null,
     index,
     here,
     before,
@@ -424,7 +426,11 @@ export interface Neighbour {
   /** The place's own shape, which is what its patch's region is drawn from. */
   aspect: number;
   sector: [number, number];
-  units: { id: string; icon: string | null; at: [number, number, number] }[];
+  /** The cell the place holds, in radians, or nothing when it takes the standard patch. */
+  cell: [number, number][] | null;
+  /** The unit that stands for the place, or nothing when the place names none. */
+  mark: string | null;
+  units: { id: string; icon: string | null; model: string | null; at: [number, number, number] }[];
   areas: { label: string; corners: [number, number, number][] }[];
 }
 
@@ -441,9 +447,16 @@ export function neighboursOf(projects: Bundle[], focused: string | null): Neighb
         status: project.status ?? null,
         aspect,
         sector: sectorOf(place),
+        cell: cellOfPlace(place),
+        mark: place.mark ?? null,
         units: Object.entries(place.units ?? {}).map(([id, unit]) => {
-          const first = Object.values(unit.at)[0] ?? [vw / 2, vh / 2];
-          return { id, icon: unit.icon ?? null, at: fromPlace(place, first[0], first[1]) };
+          const first = Object.values(unit.at ?? {})[0] ?? [vw / 2, vh / 2];
+          return {
+            id,
+            icon: unit.icon ?? null,
+            model: unit.model ?? null,
+            at: fromPlace(place, first[0], first[1]),
+          };
         }),
         areas: (place.areas ?? []).map((area) => ({
           label: area.label,

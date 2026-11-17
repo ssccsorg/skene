@@ -371,6 +371,24 @@ export interface Place {
    * their eyes.
    */
   sector?: [number, number];
+  /**
+   * The cell this place takes on the shell, when it takes one: its own edge as bearings, an azimuth and an
+   * elevation in degrees, in the order they are joined.
+   *
+   * A place that declares none takes a cap around its own bearing, which is a field of one. A deployment that
+   * stands many places in one shell declares a tiling and gives each place the polygon it holds, so two places
+   * cannot claim the same direction and no direction is left over. A cell is the place's ground at the scale of
+   * the shell; its own members are laid inside it by `placedIn`.
+   */
+  cell?: [number, number][];
+  /**
+   * The unit that stands for this place when it is read from a scale above its own.
+   *
+   * A place is a space, and its members are laid inside it, so from the region a place is one mark and this names
+   * which member that is. A place that names none is drawn as the group it is, and a member named here that the
+   * place does not stand is the same as naming none.
+   */
+  mark?: string;
   store?: Store;
   areas?: Area[];
   units?: Record<string, UnitPlace>;
@@ -634,6 +652,15 @@ export interface World {
   aspect: number;
   /** The bearing of the place's own patch on the shell, in radians. */
   sector: [number, number];
+  /**
+   * The cell the place holds on the shell, in radians, or nothing when it takes the standard patch.
+   *
+   * A place of one space declares no cell and is drawn on the patch every place was drawn on before. A deployment that
+   * stands many places in one shell declares a tiling, and the place holds the polygon it was given.
+   */
+  cell: [number, number][] | null;
+  /** The unit that stands for the place from a scale above its own, or nothing when the place names none. */
+  mark: string | null;
   index: number;
   here: SceneKey;
   before: SceneKey;

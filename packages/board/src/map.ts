@@ -11,7 +11,7 @@
 // sphere seen from outside shows one half of itself, and a far place folded onto the front is the picture a
 // sphere seen from the seat would give, with the back of the shell showing through the front.
 
-import { bearingOf, frameAt, placed, type View } from './board';
+import { bearingOf, cellRim, frameAt, placed, type View } from './board';
 
 type Point = [number, number, number];
 
@@ -121,6 +121,46 @@ export function outlineOfPoints(points: Point[], turn: Turn = [0, 0]): string {
   let path = '';
   points.forEach((point, index) => {
     const [x, y] = onEdge(point, turn);
+    path += `${index ? 'L' : 'M'}${x.toFixed(4)} ${y.toFixed(4)}`;
+  });
+  return `${path}Z`;
+}
+
+/**
+ * A cell as one closed path on the disc, cut at the shell's horizon.
+ *
+ * The disc is the near half of the sphere seen from outside, and a cell that crosses the horizon has a part behind the
+ * seat. That part is not folded onto the front: the polygon is cut where the shell turns away and the near part drawn,
+ * which is what makes a cell read as ground rather than as a patch of the disc's rim. A cell wholly behind the pilot
+ * has no path at all, and the caller draws no ground for it.
+ */
+export function outlineOfCell(cell: [number, number][], turn: Turn = [0, 0]): string | null {
+  // The plane through the seat that faces the pilot's bearing: the disc is the side of it the pilot is looking at.
+  const normal = [Math.sin(turn[0]), 0, -Math.cos(turn[0])];
+  const rim = cellRim(cell, 4).map((point) => {
+    const length = Math.hypot(point[0], point[1], point[2]) || 1;
+    return [point[0] / length, point[1] / length, point[2] / length] as Point;
+  });
+  const near: Point[] = [];
+  for (let index = 0; index < rim.length; index += 1) {
+    const a = rim[index];
+    const b = rim[(index + 1) % rim.length];
+    const da = a[0] * normal[0] + a[2] * normal[2];
+    const db = b[0] * normal[0] + b[2] * normal[2];
+    if (da >= 0) near.push(a);
+    if ((da > 0 && db < 0) || (da < 0 && db > 0)) {
+      const t = da / (da - db);
+      near.push([
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t,
+      ]);
+    }
+  }
+  if (near.length < 3) return null;
+  let path = '';
+  near.forEach((point, index) => {
+    const [x, y] = onDisc(...bearingOf(point), turn);
     path += `${index ? 'L' : 'M'}${x.toFixed(4)} ${y.toFixed(4)}`;
   });
   return `${path}Z`;

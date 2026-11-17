@@ -14,7 +14,7 @@ import { campaignAt } from '@ssccsorg/skene-kernel';
 import { causesOf, effectsOf } from '@ssccsorg/skene-kernel';
 import { graphOf } from '@/lib/graph';
 import { boundsOf, intentsOf } from '@ssccsorg/skene-kernel';
-import { buildModel, lineOf, revealedCount, sceneStep, scenes, upto, whoOf, worldOf, writerOf } from '@/lib/world';
+import { buildModel, lineOf, neighboursOf, revealedCount, sceneStep, scenes, upto, whoOf, worldOf, writerOf } from '@/lib/world';
 import type { Bundle, Campaign } from '@ssccsorg/skene-kernel';
 
 /** A run the frame owns: one reading, one declaration, one movement after it. */
@@ -103,6 +103,28 @@ test('a person stands in the space once they have written', () => {
     'watcher',
   );
   expect(worldOf(model(), cut.length).present.map((unit) => unit.id)).toContain('watcher');
+});
+
+test('a place keeps the cell it holds and the unit it names as its mark', () => {
+  const cell: [number, number][] = [
+    [0, 0],
+    [10, 0],
+    [10, 10],
+    [0, 10],
+  ];
+  const read = { ...BUNDLE.place, cell, mark: 'mover' };
+  const bundle = { ...BUNDLE, place: read } as unknown as Bundle;
+  const world = worldOf(buildModel(SCENARIO, bundle), cut.length);
+  expect(world.cell, 'the cell the place declares').toHaveLength(4);
+  expect(world.cell?.[1][0]).toBeCloseTo((10 * Math.PI) / 180, 12);
+  expect(world.mark).toBe('mover');
+  const neighbour = neighboursOf([{ ...bundle, id: 'other' } as Bundle], 'fixture')[0];
+  expect(neighbour.cell, 'and the place keeps it from the outside too').toHaveLength(4);
+  expect(neighbour.mark).toBe('mover');
+  expect(neighbour.units.find((unit) => unit.id === 'mover')?.model).toBeNull();
+  // A place that declares nothing keeps the patch every place had before, which is what a board of one place uses.
+  expect(worldOf(model(), cut.length).cell).toBeNull();
+  expect(worldOf(model(), cut.length).mark).toBeNull();
 });
 
 test('a record is its writer, and a hint is by the layer that set the bounds', () => {

@@ -6,7 +6,7 @@ import {
   bearingOf,
   patchOf,
   patchRim,
-  placed,
+  onShell,
   project,
   shellAt,
   unfold,
@@ -125,18 +125,18 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
   // like the rest, and the entity of every other window, so that opening the space again is a picture rather than a
   // pile of windows on one clear place.
   const marks = useMemo(() => {
-    const out = world.standing.map((unit) => bearingOf(placed(unit.at, world.aspect, world.sector)));
-    if (world.store) out.push(bearingOf(placed(world.store, world.aspect, world.sector)));
+    const out = world.standing.map((unit) => bearingOf(onShell(unit.at, world)));
+    if (world.store) out.push(bearingOf(onShell(world.store, world)));
     return out;
   }, [world]);
 
   return useMemo(() => {
     const look: Look = { yaw, pitch, fov };
-    const centre = placed([0, 0, 0], world.aspect, world.sector);
+    const centre = onShell([0, 0, 0], world);
     const origins = views.flatMap((view) => {
       const source = world.views.find((each) => each.id === view.id);
       const unit = world.present.find((each) => each.id === source?.origin);
-      return unit ? [bearingOf(unfold(placed(unit.at, world.aspect, world.sector), centre, arrival))] : [];
+      return unit ? [bearingOf(unfold(onShell(unit.at, world), centre, arrival))] : [];
     });
     const out: ViewPlace[] = [];
     for (const view of views) {
@@ -145,7 +145,7 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
       if (!source || source.kind === 'unknown' || !unit) continue;
       // The bearing comes from the entity's own place as the space unfolds it, so a window comes out of its group
       // with the entity it belongs to rather than appearing where it will be.
-      const carried = bearingOf(unfold(placed(unit.at, world.aspect, world.sector), centre, arrival));
+      const carried = bearingOf(unfold(onShell(unit.at, world), centre, arrival));
       const overPlace = viewKindOf(source.kind)?.anchor === 'place';
       const own = anchorOf(carried, bearingOf(centre), overPlace);
       // Where that entity falls on the frame, which is the side the window's pin is set on. It is the entity's

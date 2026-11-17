@@ -144,6 +144,168 @@ function unplaced(point: [number, number, number], sector: Bearing): [number, nu
   return [across, y * p + pitched * s, -y * s + pitched * p];
 }
 
+/** A place's own shape on the shell: how wide its rectangle is, where it stands, and the cell it holds. */
+export interface Ground {
+  aspect: number;
+  sector: Bearing;
+  /** The cell the place holds, in radians, or nothing when it takes the standard patch. */
+  cell?: Bearing[] | null;
+}
+
+/**
+ * A place's own point on the shell, in the cell the place holds.
+ *
+ * A place that declares no cell stands on the standard patch, which is the one place of a space. A place that
+ * declares one is pressed into the room its own cell has, so a member never stands in a neighbour's ground: every
+ * cell of a tiling is as wide as its nearest edge, and the place's rectangle is drawn inside that width.
+ */
+export function onShell(point: [number, number, number], ground: Ground): [number, number, number] {
+  return placedIn(point, ground.aspect, ground.sector, ground.cell);
+}
+
+/**
+ * A place's own point on the shell, inside the cell it holds.
+ *
+ * The place's rectangle is the interface's, and a cell is the shell's: the one is a layout and the other is ground. The
+ * rectangle keeps its own proportions and is scaled to the room the cell gives it, so a place of two members and a place
+ * of two hundred are drawn at the same reach from their own middle, and neither reaches past its own edge.
+ */
+export function placedIn(
+  point: [number, number, number],
+  aspect: number,
+  sector: Bearing,
+  cell?: Bearing[] | null,
+): [number, number, number] {
+  if (!cell) return placed(point, aspect, sector);
+  const scale = cellScale(cell);
+  if (scale >= 1) return placed(point, aspect, sector);
+  // The place's own direction, read as if the place took the whole patch, and then turned into the cell from its
+  // middle: the two angles are the offset's two sides, and the exponential map is what bends them onto the sphere.
+  const where = bearingOf(scene(point, aspect));
+  const radius = SHELL * (1 - RECEDE * point[1]);
+  const across = Math.hypot(where[0], where[1]);
+  if (across < 1e-9) return shellAt(sector, radius);
+  const forward = forwardOf({ yaw: sector[0], pitch: sector[1] });
+  // A cell at a pole has no east to take, so the frame is measured from the seat's own forward, as a cap's is.
+  const east =
+    Math.hypot(...cross(forward, WORLD_UP)) > 1e-6
+      ? normalise(cross(forward, WORLD_UP))
+      : normalise(cross(forward, LOOK));
+  const north = cross(east, forward);
+  const reach = across * scale;
+  const side = (where[0] / across) * Math.sin(reach);
+  const up = (where[1] / across) * Math.sin(reach);
+  const along = Math.cos(reach);
+  return [
+    radius * (forward[0] * along + east[0] * side + north[0] * up),
+    radius * (forward[1] * along + east[1] * side + north[1] * up),
+    radius * (forward[2] * along + east[2] * side + north[2] * up),
+  ];
+}
+
+/** How far a place's own rectangle reaches from its middle on the standard patch: the corner of its view box. */
+const PATCH_CORNER = Math.hypot((ARC * Math.PI) / 720, (ELEVATION * Math.PI) / 720);
+
+/** The scale computed for a cell, kept with the cell because a tiling hands the board the same array every draw. */
+const scales = new WeakMap<Bearing[], number>();
+
+/**
+ * How much smaller than the standard patch a place is drawn inside its cell: the cell's own reach over the patch's.
+ *
+ * A place whose cell is wider than the patch keeps the patch, because the interface's layout was measured for it and a
+ * place with room to spare is not a reason to draw its members further apart. No cell is drawn past its nearest edge, so
+ * a cell's own room is what bounds the scale, and the margin is the gap that keeps an edge from being a wall.
+ */
+export function cellScale(cell: Bearing[]): number {
+  const known = scales.get(cell);
+  if (known !== undefined) return known;
+  const scale = Math.min(1, (cellReach(cell) / PATCH_CORNER) * 0.94);
+  scales.set(cell, scale);
+  return scale;
+}
+
+/**
+ * The middle of a cell: the direction its corners add up to.
+ *
+ * A cell of a tiling is contained in a hemisphere, so the sum of its corners is inside it and is the point its own fan
+ * is anchored on. A cell wide enough to break that is not a cell this board can draw, and the sum's own direction is
+ * still the answer the caller gets rather than a second case.
+ */
+export function cellCentre(cell: Bearing[]): Bearing {
+  let sum: [number, number, number] = [0, 0, 0];
+  for (const corner of cell) {
+    const point = shellAt(corner, 1);
+    sum = [sum[0] + point[0], sum[1] + point[1], sum[2] + point[2]];
+  }
+  return bearingOf(normalise(sum));
+}
+
+/** The middle of a cell as a point of the shell, which is what its own fan is built from. */
+export function cellAt(cell: Bearing[]): [number, number, number] {
+  return shellAt(cellCentre(cell));
+}
+
+/**
+ * How far a cell's nearest edge stands from its middle, in radians: the room a place has inside its own ground.
+ *
+ * The nearest point of a convex cell is the foot of a perpendicular that falls on an edge, or a corner when the foot
+ * falls past one. Both are tried and the smaller wins, because a reach read as larger than it is would put a member
+ * through the edge it was measured against.
+ */
+export function cellReach(cell: Bearing[]): number {
+  const centre = shellAt(cellCentre(cell), 1);
+  let reach = Infinity;
+  for (let index = 0; index < cell.length; index += 1) {
+    const a = shellAt(cell[index], 1);
+    const b = shellAt(cell[(index + 1) % cell.length], 1);
+    const plane = normalise(cross(a, b));
+    const height = Math.abs(dot(centre, plane));
+    const foot = normalise([
+      centre[0] - plane[0] * dot(centre, plane),
+      centre[1] - plane[1] * dot(centre, plane),
+      centre[2] - plane[2] * dot(centre, plane),
+    ]);
+    const whole = angleBetween(a, b);
+    const parts = angleBetween(a, foot) + angleBetween(foot, b);
+    const near =
+      parts <= whole + 1e-6
+        ? Math.asin(Math.min(1, height))
+        : Math.min(angleBetween(centre, a), angleBetween(centre, b));
+    reach = Math.min(reach, near);
+  }
+  return reach;
+}
+
+/**
+ * The edge of a cell, each side walked as the great circle it is: the points a surface and a rim are drawn from.
+ *
+ * A side joined by one chord cuts inside the ground it bounds, which is the same reason a picture's own edge is walked.
+ */
+export function cellRim(cell: Bearing[], steps = 4): [number, number, number][] {
+  const points: [number, number, number][] = [];
+  for (let index = 0; index < cell.length; index += 1) {
+    const a = shellAt(cell[index], 1);
+    const b = shellAt(cell[(index + 1) % cell.length], 1);
+    for (let step = 0; step < steps; step += 1) {
+      const t = step / steps;
+      const point = normalise([
+        a[0] * (1 - t) + b[0] * t,
+        a[1] * (1 - t) + b[1] * t,
+        a[2] * (1 - t) + b[2] * t,
+      ]);
+      points.push([point[0] * SHELL, point[1] * SHELL, point[2] * SHELL]);
+    }
+  }
+  return points;
+}
+
+/** A place's cell as the board reads it, or nothing when the place declares none. */
+export function cellOfPlace(place: { cell?: [number, number][] } | undefined): Bearing[] | null {
+  const cell = place?.cell;
+  if (!cell || cell.length < 3) return null;
+  return cell.map(([azimuth, elevation]) => [(azimuth * Math.PI) / 180, (elevation * Math.PI) / 180]);
+}
+
 /**
  * The point of the shell at a bearing. A place on the shell is what it is here: nothing stands at a distance,
  * only in a direction, and `radius` is the seat the direction is read from.

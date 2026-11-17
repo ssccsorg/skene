@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Crosshair, Minus, Plus } from 'lucide-react';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
-import { bearingOf, capRim, glyphPath, placed, ringOf, zoneOf } from '@ssccsorg/skene-board';
-import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfPoints, viewRegion, visible, type Turn } from '@ssccsorg/skene-board';
+import { bearingOf, capRim, cellCentre, glyphPath, onShell, ringOf, zoneOf } from '@ssccsorg/skene-board';
+import { DISC, insideDisc, onDisc, onEdge, onMap, outlineOfCell, outlineOfPoints, viewRegion, visible, type Turn } from '@ssccsorg/skene-board';
 import { useMapDrag } from '../hooks/useMapDrag';
 import { useSeat } from '../lib/readings';
 import { UNIT_STATE } from '../hooks/useEntityState';
@@ -203,43 +203,59 @@ export function SpaceMap({
   const here = onDisc(yaw, pitch, turn);
   const store = world.store ? onMap(world.store, aspect, sector, turn) : null;
 
-  // The zone of the open field, and of every field the shell holds, by the one rule the board draws them
-  // with: a cap its own members reach from its bearing. The map and the board therefore cannot draw two
-  // different grounds for one field, and a field's ground is the same size in both readings.
+  // The ground of the open field: the cell the place holds when it declares one, and the cap its own members
+  // reach when it does not. The map and the board draw the same polygon, so a place's ground is one answer read
+  // twice rather than two shapes kept in step.
   const mine = useMemo(() => {
+    if (world.cell) {
+      const d = outlineOfCell(world.cell, turn) ?? '';
+      return { d, at: onDisc(...cellCentre(world.cell), turn) };
+    }
     const zone = zoneOf(
-      world.standing.map((unit) => placed(unit.at, aspect, sector)),
+      world.standing.map((unit) => onShell(unit.at, world)),
       sector,
     );
     return { d: outlineOfPoints(capRim(zone.centre, zone.radius), turn), at: onDisc(...sector, turn) };
-  }, [world.standing, aspect, sector, turn]);
+  }, [world, sector, turn]);
   const theirs = useMemo(() => {
     const list = neighbours.map((neighbour) => {
-      const zone = zoneOf(
-        neighbour.units.map((unit) => placed(unit.at, neighbour.aspect, neighbour.sector)),
-        neighbour.sector,
-      );
+      const zone = neighbour.cell
+        ? null
+        : zoneOf(
+            neighbour.units.map((unit) => onShell(unit.at, neighbour)),
+            neighbour.sector,
+          );
       const near = visible(neighbour.sector, turn);
+      // A place that names its mark is one thing from here: the map draws that unit and no other, because the
+      // rest of the place is inside the cell the mark stands on.
+      const markUnit = neighbour.mark
+        ? neighbour.units.find((unit) => unit.id === neighbour.mark)
+        : undefined;
       return {
         id: neighbour.id,
         near,
-        at: onEdge(zone.centre, turn),
+        cell: neighbour.cell,
+        at: onEdge(neighbour.cell ? onShell(markUnit?.at ?? [0, 0, 0], neighbour) : zone!.centre, turn),
         mark: null as [number, number] | null,
         // Every place keeps a patch, and a place behind the pilot is held at the rim: the map is how a pilot crosses the
         // shell, so the way into a place that is behind them is still on the map. Only the marks of a far place are left
         // out, because a mark is where a machine is and a machine on the far side is not being looked at.
-        d: outlineOfPoints(capRim(zone.centre, zone.radius), turn),
+        d: neighbour.cell
+          ? (outlineOfCell(neighbour.cell, turn) ?? '')
+          : outlineOfPoints(capRim(zone!.centre, zone!.radius), turn),
         units: near
-          ? neighbour.units
-              .filter((unit) => visible(bearingOf(placed(unit.at, neighbour.aspect, neighbour.sector)), turn))
-              .map((unit) => onMap(unit.at, neighbour.aspect, neighbour.sector, turn))
+          ? (markUnit ? [markUnit] : neighbour.units)
+              .filter((unit) => visible(bearingOf(onShell(unit.at, neighbour)), turn))
+              .map((unit) => onDisc(...bearingOf(onShell(unit.at, neighbour)), turn))
           : [],
       };
     });
     // A far place is a rim marker rather than a patch: a patch clamped onto the rim is a sliver of itself and cannot be
     // pressed. The markers are spread along the rim of their own side, so the places behind the pilot are all reachable.
+    // A place that holds a cell is a ground and not a marker: it is one of a tiling, and the half of the shell behind
+    // the pilot is not drawn for it.
     for (const side of [-1, 1]) {
-      const far = list.filter((each) => !each.near && Math.sign(each.at[0]) === side);
+      const far = list.filter((each) => !each.near && !each.cell && Math.sign(each.at[0]) === side);
       far.sort((left, right) => left.id.localeCompare(right.id));
       far.forEach((each, index) => {
         const y = Math.max(-0.86, Math.min(0.86, (index - (far.length - 1) / 2) * 0.18));
@@ -250,9 +266,9 @@ export function SpaceMap({
   }, [neighbours, turn]);
 
   const mark = (unit: World['present'][number]) => {
-    const bearing = bearingOf(placed(unit.at, aspect, sector));
+    const bearing = bearingOf(onShell(unit.at, world));
     if (!visible(bearing, turn)) return null;
-    const [x, y] = onMap(unit.at, aspect, sector, turn);
+    const [x, y] = onDisc(...bearing, turn);
     const picked = unit.id === pickedId;
     const ring = ringOf(unit);
     return (
@@ -333,18 +349,20 @@ export function SpaceMap({
               board's own group marks are reached by turning, and this is the reading that holds them all. */}
           {theirs.map((theirs) => (
             <g key={theirs.id}>
-              <path
-                d={theirs.d}
-                fill="none"
-                pointerEvents="all"
-                className="cursor-pointer stroke-border hover:stroke-foreground"
-                strokeWidth={0.004}
-                onClick={() => {
-                  if (!drag.turned.current) onOpenProject(theirs.id);
-                }}
-              >
-                <title>enter {theirs.id}</title>
-              </path>
+              {theirs.d ? (
+                <path
+                  d={theirs.d}
+                  fill="none"
+                  pointerEvents="all"
+                  className="cursor-pointer stroke-border hover:stroke-foreground"
+                  strokeWidth={0.004}
+                  onClick={() => {
+                    if (!drag.turned.current) onOpenProject(theirs.id);
+                  }}
+                >
+                  <title>enter {theirs.id}</title>
+                </path>
+              ) : null}
               {theirs.mark ? (
                 <circle
                   cx={theirs.mark[0]}
@@ -367,7 +385,7 @@ export function SpaceMap({
           ))}
 
           {/* The patch of shell the open place takes, and the ground it names inside it. */}
-          <path d={mine.d} fill="none" className="stroke-foreground/60" strokeWidth={0.006} />
+          {mine.d ? <path d={mine.d} fill="none" className="stroke-foreground/60" strokeWidth={0.006} /> : null}
 
           {/* Where the frame is pointed: the view's own four corners, which is what the board holds. It is the map's
               own viewport, so a hand inside it takes what the board is showing and a hand outside it turns the map. It

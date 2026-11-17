@@ -65,6 +65,24 @@ export function surface(points: Point[], across: number, up: number): THREE.Buff
 }
 
 /**
+ * The surface a cell covers, as triangles from its own middle to each side of its rim.
+ *
+ * A cell is a convex patch of the shell, so one fan fills it and no triangle of the fan leaves it. The rim is the run
+ * `cellRim` walks, and its last point joins the first because the cell is closed.
+ */
+export function fan(centre: Point, rim: Point[]): THREE.BufferGeometry {
+  const positions: number[] = [];
+  for (let index = 0; index < rim.length; index += 1) {
+    const a = rim[index];
+    const b = rim[(index + 1) % rim.length];
+    positions.push(...centre, ...a, ...b);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  return geometry;
+}
+
+/**
  * The same surface `surface` builds, with the picture's own coordinates written on its vertices: across runs from
  * nought at the left column to one at the right, and up from nought at the bottom row to one at the top. It is what a
  * window carries, because a medium's bytes are read in their own coordinates and a field's ground has none.
