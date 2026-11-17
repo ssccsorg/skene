@@ -8,6 +8,7 @@ import { cn } from '@ssccsorg/skene-ui';
 import { SettingsMenu } from './SettingsMenu';
 import { StatusBar } from './StatusBar';
 import { VersionCard } from './VersionCard';
+import { Find } from './Find';
 
 // The bar is one line at the standard row and the standard inset, so the mark on it stands on the same left edge as
 // a panel's own name and as an item in a list. It carries the mark and the version beside it, and nothing else on that
@@ -59,6 +60,7 @@ export function Header() {
         {about ? <VersionCard /> : null}
       </div>
       <nav className="ml-auto flex items-center gap-1">
+        <Find />
         <StatusBar />
         <div ref={settingsBox} className="relative z-[100]">
           <Hint label="settings">
