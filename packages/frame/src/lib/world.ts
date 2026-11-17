@@ -314,8 +314,9 @@ export function worldOf(
     const path: [number, number, number][] = [];
     for (let i = 0; i <= index && i < keys.length; i += 1) {
       // A place may stand a unit only in the record, and the contract says `at` is optional: a unit the place does not
-      // stand in a scene is read from its own readings rather than from a declaration it never made.
-      const declared = unit.at?.[keys[i]];
+      // stand in a scene is read from the declaration it made for another scene before the layout is taken as its place.
+      // The board's own interface still stands it in its cell; this is the ground the map follows.
+      const declared = unit.at?.[keys[i]] ?? Object.values(unit.at ?? {})[0];
       if (declared) path.push(fromPlace(place, declared[0], declared[1]));
     }
     // The place declares where a unit stands in each scene; the record declares every move it made. Both are the path, in

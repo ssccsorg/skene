@@ -105,6 +105,27 @@ test('a person stands in the space once they have written', () => {
   expect(worldOf(model(), cut.length).present.map((unit) => unit.id)).toContain('watcher');
 });
 
+test('a declaration made for one scene stands the unit in the others', () => {
+  // A place that stands a member in a scene the run never reaches is still a place that said where the member is. The
+  // board's own layout is the interface's; what the map follows is the last ground the place declared, and a record that
+  // moved the unit after it is newer than the declaration.
+  const place = {
+    ...BUNDLE.place,
+    units: {
+      store: { icon: 'store', at: { record: [50, 50] } },
+      mover: { icon: 'mover', at: { act: [10, 10] } },
+      watcher: { icon: 'watcher', role: 'member', at: { record: [90, 90] } },
+    },
+  };
+  const bundle = { ...BUNDLE, place } as unknown as Bundle;
+  const built = buildModel(SCENARIO, bundle);
+  const reached = { ...built, scenes: built.scenes.filter((scene) => scene.key !== 'record') };
+  const world = worldOf(reached, reached.scenes.length);
+  expect(world.standing.find((unit) => unit.id === 'store')?.ground).toEqual([50, 50]);
+  expect(world.standing.find((unit) => unit.id === 'watcher')?.ground).toEqual([90, 90]);
+  expect(world.standing.find((unit) => unit.id === 'mover')?.ground, 'the record is newer').toEqual([40, 60]);
+});
+
 test('a place keeps the cell it holds and the unit it names as its mark', () => {
   const cell: [number, number][] = [
     [0, 0],
