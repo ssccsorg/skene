@@ -122,7 +122,7 @@ export function OutsideView({ world, neighbours, pickedId, onPick, onOpenProject
             <circle r="1" />
           </clipPath>
         </defs>
-        <circle r="1" className="fill-background stroke-border" />
+        <circle r="1" className="fill-background stroke-border" strokeWidth={0.004} />
         <g clipPath="url(#outside-disc)">
           {places.map((place) => (
             <g key={place.id}>

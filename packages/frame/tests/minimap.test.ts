@@ -73,3 +73,14 @@ test('a hand that turns the disc lands on the sphere', () => {
     /if \(!turned\.current\) options\.onTurn\?\.\(\);/,
   );
 });
+
+test('the disc’s own outline is a line and not a band', () => {
+  // A circle with no stroke width takes the SVG default, which is one unit in a two-unit view box: half the map's
+  // radius, drawn as a band over the ground under it. The sphere's edge is the shell's edge and not a wash.
+  for (const file of ['src/components/SpaceMap.tsx', 'src/views/OutsideView.tsx']) {
+    const view = source(file);
+    expect(view, file).toMatch(
+      /<circle r="1" className="fill-background stroke-border" strokeWidth=\{0\.004\} \/>/,
+    );
+  }
+});

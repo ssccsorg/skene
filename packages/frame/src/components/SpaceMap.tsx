@@ -325,7 +325,7 @@ export function SpaceMap({
         onPointerCancel={drag.onPointerCancel}
       >
         <g transform={`scale(${zoom})`}>
-          <circle r="1" className="fill-background stroke-border" />
+          <circle r="1" className="fill-background stroke-border" strokeWidth={0.004} />
 
           {/* The shell's own web, so the disc reads as a sphere and the patch the place takes is read as
               a patch rather than as the whole of what there is. It is the disc's own grid and not the space's, so it
