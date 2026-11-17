@@ -53,3 +53,13 @@ test('the namespace is written once, so a second spelling cannot appear', () => 
   const spellings = source.filter(({ text }) => text.includes('skene.')).map(({ path }) => relative(path));
   expect(spellings).toEqual(['lib/persist.ts']);
 });
+
+test('the frame persists under its own vocabulary of store names', () => {
+  // A store's name joins the package namespace. Pinning the set makes a new store a deliberate edit, which is where a
+  // deployment's name would otherwise arrive.
+  const used = new Set<string>();
+  for (const { text } of source) {
+    for (const match of text.matchAll(/storageName\('([^']*)'\)/g)) used.add(match[1]);
+  }
+  expect([...used].sort()).toEqual(['arrangement', 'frame', 'projects', 'sizes', 'windows']);
+});
