@@ -30,6 +30,14 @@ export interface Brand {
    */
   words?: KindWords;
   /**
+   * What this deployment calls a project, in the singular and the plural.
+   *
+   * The frame's unit is a project and the format goes on writing `project/1`; this is the word a reader sees. A product
+   * drawn for a domain names its own unit, so a board of star systems says systems and the frame keeps its own word when a
+   * deployment names none.
+   */
+  unit?: { one: string; many: string };
+  /**
    * What the deployment can do, when that is not everything: `read-only` on a board served from a committed run.
    *
    * It is a statement about this deployment rather than about the frame, so it is the brand's to carry and the bar
@@ -74,6 +82,11 @@ export function useBrand(): Brand {
   const brand = useContext(Context);
   if (!brand) throw new Error('the frame was drawn without a brand');
   return brand;
+}
+
+/** The brand's word for a project, which is the frame's own when the deployment names none. */
+export function useUnit(): { one: string; many: string } {
+  return useBrand().unit ?? { one: 'project', many: 'projects' };
 }
 
 /** The brand's mark, drawn wherever a place wants one and does not want to know which product it is. */

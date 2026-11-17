@@ -1,5 +1,6 @@
 import type { World } from '@ssccsorg/skene-kernel';
 import { LABEL } from '@ssccsorg/skene-ui';
+import { useUnit } from '../lib/brand';
 import { useScenario } from '../stores/scenario';
 
 // What the space is, when nothing in it is picked.
@@ -24,6 +25,7 @@ export function ProjectSummary({
   state: Record<string, 'working' | 'idle' | 'offline'>;
 }) {
   const model = useScenario((store) => store.model);
+  const unit = useUnit();
   if (!model) return null;
 
   const members = world.standing;
@@ -35,7 +37,7 @@ export function ProjectSummary({
       data-region="project-summary"
       className="absolute top-full left-0 z-[100] mt-1 flex w-[272px] flex-col gap-0.5 rounded-md border border-border/70 bg-card/95 p-2 shadow-lg backdrop-blur-sm"
     >
-      <span className={LABEL}>Project</span>
+      <span className={LABEL}>{unit.one}</span>
       <span className="truncate text-[11.5px] text-foreground">{model.title}</span>
       <span className="text-[11.5px] text-muted-foreground tabular-nums">
         {world.entries} records · {members.length} members · {working} working ·{' '}

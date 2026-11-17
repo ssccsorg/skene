@@ -4,6 +4,7 @@ import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import type { AddResult, NewProject } from '../stores/scenario';
 import { placeIn, validateSubmission, type ProjectIssue } from '../lib/contract';
+import { useUnit } from '../lib/brand';
 import type { SourceSpec } from '@ssccsorg/skene-kernel';
 
 /**
@@ -25,6 +26,7 @@ export function AddProject({
   onAdd: (input: NewProject) => AddResult;
   onClose: () => void;
 }) {
+  const unit = useUnit();
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -92,7 +94,7 @@ export function AddProject({
   return (
     <div data-region="project-add" className="border-b p-2 text-[11.5px]">
       <div className="mb-1 flex items-center gap-1">
-        <span className="flex-1 tracking-wide text-muted-foreground uppercase">new project</span>
+        <span className="flex-1 tracking-wide text-muted-foreground uppercase">new {unit.one}</span>
         <Hint label="close">
           <Button size="icon-xs" variant="ghost" onClick={onClose}>
             <X />
@@ -105,7 +107,7 @@ export function AddProject({
           data-region="project-add-id"
           value={id}
           spellCheck={false}
-          placeholder="a name for the project"
+          placeholder={`a name for the ${unit.one}`}
           onChange={(event) => setId(event.target.value)}
           className="rounded-sm border border-border bg-transparent px-1.5 py-0.5 outline-none focus-visible:border-ring"
         />
@@ -152,7 +154,7 @@ export function AddProject({
           data-region="project-add-text"
           value={text}
           spellCheck={false}
-          placeholder="or paste the record here, or a project declaration as JSON"
+          placeholder={`or paste the record here, or a ${unit.one} declaration as JSON`}
           onChange={(event) => {
             setText(event.target.value);
             if (issues.length) setIssues([]);

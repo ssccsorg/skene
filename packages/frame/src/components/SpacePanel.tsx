@@ -8,6 +8,7 @@ import { useEntityState } from '../hooks/useEntityState';
 import { useMenu } from '../hooks/useMenu';
 import { CONTROL, LABEL, ROW } from '@ssccsorg/skene-ui';
 import { hasSeat, useReadings, useReadingAt } from '../lib/readings';
+import { useUnit } from '../lib/brand';
 import { cn } from '@ssccsorg/skene-ui';
 import { useScenario } from '../stores/scenario';
 import { LIMITS, useSizes } from '../stores/sizes';
@@ -82,6 +83,7 @@ export function SpacePanel({
   const state = useEntityState();
   const projectHeight = useSizes((size) => size.projects);
   const setSize = useSizes((size) => size.set);
+  const unit = useUnit();
 
   // Whether the disc stands. It is the column's own reading rather than a panel of the frame, so it folds here and not
   // through the arrangement the bar draws. It is a picture of the sphere a seat reading looks through, so it stands
@@ -143,7 +145,7 @@ export function SpacePanel({
             that scrolls: a project that is not on screen says so by the number, rather than looking like a project
             that is not there. */}
         <div className={cn(ROW)}>
-          <h2 className={cn(LABEL)}>Projects</h2>
+          <h2 className={cn(LABEL)}>{unit.many}</h2>
           {/* What the space is, beside the name of the project in force and not covering the column. */}
           <div ref={infoBox} className="relative">
             <Hint label="summary">
@@ -162,7 +164,7 @@ export function SpacePanel({
           </div>
           <span className="flex-1" />
           <span className="text-[11.5px] tabular-nums text-muted-foreground">{projects.length}</span>
-          <Hint label="add project">
+          <Hint label={`add ${unit.one}`}>
             <Button
               size="icon-xs"
               variant="ghost"
