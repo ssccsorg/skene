@@ -131,7 +131,7 @@ export function Find() {
                     >
                       <span className="min-w-0 flex-1 truncate">{each.label}</span>
                       <span className="shrink-0 text-[10.5px] text-muted-foreground">
-                        {each.kind ?? unit.one} · {each.title}
+                        {each.unit === null ? unit.one : `${each.kind ?? 'unit'} · ${each.place}`}
                       </span>
                     </button>
                   </li>

@@ -13,16 +13,16 @@ import type { Bundle } from '@ssccsorg/skene-kernel';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const source = (path: string) => readFileSync(`${ROOT}${path}`, 'utf8');
 
-const bundle = (id: string, title: string, units: Record<string, unknown>) =>
-  ({ id, title, place: { view: [0, 0, 520, 176], units } }) as unknown as Bundle;
+const bundle = (id: string, title: string, units: Record<string, unknown>, label = title) =>
+  ({ id, title, place: { view: [0, 0, 520, 176], store: { label }, units } }) as unknown as Bundle;
 
 const PROJECTS = [
-  bundle('jita', 'Jita', {
+  bundle('jita', 'EVE Online: the Jita corridor', {
     jita: { icon: 'system', label: 'Jita' },
     'jita-iv': { icon: 'planet', label: 'Jita IV' },
     'jita-iv-moon-4': { icon: 'moon', label: 'Jita IV - Moon 4' },
     'jita-4-4': { icon: 'station', label: 'Caldari Navy Assembly Plant' },
-  }),
+  }, 'Jita'),
   bundle('airmia', 'Airmia', {
     airmia: { icon: 'system', label: 'Airmia' },
     'airmia-i': { icon: 'planet', label: 'Airmia I' },
@@ -35,8 +35,15 @@ test('the index is every project and every unit, with the star kept as its syste
   expect(INDEX.filter((each) => each.unit === null).map((each) => each.project)).toEqual(['jita', 'airmia']);
   expect(INDEX.find((each) => each.unit === 'jita')).toBeUndefined();
   expect(INDEX.find((each) => each.unit === 'airmia')).toBeUndefined();
-  expect(INDEX.find((each) => each.unit === 'jita-iv')?.title).toBe('Jita');
+  expect(INDEX.find((each) => each.unit === 'jita-iv')?.place).toBe('Jita');
   expect(INDEX.find((each) => each.unit === 'jita-iv')?.kind).toBe('planet');
+});
+
+test('a row is named by its place and not by the run the place carries', () => {
+  // A project's title is its record's, and a reader looking for a moon is looking for the system it stands in.
+  expect(INDEX.find((each) => each.unit === 'jita-iv')?.place).toBe('Jita');
+  expect(find(INDEX, 'corridor')[0].project, 'the run is still searchable').toBe('jita');
+  expect(find(INDEX, 'corridor')[0].place).toBe('Jita');
 });
 
 test('a system is found by its name, and it stands above its own members', () => {

@@ -13,7 +13,9 @@ import type { Bundle } from '@ssccsorg/skene-kernel';
 export interface Found {
   /** The project the found thing belongs to, which is what choosing it opens. */
   project: string;
-  /** The project's name, which is the second half of a row. */
+  /** The project the row stands in, as the board names it: the place's own label, then the project's title. */
+  place: string;
+  /** The project's title, which is what a run is named and not where the unit stands. */
   title: string;
   /** The unit's id, or null when the found thing is the place itself. */
   unit: string | null;
@@ -28,12 +30,16 @@ export function indexOf(projects: Bundle[]): Found[] {
   const out: Found[] = [];
   for (const project of projects) {
     const title = project.title || project.id;
-    out.push({ project: project.id, title, unit: null, label: title, kind: null });
+    // A place is named by what its own store is called, which is the name its people use. The run's title is what a
+    // project is named by and it is kept in the row's search, because a reader may know either.
+    const place = project.place?.store?.label || title;
+    out.push({ project: project.id, place, title, unit: null, label: place, kind: null });
     for (const [id, unit] of Object.entries(project.place?.units ?? {})) {
       // The star is named for its system, and the place is already the row a reader is looking for.
       if (id === project.id) continue;
       out.push({
         project: project.id,
+        place,
         title,
         unit: id,
         label: unit.label ?? id,
@@ -66,7 +72,7 @@ function begins(haystack: string, token: string): boolean {
  * space.
  */
 function score(found: Found, query: string, tokens: string[]): number | null {
-  const names = [found.label, found.unit ?? '', found.project, found.title].map(lower);
+  const names = [found.label, found.unit ?? '', found.project, found.place, found.title].map(lower);
   const haystack = `${names.join(' ')} ${lower(found.kind ?? '')}`;
   if (!tokens.every((token) => haystack.includes(token))) return null;
   const exact = names.some((name) => name === query);
