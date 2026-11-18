@@ -57,7 +57,9 @@ const DEFAULTS: Record<Panel, number> = {
   rail: 300,
   intents: 424,
   console: 330,
-  plan: 420,
+  // The column of the map, the projects and the members opens at its own floor: the room a wide window has goes to the
+  // record, and a pilot who reads the plan wider drags it.
+  plan: LIMITS.plan[0],
   projects: 172,
   // The transport's floor: its own content, which `min-h-fit` holds it at, and the height it comes up at.
   timeline: 60,
