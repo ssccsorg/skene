@@ -87,6 +87,11 @@ of requirements, measurements and evidence, beside a map of the site the figures
 [Delta](https://demo.ktema.systems/delta/) reads an emergency lift at a villa above the coast: the members, the drives
 they declared, and the record the call left, over the ground it came from.
 
+![Delta with two camera feeds playing beside the cell and the console](docs/showcase/delta-site.webp)
+
+The same board at the cell: footage is a reading the deployment imports, so two camera feeds play beside the console a
+shift is written in, and every frame a camera wrote is a record in the run.
+
 ## Consuming
 
 ```bash
