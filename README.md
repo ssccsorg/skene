@@ -66,6 +66,27 @@ A project that brings its own sphere names it as its seat with `views.seat`, and
 | every bare import is a dependency the importer declares; a package counts only what a consumer installs, and a deployment under `examples/` counts its devDependencies too | [tools/layers.mjs](tools/layers.mjs), by the `assembly` job |
 | a deployment imports every picture its board names | [pictures.test.ts](examples/board/tests/pictures.test.ts) |
 
+## Built with skene
+
+Three deployments, three subjects, one frame. Each supplies a brand and a board and imports the pictures it draws; the
+address, the record model, the panels and the projection come from here.
+
+![Theoros: a region of New Eden, its systems, and one quarter's market](docs/showcase/theoros.webp)
+
+[Theoros](https://github.com/ktema-systems/theoros) reads The Forge from ESI: ninety systems, 5,987 celestial units, and the
+market and the killmails one quarter stands on. Its space pane is its own picture, registered as a reading, and a system's
+inventory is a second reading over the same place.
+
+![neXus: a reporting quarter read as a chain, over a site map](docs/showcase/nexus.webp)
+
+[neXus](https://github.com/ssccsorg/nexus) demonstrates its reference storage node: one reporting quarter read as a chain
+of requirements, measurements and evidence, beside a map of the site the figures came from.
+
+![Delta: a factory cell, its members, and the line's own record](docs/showcase/delta.webp)
+
+[Delta](https://github.com/ktema-systems/kletos) is the cockpit of the kletos stack: a factory cell's members, their
+drives, and the record the line reads, on a floor plan and a site map.
+
 ## Consuming
 
 ```bash
