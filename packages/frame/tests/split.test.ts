@@ -8,7 +8,7 @@ import { beforeEach, expect, test } from 'vitest';
 import { togetherOf, useFrame } from '@/stores/frame';
 
 beforeEach(() => {
-  useFrame.setState({ modes: {}, paths: {}, last: 'vertical', tone: 'dark', orbits: {} });
+  useFrame.setState({ modes: {}, shares: {}, paths: {}, last: 'vertical', tone: 'dark', orbits: {} });
 });
 
 test('a project with a ground opens the map beside the globe', () => {
@@ -36,6 +36,31 @@ test('one project arrangement is not another project arrangement', () => {
   useFrame.getState().setSplit('villa', 'globe');
   expect(useFrame.getState().splitOf('villa'), 'the place the pilot closed is closed').toBe('globe');
   expect(useFrame.getState().splitOf('island'), 'and a place they never opened still has its map').toBe('vertical');
+});
+
+test('the two pictures are halved until the edge between them is dragged', () => {
+  expect(useFrame.getState().shareOf('villa')).toBe(0.5);
+});
+
+test('a share is the project\'s own and stands between the ends', () => {
+  useFrame.getState().setShare('villa', 0.7);
+  expect(useFrame.getState().shareOf('villa')).toBeCloseTo(0.7);
+  expect(useFrame.getState().shareOf('island'), 'one place arranged is not another').toBe(0.5);
+  useFrame.getState().setShare('villa', 0.95);
+  expect(useFrame.getState().shareOf('villa'), 'a strip of names is not a picture').toBe(0.8);
+  useFrame.getState().setShare('villa', 0.01);
+  expect(useFrame.getState().shareOf('villa')).toBe(0.2);
+});
+
+test('a share of nothing is a measure nobody took, so it stands at half', () => {
+  useFrame.getState().setShare('villa', Number.NaN);
+  expect(useFrame.getState().shareOf('villa')).toBe(0.5);
+});
+
+test('the frame reset forgets the shares', () => {
+  useFrame.getState().setShare('villa', 0.7);
+  useFrame.getState().reset();
+  expect(useFrame.getState().shareOf('villa')).toBe(0.5);
 });
 
 test('the map taking the frame is an arrangement and not a third reading', () => {

@@ -41,9 +41,26 @@ export function togetherOf(mode: Split): OpenSplit {
   return mode === 'horizontal' ? 'horizontal' : 'vertical';
 }
 
+/**
+ * How much of a split the reading takes, as the share of the frame the sphere is given.
+ *
+ * The pane and the sphere are two pictures of one place and neither is always the one a pilot is reading, so the edge
+ * between them is a control. The ends are the point past which one of the two stops being a picture: a fifth of the frame
+ * is a strip of names, and the share is clamped here rather than at the handle because the handle is not the only caller.
+ */
+export const SHARE: [number, number] = [0.2, 0.8];
+
+/** A share as it is allowed to stand. */
+export function shareWithin(value: number): number {
+  if (!Number.isFinite(value)) return 0.5;
+  return Math.min(Math.max(value, SHARE[0]), SHARE[1]);
+}
+
 interface FrameState {
   /** The pane's arrangement, by project. Absent means the default. */
   modes: Record<string, Split>;
+  /** How much of the split the reading takes, by project. Absent means half. */
+  shares: Record<string, number>;
   /** The reading in force, by project, as the address it is reached at. */
   paths: Record<string, string>;
   /** The arrangement a closed pane comes back to. */
@@ -53,9 +70,11 @@ interface FrameState {
   /** Whether the map is read through the flat projection or on the earth, by project. */
   orbits: Record<string, boolean>;
   splitOf: (project: string | null) => Split;
+  shareOf: (project: string | null) => number;
   orbitOf: (project: string | null) => boolean;
   pathOf: (project: string | null) => string | null;
   setSplit: (project: string | null, mode: Split) => void;
+  setShare: (project: string | null, value: number) => void;
   toggle: (project: string | null) => void;
   /** Switch the flat map and the orbit between the page's dark ground and the tiles' own colour. */
   toggleTone: () => void;
@@ -72,6 +91,7 @@ export const useFrame = create<FrameState>()(
   persist(
     (set, get) => ({
       modes: {},
+      shares: {},
       paths: {},
       last: PANE_ON,
       tone: 'dark',
@@ -89,6 +109,15 @@ export const useFrame = create<FrameState>()(
         if (!project) return false;
         const raw = get().modes[project] as Split | 'orbit' | undefined;
         return get().orbits[project] ?? raw === 'orbit';
+      },
+
+      // A split between two pictures is halved until a pilot drags it, and the share is kept per project for the same
+      // reason the arrangement is: a place arranged wide is one place's arrangement.
+      shareOf: (project) => shareWithin(project ? (get().shares[project] ?? 0.5) : 0.5),
+
+      setShare: (project, value) => {
+        if (!project) return;
+        set((state) => ({ shares: { ...state.shares, [project]: shareWithin(value) } }));
       },
 
       pathOf: (project) => (project ? (get().paths[project] ?? null) : null),
@@ -125,7 +154,7 @@ export const useFrame = create<FrameState>()(
         set((state) => ({ paths: { ...state.paths, [project]: path } }));
       },
 
-      reset: () => set({ modes: {}, paths: {}, last: PANE_ON, orbits: {} }),
+      reset: () => set({ modes: {}, shares: {}, paths: {}, last: PANE_ON, orbits: {} }),
     }),
     {
       name: storageName('frame'),

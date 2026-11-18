@@ -5,6 +5,7 @@ import { BottomBar } from '../components/BottomBar';
 import { MoveContext } from '../components/MoveContext';
 import { PanelOverlay } from '../components/PanelOverlay';
 import { FloatingPanels } from '../components/FloatingPanels';
+import { Splitter } from '../components/Splitter';
 import { useWorld } from '../hooks/useWorld';
 import { BAR_INSET, ROW_SHAPE, TITLE } from '@ssccsorg/skene-ui';
 import { aimAt, onShell } from '@ssccsorg/skene-board';
@@ -71,6 +72,13 @@ export function Space() {
   // the store for the mode rather than for its function, because a function is the same value when the modes move and the
   // board would keep the arrangement it first drew.
   const split = useFrame((state) => state.splitOf(projectId));
+  // How much of the split the two pictures are drawn with, which the edge between them is dragged by.
+  const share = useFrame((state) => state.shareOf(projectId));
+  const setShare = useFrame((state) => state.setShare);
+  // The box the two pictures stand in, measured when the edge is dragged: a share is what is kept, so the pixels of one
+  // drag are read against the room the frame has at that moment rather than against a number from an earlier window.
+  const splitBox = useRef<HTMLDivElement>(null);
+  const span = () => (split === 'vertical' ? splitBox.current?.clientWidth : splitBox.current?.clientHeight) ?? 0;
   // The pane taking the frame is one picture of the place, in whichever projection the pane is read through.
   const paneOnly = split === 'full';
   // A move belongs to the place it was opened in, so another project closes the context rather than carrying it over.
@@ -190,9 +198,12 @@ export function Space() {
             of readings and does not know one from another: it has the address, it asks which reading that is, and it
             hands that reading the board. */}
         {pane && paneDrawn && reading?.key !== pane.key && split !== 'globe' ? (
-          <div className={cn('absolute inset-0 flex', split === 'vertical' ? 'flex-row' : 'flex-col')}>
+          <div
+            ref={splitBox}
+            className={cn('absolute inset-0 flex', split === 'vertical' ? 'flex-row' : 'flex-col')}
+          >
             {paneOnly ? null : (
-              <div className="relative min-h-0 min-w-0 flex-1">
+              <div style={{ flex: share }} className="relative min-h-0 min-w-0">
                 {reading ? (
                   <div className={PICTURE}>
                     <reading.View {...board} />
@@ -200,9 +211,31 @@ export function Space() {
                 ) : null}
               </div>
             )}
+            {paneOnly ? null : (
+              // The edge between the two pictures is a control, and it stands where the share puts the seam: a frame
+              // whose two pictures are one width is a frame that decides which of them a pilot is reading.
+              <div
+                className={cn('absolute z-20', split === 'vertical' ? 'inset-y-0' : 'inset-x-0')}
+                style={split === 'vertical' ? { left: `${share * 100}%` } : { top: `${share * 100}%` }}
+              >
+                <Splitter
+                  axis={split === 'vertical' ? 'x' : 'y'}
+                  value={share * span()}
+                  measure={() => share * span()}
+                  onChange={(pixels) => {
+                    const size = span();
+                    if (size > 0) setShare(projectId, pixels / size);
+                  }}
+                  className={
+                    split === 'vertical' ? 'inset-y-0 -left-[3px] w-1.5' : 'inset-x-0 -top-[3px] h-1.5'
+                  }
+                />
+              </div>
+            )}
             <div
+              style={paneOnly ? undefined : { flex: 1 - share }}
               className={cn(
-                'relative min-h-0 min-w-0 flex-1',
+                'relative min-h-0 min-w-0',
                 !paneOnly && (split === 'vertical' ? 'border-l' : 'border-t'),
               )}
             >
