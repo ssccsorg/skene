@@ -39,6 +39,9 @@ export { KindTag } from './components/KindTag';
 // the deployment's, and the element that states them is not.
 export { NarrowNotice } from './components/NarrowNotice';
 export type { NarrowNoticeProps } from './components/NarrowNotice';
+// The field over the whole board is the frame's own control. A deployment that draws its own bar mounts this in it, and
+// a deployment that draws the frame's bar already has it.
+export { Find } from './components/Find';
 // What a screen calls the three kinds is the project's projection, so a deployment that draws a record reads the words
 // here rather than choosing a vocabulary of its own beside the frame's.
 export { FORMAT_WORDS, useKindWords, wordsOf } from './lib/words';

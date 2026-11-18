@@ -31,3 +31,7 @@ test('a pick turns the frame own view, whichever reading draws the space', () =>
   expect(space, 'the one view is turned').toMatch(/useView\.getState\(\)\.aim\(where\.yaw, where\.pitch\)/);
   expect(space, 'a repeated pick is a second look').toMatch(/\[look, unit, world\]/);
 });
+
+test('the field is the frame own export, so a deployment can mount it in its own bar', () => {
+  expect(source('src/index.ts')).toMatch(/export \{ Find \} from '\.\/components\/Find';/);
+});
