@@ -71,25 +71,14 @@ A project that brings its own sphere names it as its seat with `views.seat`, and
 Three deployments, three subjects, one frame. Each supplies a brand and a board and imports the pictures it draws; the
 address, the record model, the panels and the projection come from here.
 
-![Theoros: a region of New Eden, its systems, and one quarter's market](docs/showcase/theoros.webp)
-
-Theoros reads The Forge from ESI: ninety systems, 5,987 celestial units, and the market and the killmails one quarter
-stands on. Its space pane is its own picture, registered as a reading, and a system's inventory is a second reading over
-the same place.
-
-![neXus: a reporting quarter read as a chain, over a site map](docs/showcase/nexus.webp)
-
-[neXus](https://github.com/ssccsorg/nexus) demonstrates its reference storage node: one reporting quarter read as a chain
-of requirements, measurements and evidence, beside a map of the site the figures came from.
-
-![Delta: an emergency lift at a villa above the coast, its members, and the record the call left](docs/showcase/delta.webp)
-
-[Delta](https://demo.ktema.systems/delta/) reads an emergency lift at a villa above the coast: the members, the drives
-they declared, and the record the call left, over the ground it came from.
+| Theoros | [neXus](https://github.com/ssccsorg/nexus) | [Delta](https://demo.ktema.systems/delta/) |
+|:---|:---|:---|
+| ![Theoros: a region of New Eden, its systems, and one quarter's market](docs/showcase/theoros.webp) | ![neXus: a reporting quarter read as a chain, over a site map](docs/showcase/nexus.webp) | ![Delta: an emergency lift at a villa above the coast](docs/showcase/delta.webp) |
+| A region of New Eden from ESI: ninety systems, 5,987 celestial units, and the market and the killmails one quarter stands on. Its space pane is a reading it registers, and a system's inventory is a second reading over the same place. | A reporting quarter read as a chain of requirements, measurements and evidence, beside a map of the site the figures came from. | An emergency lift at a villa above the coast: the members, the drives they declared, and the record the call left. |
 
 ![Delta with two camera feeds playing beside the cell and the console](docs/showcase/delta-site.webp)
 
-The same board at the cell: footage is a reading the deployment imports, so two camera feeds play beside the console a
+Delta with the cell's cameras open: footage is a reading the deployment imports, so two feeds play beside the console a
 shift is written in, and every frame a camera wrote is a record in the run.
 
 ## Consuming
