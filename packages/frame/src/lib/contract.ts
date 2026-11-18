@@ -180,6 +180,27 @@ function placeOf(value: unknown, issues: ProjectIssue[]): void {
               path: `place.units.${member}.attributes.battery`,
               message: 'is a charge, a fraction or a percentage',
             });
+          } else if (unit.attributes.facts !== undefined) {
+            if (!Array.isArray(unit.attributes.facts)) {
+              issues.push({
+                path: `place.units.${member}.attributes.facts`,
+                message: 'is a list of label and value pairs',
+              });
+            } else {
+              unit.attributes.facts.forEach((fact, index) => {
+                const at = `place.units.${member}.attributes.facts[${index}]`;
+                if (!isRecord(fact)) {
+                  issues.push({ path: at, message: 'is a label and a value' });
+                  return;
+                }
+                if (typeof fact.label !== 'string') {
+                  issues.push({ path: `${at}.label`, message: 'is a string' });
+                }
+                if (typeof fact.value !== 'string') {
+                  issues.push({ path: `${at}.value`, message: 'is a string' });
+                }
+              });
+            }
           }
         }
         if (unit.views !== undefined) {

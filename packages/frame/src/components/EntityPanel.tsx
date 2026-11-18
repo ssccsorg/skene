@@ -3,7 +3,7 @@ import { ChevronDown, ChevronRight, Search, X } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
 import { RowControl } from '@ssccsorg/skene-ui';
 import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
-import { chargeOf } from '@ssccsorg/skene-kernel';
+import { chargeOf, factsOf } from '@ssccsorg/skene-kernel';
 import { useAsks } from '../hooks/useAsks';
 import { wordsOf } from '../lib/interface';
 import { memberOf, partsOf } from '../lib/kinds';
@@ -242,6 +242,7 @@ export function EntityPanel({
           const Thumb = presented ? viewKindOf(presented.kind)?.Thumb : undefined;
           // What the member says about itself beyond its kind, read from its own declaration.
           const charge = chargeOf(place, unit);
+          const facts = factsOf(place, unit);
           return (
             <li key={unit.id}>
               <div className={cn('flex items-stretch', unit.id === pickedId ? 'bg-accent/60' : 'hover:bg-accent/40')}>
@@ -313,6 +314,20 @@ export function EntityPanel({
                   not draw the same chips twice. */}
               {unit.id === pickedId && folded !== unit.id ? (
                 <div className="border-t border-border/60">
+                  {/* What it states about itself, above what it holds: the pairs are the place's own words and the
+                      frame draws them without knowing what any of them means. */}
+                  {facts.length ? (
+                    <dl className="grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-3 gap-y-0.5 px-3 py-1.5 text-[11px] leading-snug">
+                      {facts.map((fact) => (
+                        <div key={fact.label} className="contents">
+                          <dt className="text-muted-foreground">{fact.label}</dt>
+                          <dd className="min-w-0 truncate" title={fact.value}>
+                            {fact.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : null}
                   {partsOf(unit.properties).map(({ key, View }) => (
                     <View key={key} member={unit} place={place} />
                   ))}

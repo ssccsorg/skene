@@ -260,6 +260,14 @@ export type Camera = Extract<CarriedView, { kind: 'media' }>;
 export interface UnitAttributes {
   /** The charge it is running on, from nought to one. A place may write 87 for eighty-seven percent. */
   battery?: number;
+  /**
+   * What the entity states about itself, as a label and a value a reader can be shown, in the order it declares them.
+   *
+   * A fact is the entity's own reading and not the space's: a star has a temperature because a star is a star, and a
+   * berth has services because a berth is a berth. The frame draws the pairs and knows none of the words, so the shape
+   * does not grow with every kind of unit a deployment stands.
+   */
+  facts?: { label: string; value: string }[];
 }
 
 export interface UnitPlace {

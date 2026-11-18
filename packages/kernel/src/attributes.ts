@@ -30,3 +30,15 @@ export function chargeOf(place: Place, member: Standing): Charge | null {
   const level = declared > 1 ? declared / 100 : declared;
   return { level: Math.min(Math.max(level, 0), 1) };
 }
+
+/**
+ * What a member states about itself, in the order it declares it.
+ *
+ * The value is the place's declaration, for the same reason the charge is: the space knows what stands in it, and a
+ * frame that filled a row from a device would be a central system holding one customer's model. A pair that names
+ * nothing on either side is dropped rather than drawn as an empty row.
+ */
+export function factsOf(place: Place, member: Standing): { label: string; value: string }[] {
+  const declared = place.units?.[member.id]?.attributes?.facts ?? [];
+  return declared.filter((fact) => fact.label !== '' && fact.value !== '');
+}

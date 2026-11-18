@@ -50,6 +50,23 @@ const withRecord = (...resources: { kind: string; at: unknown }[]) => ({
   resources: [{ kind: 'record', at: 'a.txt' }, ...resources],
 });
 
+test('a fact is a label and a value, and another shape is refused by name', () => {
+  const place = (facts: unknown) =>
+    issuesOf(
+      withRecord({
+        kind: 'place',
+        at: { view: [0, 0, 10, 10], units: { star: { attributes: { facts } } } },
+      }),
+    );
+  expect(place([{ label: 'spectral', value: 'F1 V' }])).toEqual([]);
+  expect(place([{ label: 'spectral' }])).toEqual([
+    'place.units.star.attributes.facts[0].value: is a string',
+  ]);
+  expect(place('F2')).toEqual([
+    'place.units.star.attributes.facts: is a list of label and value pairs',
+  ]);
+});
+
 test('a name is keyed the way the frame keys it', () => {
   expect(slugOf('Rover One')).toBe('rover-one');
   expect(slugOf('  --A_b__C--  ')).toBe('a-b-c');

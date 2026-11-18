@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chargeOf } from '@ssccsorg/skene-kernel';
+import { chargeOf, factsOf } from '@ssccsorg/skene-kernel';
 import type { Place, Standing } from '@ssccsorg/skene-kernel';
 
 // A charge is an attribute of an entity and not a fact about the space, so the reader takes the place's declaration and
@@ -27,5 +27,27 @@ describe('chargeOf', () => {
     expect(chargeOf(place(undefined), member('robot'))).toBeNull();
     expect(chargeOf(place({}), member('robot'))).toBeNull();
     expect(chargeOf(place({ battery: 87 }), member('other'))).toBeNull();
+  });
+});
+
+describe('factsOf', () => {
+  const facts = [
+    { label: 'spectral', value: 'F1 V' },
+    { label: 'temperature', value: '7305 K' },
+  ];
+
+  it('reads the pairs in the order the place declares them', () => {
+    expect(factsOf(place({ facts }), member('robot'))).toEqual(facts);
+  });
+
+  it('drops a pair that names nothing, rather than drawing an empty row', () => {
+    const declared = [...facts, { label: '', value: 'x' }, { label: 'y', value: '' }];
+    expect(factsOf(place({ facts: declared }), member('robot'))).toEqual(facts);
+  });
+
+  it('answers an empty list for a member that declares none', () => {
+    expect(factsOf(place(undefined), member('robot'))).toEqual([]);
+    expect(factsOf(place({ battery: 0.5 }), member('robot'))).toEqual([]);
+    expect(factsOf(place({ facts }), member('other'))).toEqual([]);
   });
 });
