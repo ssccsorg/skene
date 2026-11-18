@@ -73,19 +73,19 @@ address, the record model, the panels and the projection come from here.
 
 ![Theoros: a region of New Eden, its systems, and one quarter's market](docs/showcase/theoros.webp)
 
-Theoros reads The Forge from ESI: ninety systems, 5,987 celestial units, and the
-market and the killmails one quarter stands on. Its space pane is its own picture, registered as a reading, and a system's
-inventory is a second reading over the same place.
+Theoros reads The Forge from ESI: ninety systems, 5,987 celestial units, and the market and the killmails one quarter
+stands on. Its space pane is its own picture, registered as a reading, and a system's inventory is a second reading over
+the same place.
 
 ![neXus: a reporting quarter read as a chain, over a site map](docs/showcase/nexus.webp)
 
 [neXus](https://github.com/ssccsorg/nexus) demonstrates its reference storage node: one reporting quarter read as a chain
 of requirements, measurements and evidence, beside a map of the site the figures came from.
 
-![Delta: a factory cell, its members, and the line's own record](docs/showcase/delta.webp)
+![Delta: an emergency lift at a villa above the coast, its members, and the record the call left](docs/showcase/delta.webp)
 
-[Delta](https://demo.ktema.systems/delta/) is the cockpit of the kletos stack: a factory cell's members, their
-drives, and the record the line reads, on a floor plan and a site map.
+[Delta](https://demo.ktema.systems/delta/) reads an emergency lift at a villa above the coast: the members, the drives
+they declared, and the record the call left, over the ground it came from.
 
 ## Consuming
 
