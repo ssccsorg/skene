@@ -73,7 +73,7 @@ address, the record model, the panels and the projection come from here.
 
 ![Theoros: a region of New Eden, its systems, and one quarter's market](docs/showcase/theoros.webp)
 
-[Theoros](https://github.com/ktema-systems/theoros) reads The Forge from ESI: ninety systems, 5,987 celestial units, and the
+Theoros reads The Forge from ESI: ninety systems, 5,987 celestial units, and the
 market and the killmails one quarter stands on. Its space pane is its own picture, registered as a reading, and a system's
 inventory is a second reading over the same place.
 
@@ -84,7 +84,7 @@ of requirements, measurements and evidence, beside a map of the site the figures
 
 ![Delta: a factory cell, its members, and the line's own record](docs/showcase/delta.webp)
 
-[Delta](https://github.com/ktema-systems/kletos) is the cockpit of the kletos stack: a factory cell's members, their
+[Delta](https://demo.ktema.systems/delta/) is the cockpit of the kletos stack: a factory cell's members, their
 drives, and the record the line reads, on a floor plan and a site map.
 
 ## Consuming
