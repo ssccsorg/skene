@@ -7,6 +7,7 @@ import { PanelOverlay } from '../components/PanelOverlay';
 import { FloatingPanels } from '../components/FloatingPanels';
 import { useWorld } from '../hooks/useWorld';
 import { BAR_INSET, ROW_SHAPE, TITLE } from '@ssccsorg/skene-ui';
+import { aimAt, onShell } from '@ssccsorg/skene-board';
 import { useReadingAt, useReadings, type Board } from '../lib/readings';
 import { neighboursOf, toPlace } from '../lib/world';
 import { cn } from '@ssccsorg/skene-ui';
@@ -14,6 +15,7 @@ import { useRecords } from '../stores/records';
 import { useScenario } from '../stores/scenario';
 import { useEdits } from '../stores/edits';
 import { useSelection } from '../stores/selection';
+import { useView } from '../stores/view';
 import { useFrame } from '../stores/frame';
 // The readings that declare themselves, loaded where the board is drawn: a register knows only what has been imported.
 import '.';
@@ -101,6 +103,19 @@ export function Space() {
   // an entity picked carries its last record, so the rail, the map, the board and the console all read
   // the same choice out of this one name.
   const pickedId = unit;
+  const look = useSelection((state) => state.look);
+
+  // A pick is a look, and the look is the frame's because every reading shows the same space. A unit chosen in the
+  // find field, in the feed or in a panel turns the shared view to it, so a search result is a journey and a reading
+  // that draws the space another way reads the same view. It is the count of picks and not only the pick, because a
+  // press on a mark already picked is a second look at it.
+  useEffect(() => {
+    if (!unit || !world) return;
+    const found = world.standing.find((entry) => entry.id === unit);
+    if (!found) return;
+    const where = aimAt(onShell(found.at, world));
+    useView.getState().aim(where.yaw, where.pitch);
+  }, [look, unit, world]);
 
   // What a reading is handed. The frame gathers the board's resources once and a reading takes what it wants from them,
   // so a reading added later adds no requirement the frame has to be told about.

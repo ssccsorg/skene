@@ -2,7 +2,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Crosshair, Minus, Plus } from 'lucide-react';
 import * as THREE from 'three';
-import { DIM, GRATICULE, LEVEL, aimAt, blackboardInk, fitView, forwardOf, liftOf, onShell, orbitalAt, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
+import { DIM, GRATICULE, LEVEL, blackboardInk, fitView, forwardOf, liftOf, onShell, orbitalAt, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
 import { dashes, dotTexture, line, ring, segments } from '@ssccsorg/skene-board';
 import { routeOf, writerOf } from '@ssccsorg/skene-frame/lib/world';
 import { graphOf } from '@ssccsorg/skene-frame/lib/graph';
@@ -11,7 +11,6 @@ import { useViewPlaces } from './useViewPlaces';
 import { useDrawing } from '@ssccsorg/skene-frame/stores/drawing';
 import { useFrame as useFrameStore } from '@ssccsorg/skene-frame/stores/frame';
 import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
-import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
 import { useView } from '@ssccsorg/skene-frame/stores/view';
 import type { NodeKind, Place, World } from '@ssccsorg/skene-kernel';
 import { clipped } from '@ssccsorg/skene-board';
@@ -187,7 +186,6 @@ export function SceneBoard({
   // a place rather than a run, so its own zone is tinted by what it declares about itself.
   const declared = useScenario((store) => store.model?.project.status ?? null);
   const state = states[declared ?? 'offline'];
-  const look = useSelection((state) => state.look);
   const dot = useMemo(dotTexture, []);
   const turn = useView((state) => state.turn);
   const zoom = useView((state) => state.zoom);
@@ -283,19 +281,6 @@ export function SceneBoard({
     else fit(view);
     lastSector.current = bearing;
   }, [fit, spin, held, ground, size, world.sector]);
-
-  // The picked unit comes to the middle of the frame. A pick made anywhere in the interface ends up here,
-  // because `pickedId` is the one choice the views share, and looking at what you picked is what a pick is.
-  //
-  // It is the count of picks and not only the pick that brings it here: a press on a mark held on the frame's edge
-  // is a press on the unit already picked as often as on one that is not, and what the pilot asked for by pressing
-  // it is the look.
-  useEffect(() => {
-    const unit = world.present.find((entry) => entry.id === pickedId);
-    if (!unit) return;
-    const where = aimAt(onShell(unit.at, world));
-    useView.getState().aim(where.yaw, where.pitch);
-  }, [look, pickedId, world]);
 
   useEffect(() => {
     const element = box.current;

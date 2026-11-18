@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Hint, RowControl, cn } from '@ssccsorg/skene-ui';
 import { useUnit } from '../lib/brand';
-import { find as search, indexOf, type Found } from '../lib/find';
+import { find as search, indexOf, type Found } from '@ssccsorg/skene-kernel';
 import { useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
 

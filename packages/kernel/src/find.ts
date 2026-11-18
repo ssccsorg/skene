@@ -1,11 +1,13 @@
-import type { Bundle } from '@ssccsorg/skene-kernel';
+import type { Bundle } from './types';
 
-// The board as one thing to ask: every project the frame holds, and every unit each of them declares.
+// The board as one thing to ask: every project the board holds, and every unit each of them declares.
 //
-// A project is a space and the board is a space of spaces, so a reader looking for one planet is looking for one row
-// in a list they cannot see. The index is what makes that row findable: the place itself, and the members the place
-// stands, with the project each belongs to kept beside it. A unit is searched by its id, its name, what it is, and the
-// project it stands in, because a reader may know any of the four.
+// It is an answer about the board and not a drawing of it, so it stands in the kernel: a node tool, a test and a frame
+// ask the same list from the same function, and the field that draws it is the frame's. A project is a space and the
+// board is a space of spaces, so a reader looking for one planet is looking for one row in a list they cannot see. The
+// index is what makes that row findable: the place itself, and the members the place stands, with the project each
+// belongs to kept beside it. A unit is searched by its id, its name, what it is, and the project it stands in, because a
+// reader may know any of the four.
 //
 // The index is built once per board and the query is read against it, which is what keeps a search of six thousand
 // rows a list of twelve.
