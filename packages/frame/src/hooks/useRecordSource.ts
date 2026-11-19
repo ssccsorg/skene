@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { keyOf } from '@ssccsorg/skene-kernel';
 import { host } from '../lib/host';
 import { useRecords, volumeOf } from '../stores/records';
@@ -40,8 +40,11 @@ export function frameFromQuery(search: string): Frame {
 }
 
 export function useRecordSource(): Frame {
-  const search = typeof window === 'undefined' ? '' : window.location.search;
-  const frame = useMemo(() => frameFromQuery(search), [search]);
+  // The address is read once, when the window opens. The frame writes its own address as it settles on a reading, so a
+  // live read would take that write for a person naming another project and read the whole board a second time.
+  const [frame] = useState(() =>
+    frameFromQuery(typeof window === 'undefined' ? '' : window.location.search),
+  );
 
   const status = useScenario((state) => state.status);
   const projectId = useScenario((state) => state.projectId);
