@@ -6,6 +6,7 @@
 
 import { useMemo } from 'react';
 import type { Camera, World } from '@ssccsorg/skene-kernel';
+import { useView } from '@ssccsorg/skene-frame/stores/view';
 import { SphereSurface } from './SphereSurface';
 import { surfaceMedia } from './surface';
 import { useSurface } from './surface-store';
@@ -24,7 +25,10 @@ export function filling(world: World): Camera[] {
 /** The picture inside the shell, or nothing while the surface is off or the place fills it with nothing. */
 export function MediaSurface({ world, pickedId }: SurfaceProps) {
   const mode = useSurface((state) => state.mode);
+  // A sphere filled with the place's own cell is the place's picture, so the room's surface is not painted on it: the
+  // footage is still there and comes back when the sphere reads the region again.
+  const filled = useView((state) => state.filled);
   const media = useMemo(() => surfaceMedia(filling(world), pickedId), [world, pickedId]);
-  if (mode === 'off' || !media.length) return null;
+  if (mode === 'off' || filled || !media.length) return null;
   return <SphereSurface media={media} mode={mode} />;
 }

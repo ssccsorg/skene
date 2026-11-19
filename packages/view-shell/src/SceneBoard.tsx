@@ -1,8 +1,8 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Crosshair, Minus, Plus } from 'lucide-react';
+import { Crosshair, Globe, Grid2x2, Minus, Plus } from 'lucide-react';
 import * as THREE from 'three';
-import { DIM, GRATICULE, LEVEL, blackboardInk, fitView, forwardOf, liftOf, onShell, orbitalAt, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
+import { DIM, GRATICULE, LEVEL, blackboardInk, cellRim, fitView, forwardOf, liftOf, onShell, orbitalAt, ringOf, SHELL, kindInk, stateInk, unfold, zoneOf } from '@ssccsorg/skene-board';
 import { dashes, dotTexture, line, ring, segments } from '@ssccsorg/skene-board';
 import { routeOf, writerOf } from '@ssccsorg/skene-frame/lib/world';
 import { graphOf } from '@ssccsorg/skene-frame/lib/graph';
@@ -193,6 +193,7 @@ export function SceneBoard({
   const spin = useView((state) => state.spin);
   const setFrame = useView((state) => state.setFrame);
   const held = useView((state) => state.held);
+  const filled = useView((state) => state.filled);
   const release = useView((state) => state.release);
   const arrival = useView((state) => state.arrival);
   const box = useRef<HTMLDivElement>(null);
@@ -214,8 +215,11 @@ export function SceneBoard({
   // the frame opens holding it and the zone is fitted to it, and a zone is the field's whether or not the
   // field is the one being read.
   const ground = useMemo(
-    () => world.standing.map((unit) => onShell(unit.at, world)),
-    [world],
+    () =>
+      // A place read at its own scale is fitted to the cell it holds, which is what fills the frame with the place; the
+      // region's reading fits the field its members reach, which is what puts them on the sphere at their own bearings.
+      (filled && world.cell ? cellRim(world.cell, 4) : world.standing.map((unit) => onShell(unit.at, world))),
+    [filled, world],
   );
   // A place that holds a cell is drawn as that cell, and a place that holds none keeps the cap its members reach.
   // The two are the same claim at two scales: the ground a place takes, read from what it declares.
@@ -275,12 +279,12 @@ export function SceneBoard({
   const lastSector = useRef<string | null>(null);
   useEffect(() => {
     if (held || !ground.length || size[0] === 0) return;
-    const view = fitView(ground, size[0], size[1], 1.45, world.sector);
+    const view = fitView(ground, size[0], size[1], filled ? 1.06 : 1.45, world.sector);
     const bearing = world.sector.join(',');
     if (lastSector.current !== null && lastSector.current !== bearing) spin(view);
     else fit(view);
     lastSector.current = bearing;
-  }, [fit, spin, held, ground, size, world.sector]);
+  }, [fit, spin, held, ground, size, world.sector, filled]);
 
   useEffect(() => {
     const element = box.current;
@@ -656,7 +660,10 @@ export function SceneBoard({
         );
       })}
       <ViewLayer places={places} views={world.views} tints={tints} onPick={onPick} size={size} />
-      <ViewControls surface={SurfaceControl ? <SurfaceControl world={world} pickedId={pickedId} /> : null} />
+      <ViewControls
+        cell={Boolean(world.cell)}
+        surface={SurfaceControl ? <SurfaceControl world={world} pickedId={pickedId} /> : null}
+      />
     </div>
   );
 }
@@ -668,10 +675,12 @@ export function SceneBoard({
  * the bar: a control about what is inside the board is read with the board. A press here is not a press on the space, so
  * it does not reach the board's own drag.
  */
-function ViewControls({ surface }: { surface?: ReactNode }) {
+function ViewControls({ surface, cell }: { surface?: ReactNode; cell: boolean }) {
   const release = useView((state) => state.release);
   const zoom = useView((state) => state.zoom);
   const held = useView((state) => state.held);
+  const filled = useView((state) => state.filled);
+  const setFilled = useView((state) => state.setFilled);
   const tool =
     'pointer-events-auto flex size-6 items-center justify-center rounded-sm border border-border/70 bg-card/85 ' +
     'text-muted-foreground transition-colors hover:text-foreground disabled:cursor-default disabled:opacity-40';
@@ -691,6 +700,21 @@ function ViewControls({ surface }: { surface?: ReactNode }) {
           <Minus className="size-3.5" />
         </button>
       </Hint>
+      {cell ? (
+        // The one other reading of the same space: the place's own cell fills the frame instead of the region holding it.
+        // A place that holds no cell has no such picture, and the control is not drawn rather than drawn dead.
+        <Hint label={filled ? 'read the region' : 'fill with the cell'}>
+          <button
+            type="button"
+            data-region="fill-cell"
+            data-on={filled}
+            className={tool}
+            onClick={() => setFilled(!filled)}
+          >
+            {filled ? <Globe className="size-3.5" /> : <Grid2x2 className="size-3.5" />}
+          </button>
+        </Hint>
+      ) : null}
       <Hint label="center">
         <button type="button" className={tool} disabled={!held} onClick={release}>
           <Crosshair className="size-3.5" />

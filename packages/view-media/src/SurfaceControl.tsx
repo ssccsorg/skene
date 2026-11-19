@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 import { Check, Columns2, EyeOff, Grid2x2, Tv } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
 import { useMenu } from '@ssccsorg/skene-frame/hooks/useMenu';
+import { useView } from '@ssccsorg/skene-frame/stores/view';
 import { cn } from '@ssccsorg/skene-ui';
 import { SURFACE_MODES, surfaceMedia } from './surface';
 import { useSurface } from './surface-store';
@@ -21,6 +22,9 @@ const TOOL =
 export function SurfaceControl({ world, pickedId }: SurfaceProps) {
   const surface = useSurface((state) => state.mode);
   const setSurface = useSurface((state) => state.setMode);
+  // A sphere filled with the place's own cell is the cell's picture, so the surface has nowhere to be drawn and its
+  // control is dead rather than hidden: the layout is still the pilot's and comes back with the region.
+  const filled = useView((state) => state.filled);
   const [menu, setMenu, menuBox] = useMenu();
   const hasMedia = useMemo(() => surfaceMedia(filling(world), pickedId).length > 0, [world, pickedId]);
   const icon = surface === 'single' ? Tv : surface === 'split' ? Columns2 : surface === 'grid' ? Grid2x2 : EyeOff;
@@ -29,13 +33,13 @@ export function SurfaceControl({ world, pickedId }: SurfaceProps) {
 
   return (
     <div ref={menuBox} className="relative">
-      <Hint label={`surface: ${name}`}>
+      <Hint label={filled ? 'surface: the cell fills the sphere' : `surface: ${name}`}>
         <button
           type="button"
           data-region="surface-mode"
           data-on={surface !== 'off'}
           className={TOOL}
-          disabled={!hasMedia}
+          disabled={!hasMedia || filled}
           aria-expanded={menu}
           onClick={() => setMenu(!menu)}
         >

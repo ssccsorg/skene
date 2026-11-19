@@ -12,18 +12,23 @@ import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import { CONTROL } from '@ssccsorg/skene-ui';
 import { cn } from '@ssccsorg/skene-ui';
+import { useView } from '@ssccsorg/skene-frame/stores/view';
 import { useSurfaceForward } from './useSurfaceForward';
 
 export function Forward({ origin, where }: { origin: string; where: 'row' | 'handle' }) {
   const forward = useSurfaceForward();
+  // A sphere filled with the place's own cell is drawn by the cell, so there is no room on it for a picture to be sent to.
+  const filled = useView((state) => state.filled);
+  const label = filled ? 'the sphere is filled with the cell' : 'forward to the sphere';
 
   if (where === 'row') {
     return (
-      <Hint label="forward to the sphere">
+      <Hint label={label}>
         <button
           type="button"
           data-region="surface-forward"
-          className="flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
+          className="flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground disabled:cursor-default disabled:opacity-40"
+          disabled={filled}
           onClick={() => forward(origin)}
         >
           <ArrowUpRight className="size-3.5" />
@@ -33,12 +38,13 @@ export function Forward({ origin, where }: { origin: string; where: 'row' | 'han
   }
 
   return (
-    <Hint label="forward to the sphere">
+    <Hint label={label}>
       <Button
         size="icon-xs"
         variant="ghost"
         className={cn(CONTROL)}
         data-region="surface-forward"
+        disabled={filled}
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
           event.stopPropagation();

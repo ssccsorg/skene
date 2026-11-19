@@ -47,6 +47,14 @@ interface ViewState extends View {
   /** Whether the pilot has taken the view over: the fitted field stops following the space. */
   held: boolean;
   /**
+   * Whether the sphere is filled with the place's own cell rather than read at the region's scale.
+   *
+   * A place holds an edge of the shell, and a pilot reading one place closely wants that edge to be the picture: the
+   * cell fills the frame and the places beside it are out of view. It is a way of reading the same space and not a
+   * second space, so the projection is unchanged and only what is fitted is.
+   */
+  filled: boolean;
+  /**
    * How far the open project's own marks have come out of its group: nought at the start of a turn to it and
    * one once it has settled. It is the one number the entry motion is, and the board draws every member of
    * the project against it, so a place the pilot moved to unfolds rather than appears.
@@ -54,6 +62,13 @@ interface ViewState extends View {
   arrival: number;
   /** Record the frame's size, which the board measures and nothing else knows. */
   setFrame: (frame: [number, number]) => void;
+  /**
+   * Fill the sphere with the place's own cell, or read it at the region's scale again.
+   *
+   * The view is released on the way in and out, because the fit that turns the cell into the picture is the space's and
+   * a field the pilot chose is not one the board may overwrite.
+   */
+  setFilled: (filled: boolean) => void;
   /**
    * Turn the view by a drag, with the space taken in the hand: the thing the pointer took hold of stays under
    * it. Across, that means the bearing comes round away from the way the pointer went, because the space moving
@@ -130,9 +145,14 @@ export const useView = create<ViewState>((set, get) => ({
   ...LEVEL,
   frame: [0, 0],
   held: false,
+  filled: false,
   arrival: 1,
   setFrame: (frame) =>
     set((state) => (state.frame[0] === frame[0] && state.frame[1] === frame[1] ? state : { frame })),
+  setFilled: (filled) => {
+    handed();
+    set({ filled, held: false });
+  },
   turn: (dx, dy, per) => {
     handed();
     set((state) => {
