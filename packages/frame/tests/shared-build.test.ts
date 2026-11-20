@@ -132,3 +132,16 @@ test('a build carries the fallback, and a deployment that ships one keeps it', a
   await plugin.closeBundle();
   expect(readFileSync(join(root, 'dist', '_redirects'), 'utf8')).toBe('/*    /elsewhere    200\n');
 });
+
+// A set is a board in a directory of its own, so the build makes the path it lands on rather than assuming the root.
+test('a board in a directory of its own lands with its directories made', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'board-set-'));
+  mkdirSync(join(root, 'projects'));
+  mkdirSync(join(root, 'dist'));
+  writeFileSync(join(root, 'projects', 'highlight.json'), '{"projects":[]}');
+  const plugin = boardIntoBuild({ board: 'projects/highlight.json' });
+  plugin.configResolved({ root, build: { outDir: 'dist' } });
+
+  await plugin.closeBundle();
+  expect(readFileSync(join(root, 'dist', 'projects', 'highlight.json'), 'utf8')).toBe('{"projects":[]}');
+});

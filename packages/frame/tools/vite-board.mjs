@@ -47,7 +47,10 @@ export function boardIntoBuild(options = {}) {
     },
     async closeBundle() {
       const source = join(root, board);
-      await copyFile(source, join(root, outDir, board));
+      // A board in a directory of its own is a set, and the build makes the path it lands on rather than assuming the root.
+      const landed = join(root, outDir, board);
+      await mkdir(dirname(landed), { recursive: true });
+      await copyFile(source, landed);
       // A deployment's runs may stand in one directory or in a project's own folder. The directory is copied when it is
       // there, and every run the board names is copied wherever it stands, so a project that keeps its own folder ships.
       const runsDir = join(root, runs);
