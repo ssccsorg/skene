@@ -57,12 +57,13 @@ export interface Host {
    */
   static?: boolean;
   /**
-   * Where this deployment's record stream and chat answer, when they are not the frame's own defaults.
+   * Where this deployment's record stream, chat, and board answer, when they are not the frame's own defaults.
    *
    * The frame's defaults are the demonstration's, on loopback, because that is what an example needs. A deployment
-   * that serves them elsewhere says so here rather than in a build-time variable.
+   * that serves them elsewhere says so here rather than in a build-time variable. `board` names the board file itself,
+   * so one application reads an exhibition's board or a customer's without a second build of the frame.
    */
-  endpoints?: { stream?: string; chat?: string };
+  endpoints?: { stream?: string; chat?: string; board?: string };
   /** Work to do once, when the frame mounts. Returns how to stop. */
   start?: () => (() => void) | void;
 }

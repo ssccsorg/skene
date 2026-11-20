@@ -33,7 +33,8 @@ import type { Bundle, Place, SourceSpec } from '@ssccsorg/skene-kernel';
  * draws the spaces it was built with. What such a window loses is the run, and the run is the room's.
  */
 async function boardFile(base: string): Promise<BoardDocument> {
-  const answer = await fetch(`${base}projects.json`);
+  // A host that names the board names the file, so the runs it names stay where the board says they are.
+  const answer = await fetch(host().endpoints?.board ?? `${base}projects.json`);
   if (!answer.ok) throw new Error(`the board did not load (${answer.status})`);
   return (await answer.json()) as BoardDocument;
 }
