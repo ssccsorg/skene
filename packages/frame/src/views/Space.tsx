@@ -233,7 +233,7 @@ export function Space() {
               </div>
             )}
             <div
-              style={paneOnly ? undefined : { flex: 1 - share }}
+              style={{ flex: paneOnly ? 1 : 1 - share }}
               className={cn(
                 'relative min-h-0 min-w-0',
                 !paneOnly && (split === 'vertical' ? 'border-l' : 'border-t'),
