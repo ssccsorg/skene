@@ -8,7 +8,7 @@ import { beforeEach, expect, test } from 'vitest';
 import { togetherOf, useFrame } from '@/stores/frame';
 
 beforeEach(() => {
-  useFrame.setState({ modes: {}, shares: {}, paths: {}, last: 'vertical', tone: 'dark', orbits: {} });
+  useFrame.setState({ modes: {}, shares: {}, paths: {}, last: 'vertical', beside: {}, tone: 'dark', orbits: {} });
 });
 
 test('a project with a ground opens the map beside the globe', () => {
@@ -63,11 +63,43 @@ test('the frame reset forgets the shares', () => {
   expect(useFrame.getState().shareOf('villa')).toBe(0.5);
 });
 
+test('the frame reset forgets the arrangement a fullscreen press would give back', () => {
+  useFrame.getState().setSplit('villa', 'horizontal');
+  useFrame.getState().toggleFull('villa');
+  useFrame.getState().reset();
+  useFrame.getState().toggleFull('villa');
+  useFrame.getState().toggleFull('villa');
+  expect(useFrame.getState().splitOf('villa'), 'the place is widened again from nothing').toBe('vertical');
+});
+
 test('the map taking the frame is an arrangement and not a third reading', () => {
   useFrame.getState().setSplit('villa', 'full');
   expect(useFrame.getState().splitOf('villa')).toBe('full');
   useFrame.getState().toggle('villa');
   expect(useFrame.getState().splitOf('villa')).toBe('globe');
+});
+
+test('the pane taking the frame is one press in and the same press out', () => {
+  useFrame.getState().setSplit('villa', 'horizontal');
+  useFrame.getState().toggleFull('villa');
+  expect(useFrame.getState().splitOf('villa')).toBe('full');
+  useFrame.getState().toggleFull('villa');
+  expect(useFrame.getState().splitOf('villa'), 'the pane comes back as it was, not dropped beside the sphere').toBe(
+    'horizontal',
+  );
+});
+
+test('a fullscreen press from the default hands the frame back beside it', () => {
+  useFrame.getState().toggleFull('villa');
+  useFrame.getState().toggleFull('villa');
+  expect(useFrame.getState().splitOf('villa')).toBe('vertical');
+});
+
+test('the arrangement the frame was taken from is the project\'s own', () => {
+  useFrame.getState().setSplit('villa', 'horizontal');
+  useFrame.getState().toggleFull('villa');
+  expect(useFrame.getState().beside.villa).toBe('horizontal');
+  expect(useFrame.getState().beside.island, 'a place never widened has nothing to give back').toBeUndefined();
 });
 
 test('the orbit is a projection and leaves the arrangement alone', () => {
@@ -90,6 +122,13 @@ test('a press on the map alone brings the sphere back beside it', () => {
   useFrame.getState().setSplit('villa', 'full');
   useFrame.getState().returnToTogether('villa');
   expect(useFrame.getState().splitOf('villa')).toBe('vertical');
+});
+
+test('the sphere comes back to the arrangement the frame was taken from', () => {
+  useFrame.getState().setSplit('villa', 'horizontal');
+  useFrame.getState().setSplit('villa', 'full');
+  useFrame.getState().returnToTogether('villa');
+  expect(useFrame.getState().splitOf('villa')).toBe('horizontal');
 });
 
 test('the map tone is one toggle for the map and the orbit', () => {

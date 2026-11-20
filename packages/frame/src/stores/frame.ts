@@ -16,6 +16,9 @@ import { storageName } from '../lib/persist';
 // `last` is the open arrangement a press returns to. Closing the pane and opening it again should not also forget which
 // arrangement the pilot chose.
 //
+// Taking the frame is one press in and the same press out, so `beside` keeps the arrangement it was taken from: a pane
+// that was stacked comes back stacked rather than dropped beside the sphere.
+//
 // The orbit and the tone are not arrangements. They are how a map is drawn, so the map brings the controls for them and
 // they are kept per project beside the arrangement.
 
@@ -65,6 +68,8 @@ interface FrameState {
   paths: Record<string, string>;
   /** The arrangement a closed pane comes back to. */
   last: OpenSplit;
+  /** The arrangement the pane took the frame from, by project: the one the same press gives back. */
+  beside: Record<string, OpenSplit>;
   /** Whether the map is drawn on the page's dark ground or on the tiles' own colour. */
   tone: Tone;
   /** Whether the map is read through the flat projection or on the earth, by project. */
@@ -76,6 +81,8 @@ interface FrameState {
   setSplit: (project: string | null, mode: Split) => void;
   setShare: (project: string | null, value: number) => void;
   toggle: (project: string | null) => void;
+  /** Give the pane the frame, or give the frame back to the arrangement it was taken from. */
+  toggleFull: (project: string | null) => void;
   /** Switch the flat map and the orbit between the page's dark ground and the tiles' own colour. */
   toggleTone: () => void;
   /** Switch the map's projection without changing how much of the frame it takes. */
@@ -94,6 +101,7 @@ export const useFrame = create<FrameState>()(
       shares: {},
       paths: {},
       last: PANE_ON,
+      beside: {},
       tone: 'dark',
       orbits: {},
 
@@ -124,15 +132,26 @@ export const useFrame = create<FrameState>()(
 
       setSplit: (project, mode) => {
         if (!project) return;
+        const from = get().splitOf(project);
         set((state) => ({
           modes: { ...state.modes, [project]: mode },
           last: mode === 'globe' ? state.last : mode,
+          beside:
+            mode === 'full' && from !== 'full'
+              ? { ...state.beside, [project]: togetherOf(from) }
+              : state.beside,
         }));
       },
 
       toggle: (project) => {
         const mode = get().splitOf(project);
         get().setSplit(project, mode === 'globe' ? get().last : 'globe');
+      },
+
+      toggleFull: (project) => {
+        if (!project) return;
+        const mode = get().splitOf(project);
+        get().setSplit(project, mode === 'full' ? get().beside[project] ?? PANE_ON : 'full');
       },
 
       toggleTone: () => set((state) => ({ tone: state.tone === 'dark' ? 'light' : 'dark' })),
@@ -144,8 +163,9 @@ export const useFrame = create<FrameState>()(
       },
 
       returnToTogether: (project) => {
+        if (!project) return;
         if (get().splitOf(project) !== 'full') return;
-        get().setSplit(project, togetherOf(get().last));
+        get().setSplit(project, get().beside[project] ?? PANE_ON);
       },
 
       rememberPath: (project, path) => {
@@ -154,7 +174,7 @@ export const useFrame = create<FrameState>()(
         set((state) => ({ paths: { ...state.paths, [project]: path } }));
       },
 
-      reset: () => set({ modes: {}, shares: {}, paths: {}, last: PANE_ON, orbits: {} }),
+      reset: () => set({ modes: {}, shares: {}, paths: {}, last: PANE_ON, beside: {}, orbits: {} }),
     }),
     {
       name: storageName('frame'),
@@ -184,6 +204,7 @@ export const useFrame = create<FrameState>()(
         modes: state.modes,
         paths: state.paths,
         last: state.last,
+        beside: state.beside,
         tone: state.tone,
         orbits: state.orbits,
       }),

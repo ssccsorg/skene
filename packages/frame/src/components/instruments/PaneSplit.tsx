@@ -1,4 +1,4 @@
-import { Columns2, Maximize2, Rows2 } from 'lucide-react';
+import { Columns2, Maximize2, Minimize2, Rows2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
@@ -21,12 +21,19 @@ import { useScenario } from '../../stores/scenario';
 // The run is its own band, so the bar draws the rule between it and the pictures before it and the frame's own controls
 // after it, rather than a pilot reading three unrelated groups as one.
 
-// Closing the pane is the pin's own press, so the arrangements are the three flat ways it can be open. A fourth control
-// that restored the reading in force would be the same state under a second icon, which is what the pin already says.
-const ARRANGEMENTS: { mode: SplitMode; title: (pane: string) => string; Icon: typeof Columns2 }[] = [
-  { mode: 'vertical', title: () => 'side by side', Icon: Columns2 },
-  { mode: 'horizontal', title: () => 'stacked', Icon: Rows2 },
-  { mode: 'full', title: (pane) => `${pane} only`, Icon: Maximize2 },
+// Closing the pane is the pin's own press, so the arrangements are the three flat ways it can be open. The last of them
+// gives the pane the whole frame, which is one press in and the same press out: it answers in the frame's own fullscreen
+// words and hands the frame back to the arrangement it was taken from, rather than dropping the pane beside the sphere.
+// The arrows are the pane's and not the frame's, because the frame already stands a fullscreen control of its own in this
+// bar and two of one glyph would be two buttons a pilot cannot tell apart.
+const ARRANGEMENTS: {
+  mode: SplitMode;
+  title: (on: boolean) => string;
+  Icon: (on: boolean) => typeof Columns2;
+}[] = [
+  { mode: 'vertical', title: () => 'side by side', Icon: () => Columns2 },
+  { mode: 'horizontal', title: () => 'stacked', Icon: () => Rows2 },
+  { mode: 'full', title: (on) => (on ? 'windowed' : 'fullscreen'), Icon: (on) => (on ? Minimize2 : Maximize2) },
 ];
 
 function PaneSplit() {
@@ -41,6 +48,7 @@ function PaneSplit() {
   const mode = useFrame((state) => state.splitOf(projectId));
   const toggle = useFrame((state) => state.toggle);
   const set = useFrame((state) => state.setSplit);
+  const toggleFull = useFrame((state) => state.toggleFull);
   const { world, model } = useWorld();
   if (!pane?.button) return <></>;
 
@@ -76,19 +84,25 @@ function PaneSplit() {
       {mode === 'globe' ? null : (
         <>
           {pane.controls ? <pane.controls /> : null}
-          {ARRANGEMENTS.map((arrangement) => (
-            <Hint key={arrangement.mode} label={arrangement.title(button.title)}>
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                className={cn(CONTROL)}
-                data-on={mode === arrangement.mode}
-                onClick={() => set(projectId, arrangement.mode)}
-              >
-                <arrangement.Icon />
-              </Button>
-            </Hint>
-          ))}
+          {ARRANGEMENTS.map((arrangement) => {
+            const on = mode === arrangement.mode;
+            const Icon = arrangement.Icon(on);
+            return (
+              <Hint key={arrangement.mode} label={arrangement.title(on)}>
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  className={cn(CONTROL)}
+                  data-on={on}
+                  onClick={() =>
+                    arrangement.mode === 'full' ? toggleFull(projectId) : set(projectId, arrangement.mode)
+                  }
+                >
+                  <Icon />
+                </Button>
+              </Hint>
+            );
+          })}
         </>
       )}
     </>
