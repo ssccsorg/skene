@@ -130,6 +130,10 @@ The packages publish TypeScript source, so a consumer's bundler compiles them. A
 
 A project names the readings it stands in its bundle, and the frame asks the register rather than keeping a list.
 
+What a person does with a hand, a script does with a command: the same verbs, declared, in
+[docs/commands.md](docs/commands.md). It is the surface a console or a driver is written against, and it is not itself a
+driver.
+
 ## Running
 
 ```bash
