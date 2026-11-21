@@ -56,6 +56,10 @@ export function ViewPatch({
   const video = useMemo(() => {
     if (still) return null;
     const made = document.createElement('video');
+    // A picture goes onto the shell as a texture, and a texture reads pixels: a medium from another origin taints the
+    // canvas and cannot be uploaded unless the request is made in CORS mode. Footage served from this origin needs
+    // nothing, and a bucket that allows the origin needs this attribute to be asked for at all.
+    made.crossOrigin = 'anonymous';
     made.src = camera.src;
     made.muted = true;
     made.loop = true;
