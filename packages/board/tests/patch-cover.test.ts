@@ -6,7 +6,13 @@
 // keeps its proportions.
 
 import { expect, test } from 'vitest';
-import { coverUv, framedCells, patchAspect } from '@ssccsorg/skene-board';
+import { CELL_FLOOR, GRATICULE, coverUv, framedCells, patchAspect, patchHalf } from '@ssccsorg/skene-board';
+
+test('a view that names no size is the smallest a patch may be', () => {
+  // A declaration can omit cells, and a board reading one is a picture nobody sized rather than a crash: the frame the
+  // board draws went black over the missing measurement, which is a reading of the space turned into a failure.
+  expect(patchHalf(undefined)).toEqual([(GRATICULE * CELL_FLOOR[0]) / 2, (GRATICULE * CELL_FLOOR[1]) / 2]);
+});
 
 test('a patch is as wide as its own cells, narrowed by the parallel it stands on', () => {
   // The patch is a quad of the room's own coordinates, so its width in angles is its cells and its width on the surface

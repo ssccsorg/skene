@@ -16,8 +16,13 @@
 
 import { GRATICULE, bearingAt, bearingGap, cellAcross, edgeAt, patchRim, project, shellAt, type Bearing, type Patch, type View } from './board';
 
-/** How far a view's patch reaches from its own middle, across and down, in radians. */
-export function patchHalf(cells: Bearing): Bearing {
+/**
+ * How far a view's patch reaches from its own middle, across and down, in radians.
+ *
+ * A view that names no size is the smallest a patch may be: a declaration without cells is a picture nobody sized, and
+ * taking the board down over a missing measurement is not a reading of the space.
+ */
+export function patchHalf(cells: Bearing = CELL_FLOOR): Bearing {
   return [(GRATICULE * cells[0]) / 2, (GRATICULE * cells[1]) / 2];
 }
 
