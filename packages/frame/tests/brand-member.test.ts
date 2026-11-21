@@ -28,3 +28,9 @@ test('the panel reads the brand`s heading and row words rather than writing its 
   );
   expect(panel, 'the frame`s three words stay behind that reading').not.toMatch(/\{memberOf\(unit\.properties\)\}/);
 });
+
+test('the find palette names what a deployment calls its members', () => {
+  const find = source('src/components/Find.tsx');
+  expect(find, 'the shortcut says what it finds').toMatch(/label=\{`find a \$\{unit\.one\}, a \$\{member\.one\}/);
+  expect(find, 'and so does the field').toMatch(/placeholder=\{`a \$\{unit\.one\}, a \$\{member\.one\}, a kind`\}/);
+});

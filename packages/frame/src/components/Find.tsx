@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Hint, RowControl, cn } from '@ssccsorg/skene-ui';
-import { useUnit } from '../lib/brand';
+import { useMember, useUnit } from '../lib/brand';
 import { find as search, indexOf, type Found } from '@ssccsorg/skene-kernel';
 import { useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
@@ -27,6 +27,7 @@ export function Find() {
   const openProject = useScenario((state) => state.open);
   const selectUnit = useSelection((state) => state.selectUnit);
   const unit = useUnit();
+  const member = useMember();
   const index = useMemo(() => indexOf(projects), [projects]);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -81,7 +82,7 @@ export function Find() {
 
   return (
     <>
-      <Hint label={`find a ${unit.one}, a member (⌘K)`}>
+      <Hint label={`find a ${unit.one}, a ${member.one} (⌘K)`}>
         <RowControl data-region="find" data-on={open} onClick={() => setOpen(true)}>
           <Search />
         </RowControl>
@@ -96,7 +97,7 @@ export function Find() {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label={`find a ${unit.one} or a member`}
+            aria-label={`find a ${unit.one} or a ${member.one}`}
             onMouseDown={(event) => event.stopPropagation()}
             className="w-[min(640px,92vw)] overflow-hidden rounded-sm border border-border bg-card shadow-lg"
           >
@@ -106,8 +107,8 @@ export function Find() {
                 ref={field}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder={`a ${unit.one}, a member, a kind`}
-                aria-label={`find a ${unit.one} or a member`}
+                placeholder={`a ${unit.one}, a ${member.one}, a kind`}
+                aria-label={`find a ${unit.one} or a ${member.one}`}
                 className="min-w-0 flex-1 bg-transparent text-[12px] text-foreground outline-none placeholder:text-muted-foreground"
               />
               <kbd className="shrink-0 rounded-sm border border-border px-1 text-[10px] text-muted-foreground">⌘K</kbd>
