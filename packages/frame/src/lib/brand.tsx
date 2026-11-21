@@ -1,5 +1,6 @@
 import { createContext, useContext, type ComponentType, type ReactNode } from 'react';
-import type { KindWords } from '@ssccsorg/skene-kernel';
+import type { KindWords, Properties } from '@ssccsorg/skene-kernel';
+import { memberOf } from './kinds';
 
 /**
  * What the frame is called, and the mark it draws.
@@ -37,6 +38,14 @@ export interface Brand {
    * deployment names none.
    */
   unit?: { one: string; many: string };
+  /**
+   * What this deployment calls a member of a place, in the singular and the plural.
+   *
+   * The panel that lists them is one panel and its rows are not one kind of thing: a cockpit lists the machines it can ask
+   * and a corpus lists the records it holds. A deployment that names these says its own word on every row; one that names
+   * none keeps the frame's three, which are read from the atoms each member is assembled from.
+   */
+  member?: { one: string; many: string };
   /**
    * What the deployment can do, when that is not everything: `read-only` on a board served from a committed run.
    *
@@ -87,6 +96,25 @@ export function useBrand(): Brand {
 /** The brand's word for a project, which is the frame's own when the deployment names none. */
 export function useUnit(): { one: string; many: string } {
   return useBrand().unit ?? { one: 'project', many: 'projects' };
+}
+
+/**
+ * What a deployment calls a member of a place, and the word a member's own row carries.
+ *
+ * A deployment with one word for its rows says it on every row; a deployment that names none has the frame's three, which
+ * are the reading of the atoms rather than three lists to keep in step with them.
+ */
+export function useMember(): {
+  one: string;
+  many: string;
+  wordOf: (properties: Properties) => string;
+} {
+  const named = useBrand().member;
+  return {
+    one: named?.one ?? 'member',
+    many: named?.many ?? 'Members',
+    wordOf: (properties) => named?.one ?? memberOf(properties),
+  };
 }
 
 /** The brand's mark, drawn wherever a place wants one and does not want to know which product it is. */

@@ -6,7 +6,8 @@ import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
 import { chargeOf, factsOf } from '@ssccsorg/skene-kernel';
 import { useAsks } from '../hooks/useAsks';
 import { wordsOf } from '../lib/interface';
-import { memberOf, partsOf } from '../lib/kinds';
+import { useMember } from '../lib/brand';
+import { partsOf } from '../lib/kinds';
 import { lineOf, ownView } from '../lib/world';
 import type { Entry, Place, World } from '@ssccsorg/skene-kernel';
 import { cn } from '@ssccsorg/skene-ui';
@@ -102,6 +103,9 @@ export function EntityPanel({
   // and folding it does not deselect the member the board and the console are still addressed to.
   const [folded, setFolded] = useState<string | null>(null);
   const { asks, ensure } = useAsks();
+  // What the deployment calls a member of this place. The panel is one panel and its rows are not one kind of thing: a
+  // corpus lists subjects where a cockpit lists machines, and the word is the board's rather than the panel's.
+  const member = useMember();
 
   // Every member the place stands, people included: the two lists were the same members and the difference between a
   // person and a machine is the row's own word rather than which list it stands in.
@@ -158,7 +162,7 @@ export function EntityPanel({
   return (
     <div data-region="members" className="flex min-h-0 flex-1 flex-col">
       <div className={cn(ROW, 'gap-2 border-b')}>
-        <h2 className={LABEL}>Members</h2>
+        <h2 className={LABEL}>{member.many}</h2>
         <p className="ml-auto text-[11.5px] text-muted-foreground">
           <span className="text-working">{counts.working} working</span>
           {' \u00b7 '}
@@ -274,10 +278,10 @@ export function EntityPanel({
                   </span>
                 </span>
                 <span className="flex flex-wrap items-center gap-x-2 pl-[16px] text-muted-foreground">
-                  {/* What the member is, which is the one word that tells a user from an agent from an entity: it is the
-                      row's own reading of the same atoms the console asks, so a list of members and the addresses a line
-                      may be said to cannot disagree about which is which. */}
-                  <span className={cn(LABEL, 'text-[10px]')}>{memberOf(unit.properties)}</span>
+                  {/* What the member is, in the deployment's word where it names one and in the frame's three where it does
+                      not: it is the row's own reading of the same atoms the console asks, so a list of members and the
+                      addresses a line may be said to cannot disagree about which is which. */}
+                  <span className={cn(LABEL, 'text-[10px]')}>{member.wordOf(unit.properties)}</span>
                   <span>{unit.written ? `${unit.written} written` : 'empty'}</span>
                   {charge ? <Battery charge={charge} /> : null}
                 </span>
