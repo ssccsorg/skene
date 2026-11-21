@@ -30,6 +30,22 @@ interface Loaded {
   element: HTMLVideoElement | HTMLImageElement | null;
 }
 
+/** Whether a picture can be drawn into a canvas and read back, which a source served without CORS cannot. */
+function readable(element: HTMLVideoElement | HTMLImageElement): boolean {
+  const probe = document.createElement('canvas');
+  probe.width = 1;
+  probe.height = 1;
+  const context = probe.getContext('2d');
+  if (!context) return false;
+  try {
+    context.drawImage(element, 0, 0, 1, 1);
+    context.getImageData(0, 0, 1, 1);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceMode }) {
   const canvas = useMemo(() => {
     const made = document.createElement('canvas');
@@ -52,6 +68,9 @@ export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceM
   const drawRef = useRef<(() => void) | null>(null);
   const live = useRef(false);
   const last = useRef(0);
+  /** The media this canvas may not take, and the ones already proved: a picture it cannot read back taints it. */
+  const refused = useRef<Set<string>>(new Set());
+  const examined = useRef<Set<string>>(new Set());
 
   const draw = useCallback(() => {
     const context = canvas.getContext('2d');
@@ -78,10 +97,23 @@ export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceM
         context.font = '13px ui-monospace, SFMono-Regular, Menlo, monospace';
         context.fillText(camera.id, x + w / 2, y + h / 2 + 12);
         context.textAlign = 'left';
-      } else if (element) {
+      } else if (element && !refused.current.has(camera.id)) {
         const width = element instanceof HTMLVideoElement ? element.videoWidth : element.naturalWidth;
         const height = element instanceof HTMLVideoElement ? element.videoHeight : element.naturalHeight;
-        if (width && height) {
+        const frames = !(element instanceof HTMLVideoElement) || element.readyState >= 2;
+        if (width && height && frames) {
+          // A source served without CORS is a canvas this renderer cannot upload, and the throw would happen
+          // inside the frame. Proving it once here costs one pixel and keeps the board up.
+          if (!examined.current.has(camera.id)) {
+            examined.current.add(camera.id);
+            if (!readable(element)) {
+              refused.current.add(camera.id);
+              console.warn(
+                `[media] ${camera.id} is served without CORS, so the surface draws no picture of it`,
+              );
+              return;
+            }
+          }
           // Cover the slot rather than letterboxing it: a surface slot is the room and not a player with a black frame.
           const scale = Math.max(w / width, h / height);
           const sw = w / scale;
@@ -132,6 +164,9 @@ export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceM
         return { camera, element: null };
       }
       const video = document.createElement('video');
+      // This canvas becomes a texture, so a medium from another origin has to arrive in CORS mode. A no-cors
+      // response is opaque, drawing it taints the canvas, and the upload then throws inside the renderer's frame.
+      video.crossOrigin = 'anonymous';
       video.src = camera.src;
       video.muted = true;
       video.loop = true;
@@ -140,6 +175,8 @@ export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceM
       return { camera, element: video };
     });
     loaded.current = made;
+    refused.current = new Set();
+    examined.current = new Set();
     // A video reports its own frames and the surface reads them at its own rate. A still is asked for
     // (`lib/still`): the surface is drawn when an answer arrives, which is the one thing an image
     // element holding a stream never gives it.
