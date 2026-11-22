@@ -223,7 +223,13 @@ export function SceneBoard({
   );
   // A place that holds a cell is drawn as that cell, and a place that holds none keeps the cap its members reach.
   // The two are the same claim at two scales: the ground a place takes, read from what it declares.
-  const mine = useMemo(() => (world.cell ? null : zoneOf(ground, sector)), [world.cell, ground, sector]);
+  // A place that asks for no ground draws none: no cell, and no cap where it holds none. The boundary is what says a
+  // place ends, and a board of records ends where its pictures do.
+  const drawsGround = world.ground !== false;
+  const mine = useMemo(
+    () => (world.cell || !drawsGround ? null : zoneOf(ground, sector)),
+    [world.cell, drawsGround, ground, sector],
+  );
   const theirs = useMemo(
     () =>
       neighbours.map((neighbour) => ({
@@ -461,7 +467,7 @@ export function SceneBoard({
         {/* The fields themselves, as the ground each place takes on the shell: a cell where the place holds
             one, and the cap its own members reach where it holds none. Drawn first, under everything, because
             they are the ground the marks stand on. */}
-        {world.cell ? (
+        {!drawsGround ? null : world.cell ? (
           <CellRegion cell={world.cell} tint={state} lit />
         ) : mine ? (
           <FieldRegion centre={mine.centre} radius={mine.radius} tint={state} lit />

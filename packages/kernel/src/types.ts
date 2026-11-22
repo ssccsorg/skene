@@ -433,6 +433,15 @@ export interface Place {
    * form, which is what every place written before this did.
    */
   memberPanel?: string;
+  /**
+   * Whether the place draws a boundary on the shell.
+   *
+   * A cockpit's place holds a patch of the shell, and the edge of that patch is what keeps two boards from reading as one
+   * space. A board of records is read as a table of pictures, where the boundary is furniture around nothing: it says a
+   * place ends where the reader can already see it does. `false` draws no cell and no cap, which is what a place that
+   * names none of this keeps.
+   */
+  ground?: boolean;
 }
 
 export type Clock = Partial<Record<SceneKey, string>>;
@@ -702,6 +711,8 @@ export interface World {
    * stands many places in one shell declares a tiling, and the place holds the polygon it was given.
    */
   cell: [number, number][] | null;
+  /** Whether the place draws a boundary at all, which is the place's own answer rather than the frame's. */
+  ground: boolean;
   /** The unit that stands for the place from a scale above its own, or nothing when the place names none. */
   mark: string | null;
   index: number;

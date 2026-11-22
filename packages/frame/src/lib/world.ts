@@ -399,6 +399,7 @@ export function worldOf(
     aspect,
     sector: sectorOf(place),
     cell: cellOfPlace(place),
+    ground: place.ground !== false,
     mark: place.mark ?? null,
     index,
     here,
@@ -456,6 +457,7 @@ export function neighboursOf(projects: Bundle[], focused: string | null): Neighb
         aspect,
         sector: sectorOf(place),
         cell: cellOfPlace(place),
+    ground: place.ground !== false,
         mark: place.mark ?? null,
         units: Object.entries(place.units ?? {}).map(([id, unit]) => {
           const first = Object.values(unit.at ?? {})[0] ?? [vw / 2, vh / 2];
