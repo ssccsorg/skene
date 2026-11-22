@@ -5,7 +5,8 @@ import { CircleOff, LoaderCircle } from 'lucide-react';
  *
  * A window with no board has no space to draw and no panels to read, so the body is one line saying so: the header
  * keeps the readings it already has, and the mark is the one the status bar spins for a source that has not answered.
- * A refused read keeps the reason it came back with, because a line that says only that something failed leaves a
+ * A waiting read takes the neutral ink rather than a state colour, because a read in progress is not yet a verdict. A
+ * refused read keeps the reason it came back with, because a line that says only that something failed leaves a
  * reader with nothing to do about it.
  */
 export function Reading({ error }: { error: string | null }) {
@@ -19,7 +20,7 @@ export function Reading({ error }: { error: string | null }) {
         {error ? (
           <CircleOff aria-hidden className="size-3.5 shrink-0 text-offline" />
         ) : (
-          <LoaderCircle aria-hidden className="size-3.5 shrink-0 text-idle motion-safe:animate-spin" />
+          <LoaderCircle aria-hidden className="size-3.5 shrink-0 text-foreground motion-safe:animate-spin" />
         )}
         <span className="min-w-0 truncate">{error ?? 'reading the board'}</span>
       </p>

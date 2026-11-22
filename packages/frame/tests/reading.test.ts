@@ -29,7 +29,7 @@ test('the reading state is one line in the middle', () => {
 });
 
 test("the reading state speaks in the inks the chrome already uses", () => {
-  expect(view, 'a waiting thing is the idle ink').toContain('text-idle');
+  expect(view, 'a waiting thing is the neutral ink').toContain('text-foreground');
   expect(view, 'a refused one is the offline ink').toContain('text-offline');
   expect(view, "the words are the row's own size").toContain('text-[11.5px]');
 });
