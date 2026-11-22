@@ -6,8 +6,33 @@ import { InspectorPanel } from './InspectorPanel';
 import type { Place, Standing } from '@ssccsorg/skene-kernel';
 import { useSelection } from '../stores/selection';
 import { EntityDetail } from './EntityDetail';
+import { memberPanelOf } from '../lib/member-panels';
 import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
 import { cn } from '@ssccsorg/skene-ui';
+
+/**
+ * One member opened, drawn by the panel its place names.
+ *
+ * The frame's form moves a unit on the ground and takes a branch, which is a cockpit's work. A place whose members are
+ * records declares a panel of its own and this reads it; a place that names none, or names a key this build does not hold,
+ * keeps the form.
+ */
+function MemberDetail({
+  unit,
+  place,
+  fork,
+  shown,
+}: {
+  unit: Standing;
+  place: Place;
+  fork: number | null;
+  shown: number;
+}) {
+  const declared = place?.memberPanel ? memberPanelOf(place.memberPanel) : undefined;
+  if (!declared) return <EntityDetail key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />;
+  const { View } = declared;
+  return <View key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />;
+}
 
 // What is picked, opened where it was picked: the row of the feed the pick landed on opens and the detail
 // stands in its own place in the list.
@@ -80,9 +105,7 @@ export function RecordDetail({
       {/* The detail takes the width of the list it stands in and no border of its own, because it is the
           body of the row and not a card floating in it. */}
       <div className="flex min-w-0 flex-col">
-        {unit ? (
-          <EntityDetail key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />
-        ) : null}
+        {unit ? <MemberDetail unit={unit} place={place} fork={fork} shown={shown} /> : null}
         <InspectorPanel selected={selected} place={place} />
       </div>
     </div>

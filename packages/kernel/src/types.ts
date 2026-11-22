@@ -425,6 +425,14 @@ export interface Place {
    * panel's contents. A place that names none keeps the envelope, which is what every place written before this did.
    */
   recordPanel?: string;
+  /**
+   * The panel that opens one member, by key, declared by the place the member stands in.
+   *
+   * The frame's form moves a unit on the ground and takes a branch, which is what a cockpit over machines does. A place
+   * whose members are records rather than machines declares a panel of its own, and a place that names none keeps the
+   * form, which is what every place written before this did.
+   */
+  memberPanel?: string;
 }
 
 export type Clock = Partial<Record<SceneKey, string>>;

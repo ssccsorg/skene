@@ -68,6 +68,9 @@ const KINDS = new Set([
   'project',
   // The panel that reads one record. A place declares it, so a project that names one carries the resource.
   'recordPanel',
+  // The panel that opens one member. A cockpit's form moves a unit and takes a branch, which is work a corpus does not
+  // have, so the place says what its members' detail is in the way it says what a record's detail is.
+  'memberPanel',
 ]);
 
 /** The kinds a bundle may declare once. A second `place` is two grounds and no answer to which one the board draws. */
@@ -373,10 +376,14 @@ export function validateProject(input: unknown, taken: string[] = []): ProjectPr
         }
         break;
       case 'recordPanel':
+      case 'memberPanel':
         // What a panel says is the build's, so the frame checks the name and not the contents: a key this build does not
-        // hold is what `InspectorPanel` falls back from, which is why a place may name one this build has not got.
+        // hold is what the detail falls back from, which is why a place may name one this build has not got.
         if (typeof resource.at !== 'string' || !resource.at.trim()) {
-          issues.push({ path: `${path}.at`, message: 'is the key of a record panel' });
+          issues.push({
+            path: `${path}.at`,
+            message: `is the key of a ${resource.kind === 'recordPanel' ? 'record' : 'member'} panel`,
+          });
         }
         break;
       case 'abilities':
