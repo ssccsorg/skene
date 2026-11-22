@@ -43,12 +43,6 @@ const takes = (classes: string, side: 'l' | 'r'): number => {
   return unit === undefined ? 0 : points(unit);
 };
 
-/** The class a control of this size draws its glyph at, which is the size a reading beside it has to be. */
-const glyphOf = (size: RowControlSize): string => {
-  const classes = buttonVariants({ size });
-  return `size-${[...classes.matchAll(/:size-([0-9.]+)/g)].pop()?.[1]}`;
-};
-
 /** The inset a control states for itself, read from the size it is built at. */
 const paddingOf = (size: RowControlSize): number => {
   const classes = buttonVariants({ size });
@@ -107,15 +101,14 @@ test('a label and a control stand on one inset, at every size a row carries', ()
   }
 });
 
-test('a reading in the bar is drawn at the size of the control beside it', () => {
-  // The search stands in the run of readings and not at the frame's edge, so it keeps its whole box: an edge margin on
-  // it takes six points off the gap and leaves it four points from the link. The readings are a control's own glyph size
-  // for the same reason, since a reading a size apart from the control next to it is a bar of two kinds of mark.
-  const glyph = glyphOf('icon-xs');
-  const readings = source('src/components/StatusBar.tsx');
-  const drawn = [...readings.matchAll(/\bsize-([0-9.]+)\b/g)].map((match) => match[0]);
-  expect(drawn.length, 'the bar names a size for every reading').toBeGreaterThan(0);
-  for (const each of drawn) expect(each, 'a reading is the control`s size').toBe(glyph);
+test("a mark on the bar is the bar's own size, and the search keeps its whole box", () => {
+  // The bar's marks were a control's twelve points beside readings of fourteen, which is two kinds of mark at one
+  // height. They are one size now, stated once and taken by the readings and by the two controls: written on the glyph
+  // rather than left to the button's default, because the button draws twelve in a box the bar can fill to sixteen.
+  for (const path of ['src/components/StatusBar.tsx', 'src/components/Find.tsx', 'src/components/Header.tsx']) {
+    expect(source(path), `${path} takes the bar's mark size`).toContain('BAR_GLYPH');
+  }
+  expect(source('src/components/StatusBar.tsx'), 'no reading names a size of its own').not.toMatch(/\bsize-[0-9]/);
   expect(source('src/components/Find.tsx'), 'the search keeps its whole box among readings').toContain('at="middle"');
 });
 

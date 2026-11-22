@@ -1,6 +1,6 @@
 import { Info, Settings } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
-import { RowControl } from '@ssccsorg/skene-ui';
+import { BAR_GLYPH, RowControl } from '@ssccsorg/skene-ui';
 import { useMenu } from '../hooks/useMenu';
 import { ROW, ROW_CONTROL_EDGE, TITLE } from '@ssccsorg/skene-ui';
 import { useBrand } from '../lib/brand';
@@ -65,7 +65,7 @@ export function Header() {
         <div ref={settingsBox} className="relative z-[100]">
           <Hint label="settings">
             <RowControl data-on={settings} onClick={() => setSettings(!settings)}>
-              <Settings />
+              <Settings className={BAR_GLYPH} />
             </RowControl>
           </Hint>
           {settings ? <SettingsMenu /> : null}

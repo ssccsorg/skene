@@ -110,6 +110,16 @@ export const CONTROL =
   'text-control transition-colors hover:bg-control-hover hover:text-control-on data-[on=true]:text-control-on dark:hover:bg-control-hover';
 
 /**
+ * The size a mark on the top bar is drawn at.
+ *
+ * The bar is the one line a reader scans without aiming, so its marks are the largest in the chrome rather than the
+ * smallest: a control's own box is twenty-four points, and sixteen is what fills it while still leaving the surface the
+ * pointer puts under it some room. Every mark on the bar names this, so a reading and the control beside it cannot be
+ * two sizes, and the glyph is written on the mark rather than taken from the button's default so the two agree.
+ */
+export const BAR_GLYPH = 'size-4';
+
+/**
  * What a project is doing, as the mark and the word the chrome reads it in.
  *
  * The mark is the one the agent's own app puts before a working thread: filled and moving while the project is

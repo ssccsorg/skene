@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search } from 'lucide-react';
-import { Hint, RowControl, cn } from '@ssccsorg/skene-ui';
+import { BAR_GLYPH, Hint, RowControl, cn } from '@ssccsorg/skene-ui';
 import { useMember, useUnit } from '../lib/brand';
 import { find as search, indexOf, type Found } from '@ssccsorg/skene-kernel';
 import { useScenario } from '../stores/scenario';
@@ -86,7 +86,7 @@ export function Find() {
         {/* A control in the middle of a cluster and not at an edge: an edge gives back the row's inset, and this one
             has a reading beside it rather than the frame's own edge. */}
         <RowControl at="middle" data-region="find" data-on={open} onClick={() => setOpen(true)}>
-          <Search />
+          <Search className={BAR_GLYPH} />
         </RowControl>
       </Hint>
       {open ? (
