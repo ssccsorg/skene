@@ -4,6 +4,7 @@ import { BottomBar } from './components/BottomBar';
 import { EdgePeek } from './components/EdgePeek';
 import { Header } from './components/Header';
 import { Panes } from './components/Panes';
+import { Reading } from './components/Reading';
 import { useRoom } from './hooks/useRoom';
 import { host } from './lib/host';
 import { useRecordSource } from './hooks/useRecordSource';
@@ -91,11 +92,10 @@ export function App() {
   return (
     <div className="relative flex h-full flex-col">
       <Header />
-      {error ? <p className="shrink-0 px-3 py-2 text-[11.5px] text-destructive">{error}</p> : null}
-      <div className="flex min-h-0 flex-1">
-        <Panes at="left" />
-        <main data-region="view" className="flex min-h-0 min-w-0 flex-1 flex-col">
-          {status === 'ready' ? (
+      {status === 'ready' ? (
+        <div className="flex min-h-0 flex-1">
+          <Panes at="left" />
+          <main data-region="view" className="flex min-h-0 min-w-0 flex-1 flex-col">
             <Routes>
               {/* One route and not one per reading: every reading is drawn by the same board, and which reading that is
                   is read from the address by the board itself. So a reading's address is its own declaration and not a
@@ -103,14 +103,12 @@ export function App() {
               {home ? <Route index element={<Navigate to={home.path} replace />} /> : null}
               <Route path="*" element={<Space />} />
             </Routes>
-          ) : (
-            <p className="p-4 text-[11.5px] text-muted-foreground">
-              {status === 'error' ? 'the board did not load' : 'reading the board'}
-            </p>
-          )}
-        </main>
-        <Panes at="right" />
-      </div>
+          </main>
+          <Panes at="right" />
+        </div>
+      ) : (
+        <Reading error={status === 'error' ? error : null} />
+      )}
       {spanning ? <BottomBar /> : null}
       {/* An edge that is away is looked at by resting the pointer on it: nothing is drawn there until it is asked. */}
       <EdgePeek />
