@@ -105,7 +105,7 @@ export function StatusBar() {
         className="flex items-center"
         title={`${link.word} \u00b7 ${detail ?? link.title}`}
       >
-        <link.Icon className={cn('size-3.5 shrink-0', link.ink)} />
+        <link.Icon className={cn('size-3 shrink-0', link.ink)} />
       </span>
       {state ? (
         <span
@@ -114,7 +114,7 @@ export function StatusBar() {
           className="flex items-center"
           title={`${state.word} \u00b7 what the open project is doing`}
         >
-          <state.Icon className={cn('size-3.5 shrink-0', state.ink)} />
+          <state.Icon className={cn('size-3 shrink-0', state.ink)} />
         </span>
       ) : null}
       {members ? (
@@ -124,7 +124,7 @@ export function StatusBar() {
           className="flex items-center gap-1.5"
           title={`${members} ${members === 1 ? 'member stands' : 'members stand'} in this space`}
         >
-          <Boxes className="size-3.5 shrink-0 text-muted-foreground" />
+          <Boxes className="size-3 shrink-0 text-muted-foreground" />
           <span className="text-[11.5px] tabular-nums text-muted-foreground">{members}</span>
         </span>
       ) : null}
@@ -135,7 +135,7 @@ export function StatusBar() {
           className="flex items-center gap-1.5"
           title={`${users.join(', ')} \u00b7 the users the place names, who are written to rather than asked`}
         >
-          <UserRound className="size-3.5 shrink-0 text-muted-foreground" />
+          <UserRound className="size-3 shrink-0 text-muted-foreground" />
           <span className="text-[11.5px] tabular-nums text-muted-foreground">{users.length}</span>
         </span>
       ) : null}

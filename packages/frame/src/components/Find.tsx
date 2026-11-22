@@ -83,7 +83,9 @@ export function Find() {
   return (
     <>
       <Hint label={`find a ${unit.one}, a ${member.one} (⌘K)`}>
-        <RowControl data-region="find" data-on={open} onClick={() => setOpen(true)}>
+        {/* A control in the middle of a cluster and not at an edge: an edge gives back the row's inset, and this one
+            has a reading beside it rather than the frame's own edge. */}
+        <RowControl at="middle" data-region="find" data-on={open} onClick={() => setOpen(true)}>
           <Search />
         </RowControl>
       </Hint>
