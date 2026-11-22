@@ -417,6 +417,14 @@ export interface Place {
   store?: Store;
   areas?: Area[];
   units?: Record<string, UnitPlace>;
+  /**
+   * The panel that says what one of this place's records means, by the key a build installed.
+   *
+   * The frame draws a record's envelope. What a record means is the domain's, so a place names the panel that reads it
+   * and a build that does not hold the key falls back to the envelope: a place states the panel's name, and never the
+   * panel's contents. A place that names none keeps the envelope, which is what every place written before this did.
+   */
+  recordPanel?: string;
 }
 
 export type Clock = Partial<Record<SceneKey, string>>;

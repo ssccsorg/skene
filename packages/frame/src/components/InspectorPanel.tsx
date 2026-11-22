@@ -1,5 +1,6 @@
-import type { Entry, NodeKind } from '@ssccsorg/skene-kernel';
+import type { Entry, NodeKind, Place } from '@ssccsorg/skene-kernel';
 import { POLICY } from '../lib/world';
+import { recordPanelOf } from '../lib/record-panels';
 import { KindTag } from './KindTag';
 import { useKindWords } from '../lib/words';
 import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
@@ -40,7 +41,7 @@ const FIELDS: Record<NodeKind, (record: Entry) => [string, string][]> = {
  * a note sitting in it. There is no card here: the header is a band of the panel and every field is a
  * row of it, edge to edge.
  */
-export function InspectorPanel({ selected }: { selected: Entry | null }) {
+export function InspectorPanel({ selected, place }: { selected: Entry | null; place?: Place | null }) {
   const words = useKindWords();
   if (!selected) {
     return <p className="px-3 py-2 text-[11.5px] text-muted-foreground">no record is picked.</p>;
@@ -63,6 +64,13 @@ export function InspectorPanel({ selected }: { selected: Entry | null }) {
   rows.push(...FIELDS[selected.kind](selected));
   if (selected.producedBy) rows.push(['produced by', selected.producedBy.label ?? '']);
 
+  // A place that names a record panel decides what the record means. The envelope is still the frame's answer, so it is
+  // handed to the panel as rows rather than derived a second time there.
+  const declared = place?.recordPanel ? recordPanelOf(place.recordPanel) : undefined;
+  const body = declared ? (
+    <declared.View record={selected} place={place as Place} envelope={rows.map(([label, value]) => ({ label, value }))} />
+  ) : null;
+
   return (
     <div className="flex flex-col">
       <div className={cn(ROW, 'gap-2 border-b')}>
@@ -72,15 +80,18 @@ export function InspectorPanel({ selected }: { selected: Entry | null }) {
         </span>
       </div>
       <dl className="flex flex-col">
-        {rows.map(([name, value]) => (
-          <div
-            key={name}
-            className="flex flex-col gap-0.5 border-b border-border/50 px-3 py-1.5 last:border-b-0"
-          >
-            <dt className={LABEL}>{name}</dt>
-            <dd className="text-[11.5px] break-words">{value}</dd>
-          </div>
-        ))}
+        {body}
+        {body
+          ? null
+          : rows.map(([name, value]) => (
+              <div
+                key={name}
+                className="flex flex-col gap-0.5 border-b border-border/50 px-3 py-1.5 last:border-b-0"
+              >
+                <dt className={LABEL}>{name}</dt>
+                <dd className="text-[11.5px] break-words">{value}</dd>
+              </div>
+            ))}
       </dl>
     </div>
   );

@@ -66,6 +66,8 @@ const KINDS = new Set([
   'place',
   'campaigns',
   'project',
+  // The panel that reads one record. A place declares it, so a project that names one carries the resource.
+  'recordPanel',
 ]);
 
 /** The kinds a bundle may declare once. A second `place` is two grounds and no answer to which one the board draws. */
@@ -368,6 +370,13 @@ export function validateProject(input: unknown, taken: string[] = []): ProjectPr
       case 'views':
         if (!isRecord(resource.at)) {
           issues.push({ path: `${path}.at`, message: 'is an object naming the pack and the reading it opens on' });
+        }
+        break;
+      case 'recordPanel':
+        // What a panel says is the build's, so the frame checks the name and not the contents: a key this build does not
+        // hold is what `InspectorPanel` falls back from, which is why a place may name one this build has not got.
+        if (typeof resource.at !== 'string' || !resource.at.trim()) {
+          issues.push({ path: `${path}.at`, message: 'is the key of a record panel' });
         }
         break;
       case 'abilities':

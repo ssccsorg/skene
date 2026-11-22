@@ -83,7 +83,7 @@ export function RecordDetail({
         {unit ? (
           <EntityDetail key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />
         ) : null}
-        <InspectorPanel selected={selected} />
+        <InspectorPanel selected={selected} place={place} />
       </div>
     </div>
   );

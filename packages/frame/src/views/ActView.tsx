@@ -107,7 +107,7 @@ export function ActView() {
         </span>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <InspectorPanel selected={selected} />
+        <InspectorPanel selected={selected} place={model?.project?.place ?? null} />
         <CausalNeighbours
           title="came from"
           links={causes}
