@@ -149,6 +149,20 @@ export function SphereMinimap({
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
+    if (turned.current) return;
+    // The disc held the pointer for its drag, so the release and the click after it land on the disc rather than on the
+    // mark the press began on: the mark under the hand is read here, and a press without a turn is a pick of it.
+    const under = document.elementFromPoint(event.clientX, event.clientY);
+    const id = under?.closest?.('circle[data-mark-id]')?.getAttribute('data-mark-id') ?? null;
+    const found = id ? marks.find((mark) => mark.id === id) : undefined;
+    if (found) onFace(bearingOf(found.at));
+  };
+  const cancel = (event: ReactPointerEvent<SVGSVGElement>) => {
+    event.stopPropagation();
+    drag.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   };
 
   if (!marks.length) return null;
@@ -170,7 +184,7 @@ export function SphereMinimap({
         onPointerDown={down}
         onPointerMove={move}
         onPointerUp={up}
-        onPointerCancel={up}
+        onPointerCancel={cancel}
       >
         <circle r="1" className="fill-background/40" />
         {cage.map((line, index) => (
@@ -206,6 +220,7 @@ export function SphereMinimap({
                 <circle cx={x} cy={y} r={0.07} className="fill-none stroke-foreground/40" strokeWidth={0.01} />
               ) : null}
               <circle
+                data-mark-id={mark.id}
                 cx={x}
                 cy={y}
                 r={here ? 0.05 : 0.028}
@@ -213,10 +228,6 @@ export function SphereMinimap({
                   'cursor-pointer',
                   here ? 'fill-foreground' : 'fill-muted-foreground/60 hover:fill-foreground',
                 )}
-                onClick={() => {
-                  if (turned.current) return;
-                  onFace(bearingOf(mark.at));
-                }}
               >
                 <title>{mark.label}</title>
               </circle>
