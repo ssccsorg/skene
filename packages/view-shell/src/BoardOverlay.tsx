@@ -482,7 +482,7 @@ export function BoardOverlay({
             onClick={() => onOpenProject(each.id)}
             className={cn(
               'pointer-events-auto absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-sm',
-              'border border-border/70 bg-card/85 px-2 py-0.5 text-[13px] whitespace-nowrap hover:bg-accent/70',
+              'border border-border/70 bg-card px-2 py-0.5 text-[13px] whitespace-nowrap hover:bg-accent/70',
             )}
             style={{ left: name.at[0], top: name.at[1] }}
           >
@@ -575,7 +575,7 @@ export function BoardOverlay({
               }}
               className={cn(
                 box,
-                'pointer-events-auto border border-border/70 bg-card/85 py-0.5 pr-1.5 pl-1 hover:bg-accent/70',
+                'pointer-events-auto border border-border/70 bg-card py-0.5 pr-1.5 pl-1 hover:bg-accent/70',
                 'text-foreground/90',
                 openHere && 'border-accent bg-accent',
               )}
@@ -598,7 +598,7 @@ export function BoardOverlay({
             }
             className={cn(
               box,
-              'border border-border/50 bg-card/70 px-1.5 py-0.5 text-muted-foreground',
+              'border border-border/50 bg-card px-1.5 py-0.5 text-muted-foreground',
               each.bounded && 'border-border/30 text-muted-foreground/70',
             )}
             style={at}

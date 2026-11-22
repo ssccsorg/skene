@@ -33,7 +33,7 @@ export function BoardLabel({
   return (
     <span
       className={cn(
-        'group pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-card/90 px-2 py-0.5 whitespace-nowrap',
+        'group pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-card px-2 py-0.5 whitespace-nowrap',
         BOARD_NAME,
         'flex items-center gap-1',
         onPick && 'cursor-pointer hover:bg-accent/70',
