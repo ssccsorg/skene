@@ -33,7 +33,8 @@ export function useUnitMarks(
     for (const unit of world.standing) {
       const last = lastOf.get(unit.id) ?? null;
       const ringed = unit.id === world.claimedBy || unit.id === pickedId;
-      out[unit.id] = tintOf((last?.kind as NodeKind | undefined) ?? null, ringed, ink);
+      // What the unit did wins, and a unit that has done nothing yet is drawn in the colour the place says it is.
+      out[unit.id] = tintOf((last?.kind as NodeKind | undefined) ?? null, ringed, ink) ?? unit.ink;
     }
     return out;
   }, [world, lastOf, ink, pickedId]);

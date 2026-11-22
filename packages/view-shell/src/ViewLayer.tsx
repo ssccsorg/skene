@@ -8,8 +8,10 @@ import type { CarriedView } from '@ssccsorg/skene-kernel';
 import { MARK, clipped, dragged, gripOf, sized } from '@ssccsorg/skene-board';
 import { useSelection } from '@ssccsorg/skene-frame/stores/selection';
 import { useView } from '@ssccsorg/skene-frame/stores/view';
+import { useVolume } from '@ssccsorg/skene-frame/hooks/useVolume';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';
 import type { ViewPlace } from './useViewPlaces';
+import { standsAt, timed } from './when';
 import { EdgeMark } from './EdgeMark';
 import { ViewHandle } from './ViewHandle';
 
@@ -108,6 +110,7 @@ export function ViewLayer({
   size: [number, number];
 }) {
   const open = useViews((state) => state.open);
+  const opened = useViews((state) => state.views);
   const raise = useViews((state) => state.raise);
   const fold = useViews((state) => state.fold);
   const close = useViews((state) => state.close);
@@ -129,11 +132,27 @@ export function ViewLayer({
     frame.current = size;
   }, [size]);
 
+  const volume = useVolume();
+  // The run's own second at the cursor, which is what a timed view is read against. The cursor is a count of records
+  // shown, so the second it stands at is the last of them.
+  const clock = volume.shown > 0 ? (volume.received[Math.min(volume.shown, volume.received.length) - 1]?.at ?? 0) : 0;
+
+  // A view with no bounds is the space's for the whole run. A timed one is a scene: it is on the shell while the cursor
+  // stands in it, and it is closed when the cursor leaves it, so a sequence of stills plays as footage rather than
+  // opening every frame at once.
   useEffect(() => {
-    // A view that states it stands folded leaves its handle and not its picture: a take is evidence a reader plays,
-    // and fourteen pictures of one are a shell nobody can read.
-    for (const view of views) open(view.id, kindOf(view.kind), view.folded ?? false);
-  }, [views, open]);
+    const held = new Set(opened.map((each) => each.id));
+    for (const view of views) {
+      // A timed view stands only while the cursor is in its scene, and a view that states it stands folded leaves its
+      // handle rather than its picture: one call, because a sequence of stills and a folded take are read one way.
+      const stands = standsAt(view, clock);
+      if (stands) {
+        if (!timed(view) || !held.has(view.id)) open(view.id, kindOf(view.kind), view.folded ?? false);
+      } else if (held.has(view.id)) {
+        close(view.id);
+      }
+    }
+  }, [views, clock, opened, open, close]);
 
   useEffect(() => {
     // Every view the picked entity carries, because an entity and a window are not one thing: picking a robot with

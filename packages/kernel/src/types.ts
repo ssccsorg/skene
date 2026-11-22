@@ -308,6 +308,14 @@ export interface UnitPlace {
    */
   abilities?: string[];
   /**
+   * The colour the place draws this unit in when the run has not coloured it.
+   *
+   * A unit's mark is normally its own record kind, which is what the unit is *doing*. A celestial writes no record, and a
+   * board of them would be one grey field: this is the colour of what the unit *is*, stated by the place that stands it. A
+   * unit that has written keeps its own ink, so what it did is still the reading a pilot gets.
+   */
+  ink?: string;
+  /**
    * The common attributes this unit reports about itself, when the place declares them.
    *
    * An attribute is about the entity and not about the space: a device runs on a battery or it does not, and the
@@ -634,6 +642,8 @@ export interface Standing {
   properties: Properties;
   /** What the place declares the unit can be asked to do, which is the place's record and not the room's answer. */
   abilities: string[];
+  /** The colour the place declares for what this unit is, or null when it declares none. */
+  ink: string | null;
   /** Where the unit's lower elements are, which is its own name unless the place points them elsewhere. */
   holdsAt: string;
   /** Where the unit stands in the interface: a layout inside the place's patch, not a ground coordinate. */

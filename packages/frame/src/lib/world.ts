@@ -352,6 +352,8 @@ export function worldOf(
       // points them elsewhere, which is what a unit named for a repository needs.
       holdsAt: unit.holdsAt ?? id,
       abilities: change?.abilities ?? unit.abilities ?? [],
+      // What the place says the unit is drawn as when the run has neither coloured it nor made it ring.
+      ink: unit.ink ?? null,
       at: here as [number, number, number],
       from: here as [number, number, number],
       orbital: Boolean(unit.geo),
