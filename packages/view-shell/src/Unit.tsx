@@ -190,12 +190,14 @@ export function Unit({
         <Device model={model} tint={tint} opacity={(written ? 0.95 : 0.3) * fade} />
       ) : (
         <mesh>
-          <circleGeometry args={[0.02, 24]} />
+          {/* A body with no model of its own is a disc, and a disc at a third of its colour reads as a smudge rather
+              than as a place: the fade said "nothing has happened here" and the size said nothing at all. */}
+          <circleGeometry args={[0.02, 48]} />
           <meshBasicMaterial
             color={tint}
             side={THREE.DoubleSide}
             transparent
-            opacity={(written ? 0.95 : 0.3) * fade}
+            opacity={(written ? 1 : 0.85) * fade}
           />
         </mesh>
       )}
