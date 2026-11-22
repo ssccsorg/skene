@@ -100,10 +100,16 @@ export const useViews = create<ViewsState>()(
         // A camera that is open is a window that is somewhere: opening it again brings it to the front rather than
         // putting a second window on the shell. The place's declaration is still the answer to what the window is, so
         // a window kept from before its view had a kind is corrected here rather than left drawn as footage.
+        //
+        // A declaration says the same thing on every render, and the effect that applies it runs whenever the place
+        // is re-read. Opening a window that already carries that kind is therefore not a change: writing it again
+        // would raise it and wake every reader of this store on every render, which React reports as a depth the
+        // update loop ran past.
         if (already) {
+          if (already.kind === kind && already.folded === folded) return;
           set((state) => ({
             views: state.views.map((view) =>
-              view.id === id ? { ...view, kind, z: state.top + 1 } : view,
+              view.id === id ? { ...view, kind, folded, z: state.top + 1 } : view,
             ),
             top: state.top + 1,
           }));

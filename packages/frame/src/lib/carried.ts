@@ -31,6 +31,29 @@ export function viewsIn(place: Place, at = Number.POSITIVE_INFINITY): CarriedVie
 }
 
 /**
+ * The same list, read once for a place.
+ *
+ * A place declares its views and a view is a function of that declaration and the second it stands at, so the answer
+ * for one place at one second is the same list: a reading that built it on every render handed its consumers a new
+ * array each time, and an effect over that array ran whenever anything rendered. The second is part of the key because
+ * a timed view comes and goes with it.
+ */
+const VIEWS_AT = new WeakMap<Place, Map<number, CarriedView[]>>();
+
+export function viewsAt(place: Place, at: number): CarriedView[] {
+  let bySecond = VIEWS_AT.get(place);
+  if (!bySecond) {
+    bySecond = new Map();
+    VIEWS_AT.set(place, bySecond);
+  }
+  const held = bySecond.get(at);
+  if (held) return held;
+  const read = viewsIn(place, at);
+  bySecond.set(at, read);
+  return read;
+}
+
+/**
  * Every view a place declares whose kind fills the room's surface, each one with the unit that carries it.
  *
  * Whether a kind fills the surface is the kind's own declaration, so the frame holds the list and not the word: a
