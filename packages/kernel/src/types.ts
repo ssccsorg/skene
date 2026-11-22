@@ -131,6 +131,13 @@ interface ViewShape {
   /** What the view is doing, read through `statusOf`. Absent means live. */
   status?: ViewStatus;
   /**
+   * Whether the window is folded away when it first stands, which is the picture gone and its handle left behind.
+   *
+   * A place declares it where the picture is evidence a reader asks for rather than something to put in their face: a
+   * take that runs for a minute belongs on the shell as an icon until it is played.
+   */
+  folded?: boolean;
+  /**
    * The kind the place wrote, when this build has no renderer for it.
    *
    * It is on the shape rather than only on the unknown view because a kind is free-form: the frame reads a declaration
@@ -233,6 +240,8 @@ export interface DeclaredView {
   cells: [number, number];
   /** Absent means live; a state this build does not know is `unknown`. */
   status?: string;
+  /** Whether the window starts folded away, with its handle left where the picture would be. */
+  folded?: boolean;
   /**
    * When the view stands in the run, in the record's own seconds.
    *

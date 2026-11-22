@@ -130,7 +130,9 @@ export function ViewLayer({
   }, [size]);
 
   useEffect(() => {
-    for (const view of views) open(view.id, kindOf(view.kind));
+    // A view that states it stands folded leaves its handle and not its picture: a take is evidence a reader plays,
+    // and fourteen pictures of one are a shell nobody can read.
+    for (const view of views) open(view.id, kindOf(view.kind), view.folded ?? false);
   }, [views, open]);
 
   useEffect(() => {

@@ -110,7 +110,10 @@ export function readView(declared: DeclaredView): UnitView {
   const kind = kindOf(declared.kind);
   const read = viewKindOf(kind)?.read;
   const view = read?.(declared) ?? null;
-  if (view) return view;
+  // Folded is the place's own instruction about the window rather than anything a kind draws, so it is attached here
+  // once: a kind that knows nothing about it still stands folded when its place says so.
+  const folded = declared.folded ? { folded: true as const } : {};
+  if (view) return { ...view, ...folded };
   return {
     id: declared.id,
     kind: 'unknown',
@@ -120,5 +123,6 @@ export function readView(declared: DeclaredView): UnitView {
     status: statusOf(declared),
     from: declared.from,
     to: declared.to,
+    ...folded,
   };
 }

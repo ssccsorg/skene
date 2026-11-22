@@ -66,7 +66,7 @@ interface ViewsState {
    */
   running: Record<string, boolean>;
   /** Open a window, which is putting its patch on the shell. Media is the kind a window keeps when none is said. */
-  open: (id: string, kind?: WindowKind) => void;
+  open: (id: string, kind?: WindowKind, folded?: boolean) => void;
   close: (id: string) => void;
   /** Bring a window to the front, which is what a press on any part of it does. */
   raise: (id: string) => void;
@@ -95,7 +95,7 @@ export const useViews = create<ViewsState>()(
       top: 0,
       running: {},
 
-      open: (id, kind = kindOf()) => {
+      open: (id, kind = kindOf(), folded = false) => {
         const already = get().views.find((view) => view.id === id);
         // A camera that is open is a window that is somewhere: opening it again brings it to the front rather than
         // putting a second window on the shell. The place's declaration is still the answer to what the window is, so
@@ -110,7 +110,7 @@ export const useViews = create<ViewsState>()(
           return;
         }
         set((state) => ({
-          views: [...state.views, { id, kind, offset: null, size: null, folded: false, z: state.top + 1 }],
+          views: [...state.views, { id, kind, offset: null, size: null, folded, z: state.top + 1 }],
           top: state.top + 1,
         }));
       },

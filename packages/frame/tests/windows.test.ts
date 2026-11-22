@@ -140,3 +140,17 @@ test('a kind reads its own view, and the register is where its mark is found', (
   expect(viewKindOf('sample')?.kind).toBe('sample');
   expect(viewKindOf('chart')).toBeUndefined();
 });
+
+// A window a place says stands folded is folded when it first stands: the handle is where the picture would be, and the
+// picture is what a reader asks for rather than what the shell hands them.
+test('a declaration that stands folded is carried into the window', () => {
+  const view = readView({
+    id: 'a-take',
+    kind: 'media',
+    src: '/proofs/a.mp4',
+    medium: 'video',
+    cells: [1.6, 1],
+    folded: true,
+  });
+  expect(view.folded, 'the declaration reaches the window').toBe(true);
+});
