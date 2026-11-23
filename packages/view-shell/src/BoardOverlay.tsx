@@ -405,7 +405,9 @@ export function BoardOverlay({
             className="pointer-events-auto absolute size-[24px] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full"
           />
           {/* The way into the context, drawn only on the mark the pointer is on: a move is not a press of the space and it
-              is not a long press either, so it stands as a control of its own beside the mark. */}
+              is not a long press either, so it stands as a control of its own beside the mark. A place nobody places has
+              no such control, because there is nothing for it to do. */}
+          {world.placeable ? (
           <button
             type="button"
             data-region="entity-edit"
@@ -426,6 +428,7 @@ export function BoardOverlay({
           >
             <Pencil className="size-3" />
           </button>
+          ) : null}
         </div>
       ))}
 
@@ -504,7 +507,7 @@ export function BoardOverlay({
             key={mark.unit.id}
             at={name.at}
             ringed={mark.unit.id === world.claimedBy || mark.unit.id === pickedId}
-            edit={mark.unit.id}
+            edit={world.placeable ? mark.unit.id : undefined}
             onPick={() => onPick(mark.unit.id)}
             onEdit={() => setMoving(mark.unit.id)}
           >

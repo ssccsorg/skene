@@ -713,6 +713,13 @@ export interface World {
   cell: [number, number][] | null;
   /** Whether the place draws a boundary at all, which is the place's own answer rather than the frame's. */
   ground: boolean;
+  /**
+   * Whether a pilot places this place's members by hand.
+   *
+   * A place whose members are records has none: its panel is the reading, and a control that offered to move a record
+   * would be a cockpit's work on a board that has no cockpit.
+   */
+  placeable: boolean;
   /** The unit that stands for the place from a scale above its own, or nothing when the place names none. */
   mark: string | null;
   index: number;

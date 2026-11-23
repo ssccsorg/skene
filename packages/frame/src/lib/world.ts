@@ -400,6 +400,9 @@ export function worldOf(
     sector: sectorOf(place),
     cell: cellOfPlace(place),
     ground: place.ground !== false,
+    // A place whose members are records has no pilot to place them: the member panel is the reading and nothing here is
+    // moved by hand, so the shell draws no control that would offer to.
+    placeable: place.memberPanel === undefined,
     mark: place.mark ?? null,
     index,
     here,
