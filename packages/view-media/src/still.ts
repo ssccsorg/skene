@@ -33,13 +33,34 @@ export function frameAddress(src: string, frame: number): string {
 }
 
 /**
+ * Whether an address is a file rather than a camera.
+ *
+ * A camera answers a picture endpoint with whatever frame it holds, and a counter is what makes it answer again. A file
+ * ends in its own extension and answers the same bytes every time, so the counter buys nothing: the same ask again is
+ * the same answer again, on a request the host serving a file was never told to expect.
+ */
+export function isFile(src: string): boolean {
+  return /\.(?:png|jpe?g|webp|avif|gif)(?:[?#]|$)/i.test(src);
+}
+
+/**
  * Ask `src` for a frame now, and again after each answer, until the returned function is called.
  *
  * Only one request is open at a time: a slow device is a picture at the rate it can answer rather than
  * a queue of requests it cannot. A frame that does not arrive is reported as none, and the address is
  * tried again in a second, so a camera that comes back is a picture that comes back.
+ *
+ * `once` names a picture that is a file rather than a camera. A file answers the same bytes every time,
+ * so asking it again only spends the network on an answer already in hand, and the counter that keeps
+ * a camera from answering a frame it holds is a query the host serving a file need not expect. One
+ * answer is taken, and a host with no range to ask about is asked at the address it published.
  */
-export function feedFrames(src: string, rate: number, onFrame: (frame: Frame) => void): () => void {
+export function feedFrames(
+  src: string,
+  rate: number,
+  onFrame: (frame: Frame) => void,
+  once = false,
+): () => void {
   let stopped = false;
   let timer: number | undefined;
   let count = 0;
@@ -60,13 +81,14 @@ export function feedFrames(src: string, rate: number, onFrame: (frame: Frame) =>
       // A newer request has taken over, which happens when the caller stops and starts again.
       if (stopped || mine !== count) return;
       onFrame(arrived ? { image, width: image.naturalWidth, height: image.naturalHeight } : null);
+      if (once) return;
       timer = window.setTimeout(ask, arrived ? 1000 / rate : RETRY);
     };
 
     guard = window.setTimeout(() => settle(false), GIVE_UP);
     image.addEventListener('load', () => settle(true));
     image.addEventListener('error', () => settle(false));
-    image.src = frameAddress(src, mine);
+    image.src = once ? src : frameAddress(src, mine);
   };
 
   ask();

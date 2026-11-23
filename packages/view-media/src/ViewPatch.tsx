@@ -2,7 +2,7 @@ import { useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import type { Bearing } from '@ssccsorg/skene-board';
-import { FRAME_RATE, feedFrames } from './still';
+import { FRAME_RATE, feedFrames, isFile } from './still';
 import type { Camera } from '@ssccsorg/skene-kernel';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';
 import { ShellPatch } from '@ssccsorg/skene-frame/components/ShellPatch';
@@ -96,19 +96,24 @@ export function ViewPatch({
 
   // A still is asked for, and each answer is the frame the texture takes. An address that stops
   // answering is a picture that says it is not running rather than one that keeps its last frame and
-  // reads as a live window.
+  // reads as a live window. A place that states its picture is a file says so, and a file is taken once.
   useEffect(() => {
     if (!still) return;
-    const stop = feedFrames(camera.src, FRAME_RATE, (frame) => {
-      if (!frame) {
-        say(camera.id, false);
-        return;
-      }
-      texture.image = frame.image;
-      texture.needsUpdate = true;
-      shaped(frame.width, frame.height);
-      say(camera.id, true);
-    });
+    const stop = feedFrames(
+      camera.src,
+      FRAME_RATE,
+      (frame) => {
+        if (!frame) {
+          say(camera.id, false);
+          return;
+        }
+        texture.image = frame.image;
+        texture.needsUpdate = true;
+        shaped(frame.width, frame.height);
+        say(camera.id, true);
+      },
+      isFile(camera.src),
+    );
     return () => {
       stop();
       say(camera.id, false);

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { FRAME_RATE, feedFrames } from './still';
+import { FRAME_RATE, feedFrames, isFile } from './still';
 import { cn } from '@ssccsorg/skene-ui';
 import { useViews } from '@ssccsorg/skene-frame/stores/views';
 
@@ -17,7 +17,18 @@ import { useViews } from '@ssccsorg/skene-frame/stores/views';
 /** The picture's own pixels, twice the size it stands at, so it is sharp on a display that is not one-to-one. */
 const PIXELS: [number, number] = [88, 56];
 
-export function MediaThumb({ id, src, className }: { id: string; src: string; className?: string }) {
+export function MediaThumb({
+  id,
+  src,
+  className,
+  once,
+}: {
+  id: string;
+  src: string;
+  className?: string;
+  /** Whether the picture is a file rather than a camera, which is asked once. Read from the address by default. */
+  once?: boolean;
+}) {
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const say = useViews((state) => state.setRunning);
 
@@ -35,12 +46,12 @@ export function MediaThumb({ id, src, className }: { id: string; src: string; cl
       const down = frame.height * scale;
       context.drawImage(frame.image, (width - across) / 2, (height - down) / 2, across, down);
       say(id, true);
-    });
+    }, once ?? isFile(src));
     return () => {
       stop();
       say(id, false);
     };
-  }, [id, src, say]);
+  }, [id, src, say, once]);
 
   return (
     <canvas
