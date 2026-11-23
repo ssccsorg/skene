@@ -158,11 +158,11 @@ export function ViewLayer({
   // their own: an effect that ran on a fresh array each render would open the same window on every render, and opening
   // it writes the store this layer reads.
   const carried = useMemo(() => viewsOf(views, picked ?? ''), [views, picked]);
-  const carriedIds = carried.map((view) => `${view.id}:${kindOf(view.kind)}`).join(' ');
+  const carriedIds = carried.map((view) => `${view.id}:${kindOf(view.kind)}:${view.folded ? 'folded' : 'open'}`).join(' ');
   useEffect(() => {
     // Every view the picked entity carries, because an entity and a window are not one thing: picking a robot with
     // two views is asking about both of them.
-    for (const view of carried) open(view.id, kindOf(view.kind));
+    for (const view of carried) open(view.id, kindOf(view.kind), view.folded ?? false);
     // The declarations are what the effect is about rather than the array holding them: a run that moved nothing
     // hands over the same ids in the same order.
   }, [carriedIds, open]);
