@@ -443,7 +443,12 @@ export function ViewLayer({
                   title={mark.out ? `bring ${place.source.id} in front of the pilot` : `unfold ${place.source.id}`}
                   className="flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
                   onPointerDown={(event) => event.stopPropagation()}
-                  onClick={() => show(place)}
+                  onClick={(event) => {
+                    // The press is this control's and not the mark's: a fold that rose to the mark would open a window that
+                    // is already open, and the unfold the reader asked for would never be read.
+                    event.stopPropagation();
+                    show(place);
+                  }}
                 >
                   <ChevronDown
                     className="size-3.5"
@@ -458,7 +463,10 @@ export function ViewLayer({
                   title="close the view"
                   className="flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
                   onPointerDown={(event) => event.stopPropagation()}
-                  onClick={() => close(place.id)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    close(place.id);
+                  }}
                 >
                   <X className="size-3.5" />
                 </button>
