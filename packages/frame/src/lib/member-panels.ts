@@ -22,6 +22,13 @@ export interface MemberPanelProps {
   fork: number | null;
   /** How far the run has arrived, which is where a branch taken now would start. */
   shown: number;
+  /**
+   * The names of what the member holds, as its project declares them.
+   *
+   * A board whose members are records stands each subject's runs as rows rather than as a window over all of them, so
+   * the panel draws the list and a row is what a reader opens.
+   */
+  holds?: string[];
 }
 
 export interface MemberPanel {

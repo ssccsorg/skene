@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Info } from 'lucide-react';
 import { Hint } from '@ssccsorg/skene-ui';
 import { RowControl } from '@ssccsorg/skene-ui';
 import { InspectorPanel } from './InspectorPanel';
 import type { Place, Standing } from '@ssccsorg/skene-kernel';
 import { useSelection } from '../stores/selection';
+import { useWorld } from '../hooks/useWorld';
 import { EntityDetail } from './EntityDetail';
 import { memberPanelOf } from '../lib/member-panels';
 import { LABEL, ROW, TITLE } from '@ssccsorg/skene-ui';
@@ -29,9 +30,16 @@ function MemberDetail({
   shown: number;
 }) {
   const declared = place?.memberPanel ? memberPanelOf(place.memberPanel) : undefined;
+  const { model } = useWorld();
+  // What the member holds, as the project declares it: a record board stands its subjects' runs this way, and a panel that
+  // draws them reads the same declaration the space does.
+  const holds = useMemo(
+    () => (model?.project.sources?.find((each) => each.member === unit.id)?.tree ?? []).map((node) => node.name),
+    [model, unit.id],
+  );
   if (!declared) return <EntityDetail key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />;
   const { View } = declared;
-  return <View key={unit.id} unit={unit} place={place} fork={fork} shown={shown} />;
+  return <View key={unit.id} unit={unit} place={place} fork={fork} shown={shown} holds={holds} />;
 }
 
 // What is picked, opened where it was picked: the row of the feed the pick landed on opens and the detail
