@@ -106,11 +106,12 @@ export const useViews = create<ViewsState>()(
         // would raise it and wake every reader of this store on every render, which React reports as a depth the
         // update loop ran past.
         if (already) {
-          if (already.kind === kind && already.folded === folded) return;
+          // What the pilot did to a window is the pilot's: a declaration says the same thing on every render, so a fold
+          // read back here would undo the press that made it. Only the kind is corrected, which is the one thing a place
+          // can learn about a window it already stands.
+          if (already.kind === kind) return;
           set((state) => ({
-            views: state.views.map((view) =>
-              view.id === id ? { ...view, kind, folded, z: state.top + 1 } : view,
-            ),
+            views: state.views.map((view) => (view.id === id ? { ...view, kind, z: state.top + 1 } : view)),
             top: state.top + 1,
           }));
           return;
