@@ -48,6 +48,13 @@ export interface WindowView {
   size: Cells | null;
   /** Whether it is folded away, which is the picture gone and its pin left behind. */
   folded: boolean;
+  /**
+   * The fold its place asked for when this window was last read.
+   *
+   * It is what tells a declaration that changed from one that says the same thing every render: the first is a statement
+   * about the board and is applied, and the second leaves the fold a pilot made alone.
+   */
+  declaredFold?: boolean;
   /** Its place in the stack of the pins: the highest is in front. */
   z: number;
 }
@@ -106,18 +113,28 @@ export const useViews = create<ViewsState>()(
         // would raise it and wake every reader of this store on every render, which React reports as a depth the
         // update loop ran past.
         if (already) {
-          // What the pilot did to a window is the pilot's: a declaration says the same thing on every render, so a fold
-          // read back here would undo the press that made it. Only the kind is corrected, which is the one thing a place
-          // can learn about a window it already stands.
-          if (already.kind === kind) return;
+          // What the pilot did to a window is the pilot's, and what the place says is the place's. A declaration that says
+          // the same thing on every render leaves a pilot's fold alone, and one that changed is a new statement about the
+          // window: the fold the place now asks for is applied, because the board a reader is shown is the board it reads.
+          if (already.kind === kind && already.declaredFold === folded) return;
           set((state) => ({
-            views: state.views.map((view) => (view.id === id ? { ...view, kind, z: state.top + 1 } : view)),
+            views: state.views.map((view) =>
+              view.id === id
+                ? {
+                    ...view,
+                    kind,
+                    declaredFold: folded,
+                    folded: already.declaredFold === folded ? view.folded : folded,
+                    z: state.top + 1,
+                  }
+                : view,
+            ),
             top: state.top + 1,
           }));
           return;
         }
         set((state) => ({
-          views: [...state.views, { id, kind, offset: null, size: null, folded, z: state.top + 1 }],
+          views: [...state.views, { id, kind, offset: null, size: null, folded, declaredFold: folded, z: state.top + 1 }],
           top: state.top + 1,
         }));
       },
