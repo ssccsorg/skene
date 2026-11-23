@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { SHELL } from '@ssccsorg/skene-board';
-import { FRAME_RATE, feedFrames } from './still';
+import { FRAME_RATE, feedFrames, isFile } from './still';
 import { mediumOf, slotsOf, type SurfaceMode } from './surface';
 import type { Camera } from '@ssccsorg/skene-kernel';
 
@@ -189,10 +189,15 @@ export function SphereSurface({ media, mode }: { media: Camera[]; mode: SurfaceM
         return () => element.removeEventListener('loadeddata', redraw);
       }
       if (camera.projection === 'spatial') return () => undefined;
-      return feedFrames(camera.src, FRAME_RATE, (frame) => {
-        made[index].element = frame ? frame.image : null;
-        redraw();
-      });
+      return feedFrames(
+        camera.src,
+        FRAME_RATE,
+        (frame) => {
+          made[index].element = frame ? frame.image : null;
+          redraw();
+        },
+        isFile(camera.src),
+      );
     });
     redraw();
 
