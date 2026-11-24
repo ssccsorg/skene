@@ -161,6 +161,13 @@ export interface MediaView extends ViewShape {
    * does not have to be added as a new view kind later.
    */
   projection?: 'flat' | 'spatial';
+  /**
+   * The picture a footage view shows until its own first frame has decoded.
+   *
+   * A take that has not started reads as a black rectangle otherwise, which is what a window over a medium that has not
+   * arrived looks like. It is the place's own still, so a window and the page it belongs to show one photograph.
+   */
+  poster?: string;
 }
 
 /**
@@ -231,6 +238,8 @@ export interface DeclaredView {
   medium?: string;
   /** How media is projected: a flat frame, or directions around the viewer. */
   projection?: string;
+  /** The still a footage view shows until its own first frame has decoded. */
+  poster?: string;
   /**
    * Which entities the view presents, when its kind can present more than its carrier.
    *

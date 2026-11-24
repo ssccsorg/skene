@@ -36,6 +36,9 @@ function readMedia(declared: DeclaredView): UnitView | null {
     status: statusOf(declared),
     ...(medium ? { medium } : {}),
     ...(spatial ? { projection: 'spatial' as const } : {}),
+    // The frame a take shows before its own first one, when the place states it. A poster is the place's own
+    // declaration and not this kind's invention, so one that is not stated is absent rather than guessed at.
+    ...(typeof declared.poster === 'string' && declared.poster ? { poster: declared.poster } : {}),
     from: declared.from,
     to: declared.to,
   };

@@ -27,6 +27,24 @@ import { ShellPatch } from '@ssccsorg/skene-frame/components/ShellPatch';
 // camera's own watching, and a picture unmounted the moment it was put away would take the one reading
 // of it with it.
 
+/**
+ * Start a take, and start it again from the events that say it can play.
+ *
+ * A browser may refuse `play()` on a medium it has not buffered, and a refusal that is caught and dropped is a window
+ * that shows its first frame for the whole run. The first refusal is not the medium's answer, so the element asks again
+ * when data arrives and when the network recovers, and stays silent when it is already running.
+ */
+function playWhenReady(video: HTMLVideoElement): void {
+  const ask = () => {
+    if (!video.paused) return;
+    void video.play().catch(() => undefined);
+  };
+  for (const name of ['loadeddata', 'canplay', 'canplaythrough', 'stalled', 'suspend'] as const) {
+    video.addEventListener(name, ask);
+  }
+  ask();
+}
+
 export function ViewPatch({
   camera,
   bearing,
@@ -64,7 +82,13 @@ export function ViewPatch({
     made.muted = true;
     made.loop = true;
     made.playsInline = true;
-    void made.play().catch(() => undefined);
+    // The still the place publishes for this take. A window shows it until the footage has a frame of its own, so a take
+    // nobody has started is the photograph rather than a black rectangle.
+    if (camera.poster) made.poster = camera.poster;
+    // A take is the window's picture, so it plays wherever the window stands. A browser may refuse the first play() of a
+    // medium it has not buffered yet, and a swallowed rejection is a window that stays on its poster for the whole run, so
+    // the element asks again from the two events that say it can.
+    playWhenReady(made);
     return made;
   }, [camera.src, still]);
 
@@ -126,8 +150,18 @@ export function ViewPatch({
   useEffect(() => {
     if (!video) return;
     const read = () => shaped(video.videoWidth, video.videoHeight);
-    const started = () => say(camera.id, true);
+    const started = () => {
+      say(camera.id, true);
+    };
     const stopped = () => say(camera.id, false);
+    // A take that has data and is still paused is a picture nobody is advancing: the element is asked again rather than
+    // left on the frame it decoded, which is the one thing a window showing footage must not do.
+    const ready = () => {
+      read();
+      if (video.paused) void video.play().catch(() => undefined);
+    };
+    video.addEventListener('loadeddata', ready);
+    video.addEventListener('canplay', ready);
     video.addEventListener('loadedmetadata', read);
     video.addEventListener('playing', started);
     video.addEventListener('pause', stopped);
@@ -136,11 +170,15 @@ export function ViewPatch({
     read();
     say(camera.id, video.readyState >= 2 && !video.paused);
     return () => {
+      video.removeEventListener('loadeddata', ready);
+      video.removeEventListener('canplay', ready);
       video.removeEventListener('loadedmetadata', read);
       video.removeEventListener('playing', started);
       video.removeEventListener('pause', stopped);
       video.removeEventListener('ended', stopped);
       video.removeEventListener('error', stopped);
+      // The element is released and the texture keeps the last frame it took, because a picture that is put away and
+      // brought back is a window that starts again from where the footage is.
       video.pause();
       video.removeAttribute('src');
       video.load();
