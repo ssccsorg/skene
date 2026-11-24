@@ -139,6 +139,9 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
       return unit ? [bearingOf(unfold(onShell(unit.at, world), centre, arrival))] : [];
     });
     const out: ViewPlace[] = [];
+    // The windows placed so far, in the order the store holds them. A window that has not been moved is placed beside
+    // what is already standing instead of on top of it, so opening a second view of one entity never buries the first.
+    const placed: { place: Bearing; cells: Bearing }[] = [];
     for (const view of views) {
       const source = world.views.find((each) => each.id === view.id);
       const unit = world.present.find((each) => each.id === source?.origin);
@@ -172,13 +175,16 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
         return view.folded || held(handleOf(window, [originX, originY]), size, MARGIN);
       };
       const others = origins.filter((bearing) => bearingGap(bearing, own) > 1e-6);
+      // The windows already placed, so a window that has not been moved is never laid on one laid before it: a take and
+      // the still beside it come from the same entity and are the two that would otherwise share a place.
+      const beside = placed.map((each) => ({ place: each.place, half: patchHalf(each.cells) }));
       // A window that stands over the place is not moved to a clear spot. The search for one is what keeps a camera's
       // window off the marks it is not about, and a window of the ground is about all of them: moving it to the limb to
       // keep it clear of the units it draws would shrink the picture to read the units. It is where the place is
       // centred, and the pilot moves it like any other window.
       const place = overPlace
         ? shifted(own, view.offset ?? [0, 0])
-        : viewBearing(view.offset, own, half, [...marks, ...others], view.id, holds);
+        : viewBearing(view.offset, own, half, [...marks, ...others], view.id, holds, beside);
       const [x, y, depth] = project(shellAt(place), size[0], size[1], look);
       const window = box(place);
       // The picture's own edge on the frame, which is what its press is clipped to: a bounding box is wider than the patch
@@ -240,6 +246,7 @@ export function useViewPlaces(world: World, size: [number, number]): ViewPlace[]
           : null,
         moved: view.offset !== null,
       });
+      placed.push({ place, cells });
     }
     return out;
   }, [views, world, size, yaw, pitch, fov, arrival, marks]);

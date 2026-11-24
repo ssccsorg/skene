@@ -44,6 +44,21 @@ export function covering(place: Bearing, half: Bearing, marks: Bearing[]): numbe
 }
 
 /**
+ * How many of the windows already placed stand under a patch at `place`.
+ *
+ * A patch is a body rather than a point, so two windows are apart when the distance between their middles clears half of
+ * each one's wider side. Measuring one patch's reach against the other's middle would clear a small window beside a large
+ * one while the large one still covers it, which is the case this exists to refuse: a take and the still beside it are
+ * laid out from the same entity and are the two windows most likely to stand over one another.
+ */
+export function overlapping(place: Bearing, half: Bearing, others: { place: Bearing; half: Bearing }[]): number {
+  return others.filter((other) => {
+    const clear = Math.max(half[0], half[1]) + Math.max(other.half[0], other.half[1]);
+    return bearingGap(place, other.place) < clear;
+  }).length;
+}
+
+/**
  * The smallest and largest a patch may be sized to, in cells.
  *
  * A patch under the floor is a picture with a frame. The ceiling is what the pilot can reach, and it is most of the
@@ -398,10 +413,13 @@ export function clearOffset(
   marks: Bearing[],
   name = '',
   holds?: (place: Bearing) => boolean,
+  windows: { place: Bearing; half: Bearing }[] = [],
 ): Bearing {
+  /** What is under a candidate: the marks of the place, and the windows already standing beside it. */
+  const under = (place: Bearing) => covering(place, half, marks) + overlapping(place, half, windows);
   const search = (may: (place: Bearing) => boolean): Bearing | null => {
     if (may(unit)) {
-      if (covering(unit, half, marks) === 0) return [0, 0];
+      if (under(unit) === 0) return [0, 0];
     }
     const turn = turnOf(name) * Math.PI * 2;
     let best: Bearing | null = null;
@@ -412,7 +430,7 @@ export function clearOffset(
         const offset: Bearing = [ring * Math.cos(angle), ring * Math.sin(angle)];
         const place = shifted(unit, offset);
         if (!may(place)) continue;
-        const over = covering(place, half, marks);
+        const over = under(place);
         // A ring at a time and a spoke at a time, so a place only replaces what is held when it is strictly
         // clearer: at equal cover the nearer place to the unit is the one that stands.
         if (over < fewest) {
@@ -453,8 +471,9 @@ export function viewBearing(
   marks: Bearing[],
   name = '',
   holds?: (place: Bearing) => boolean,
+  windows: { place: Bearing; half: Bearing }[] = [],
 ): Bearing {
-  return shifted(unit, offset ?? clearOffset(unit, half, marks, name, holds));
+  return shifted(unit, offset ?? clearOffset(unit, half, marks, name, holds, windows));
 }
 
 /**
