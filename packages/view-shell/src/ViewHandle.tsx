@@ -1,4 +1,4 @@
-import { ChevronUp } from 'lucide-react';
+import { ChevronUp, X } from 'lucide-react';
 import { Button } from '@ssccsorg/skene-ui';
 import { Hint } from '@ssccsorg/skene-ui';
 import { standing } from '@ssccsorg/skene-frame/lib/carried';
@@ -53,6 +53,7 @@ export function ViewHandle({
   onPick: () => void;
 }) {
   const fold = useViews((state) => state.fold);
+  const close = useViews((state) => state.close);
   // The place declares what a view is, so its kind is read from there: a window the browser kept before the place gave
   // the view a kind would otherwise go on being drawn as footage, which is what a map used to look like.
   const kind = viewKindOf(kindOf(source.kind)) ?? UNKNOWN_KIND;
@@ -82,6 +83,24 @@ export function ViewHandle({
           }}
         >
           <ChevronUp />
+        </Button>
+      </Hint>
+      {/* A window's own close control, in the handle rather than only on the mark it folds to: a reader who wants the
+          window gone is looking at the window, and folding it first is a step they did not ask for. It is drawn in the
+          ink of the board rather than the muted ink of a fold, because it is the one control here that removes
+          something. */}
+      <Hint label="close">
+        <Button
+          size="icon-xs"
+          variant="ghost"
+          className={cn(CONTROL, 'text-foreground/80 hover:text-foreground')}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation();
+            close(view.id);
+          }}
+        >
+          <X />
         </Button>
       </Hint>
     </div>

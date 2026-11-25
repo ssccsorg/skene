@@ -461,14 +461,17 @@ export function ViewLayer({
                 <button
                   type="button"
                   title="close the view"
-                  className="flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
+                  // The mark's one control that removes something, so it is drawn in the board's own ink and carries a
+                  // ground of its own: a folded window is a label among labels, and the X beside it read as one more of
+                  // the letters rather than as the way out.
+                  className="flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm bg-foreground/12 text-foreground hover:bg-foreground/25"
                   onPointerDown={(event) => event.stopPropagation()}
                   onClick={(event) => {
                     event.stopPropagation();
                     close(place.id);
                   }}
                 >
-                  <X className="size-3.5" />
+                  <X className="size-3.5" strokeWidth={2.4} />
                 </button>
               </EdgeMark>
             ) : null}
