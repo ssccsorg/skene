@@ -82,7 +82,7 @@ export const CELL_CEILING: Bearing = [10, 6.75];
  * from is this box's own middle. Two readings of it would be a line that meets the pin beside it, and the one thing a
  * leader has to do is meet what it is a leader for.
  */
-export const HANDLE: [number, number] = [138, 22];
+export const HANDLE: [number, number] = [154, 22];
 /** How far clear of the window the pin stands, so the two read as one object without touching. */
 export const HANDLE_GAP = 4;
 /** How far inside the frame a window and its pin are held, so neither is half off the board. */
