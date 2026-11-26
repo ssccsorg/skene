@@ -94,7 +94,7 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
   // The record count is subscribed to, not read at the press: a link joins an address to what the space holds, so a tree
   // drawn before the first record arrived would carry no press at all and stay that way.
   const project = useScenario((state) => state.projectId);
-  const delivered = useRecords((state) => (state.focus ? (state.volumes[state.focus]?.received.length ?? 0) : 0));
+  const delivered = useRecords((state) => (project ? (state.volumes[project]?.received.length ?? 0) : 0));
   useEffect(() => {
     ensure(path);
   }, [ensure, path]);

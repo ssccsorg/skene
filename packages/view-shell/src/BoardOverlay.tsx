@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { STORE, altitudeOf, edgeAt, glyphPath, liftOf, onShell, orbitalAt, project, spreadOnEdge, unfold } from '@ssccsorg/skene-board';
 import { fanTree, heldUnder, treeAt } from '@ssccsorg/skene-frame/lib/holds';
+import { linkOf } from '@ssccsorg/skene-frame/lib/held-links';
 import { useHolds } from '@ssccsorg/skene-frame/hooks/useHolds';
+import { useRecords } from '@ssccsorg/skene-frame/stores/records';
+import { useScenario } from '@ssccsorg/skene-frame/stores/scenario';
 import { MARK, MARK_INSET } from '@ssccsorg/skene-board';
 import { BrandMark } from '@ssccsorg/skene-frame/lib/brand';
 import { EdgeMark } from './EdgeMark';
@@ -142,6 +146,11 @@ export function BoardOverlay({
     [world.standing, pickedId],
   );
   const { rows, open, toggle, ensure } = useHolds(member ? { member: member.id, at: member.holdsAt } : null);
+  // A held element is a name the deployment may be able to open, and what it opens is a fact about the space rather than
+  // about this drawing: the panel's tree asks the same question of the same link. The count is subscribed to so a board
+  // drawn before the record arrived draws the press once it does.
+  const openProject = useScenario((state) => state.projectId);
+  const delivered = useRecords((state) => (openProject ? (state.volumes[openProject]?.received.length ?? 0) : 0));
   useEffect(() => {
     // The member's own level is the root of its tree, and the room states a level under the member, so what is asked for
     // and what a level is keyed by are the same name.
@@ -587,6 +596,27 @@ export function BoardOverlay({
               <ChevronRight className={cn('size-3 shrink-0 transition-transform', openHere && 'rotate-90')} />
               <span>{each.name}</span>
             </button>
+          );
+        }
+        // A leaf is a name the deployment may have somewhere to open it. Where that is, is the link's answer and not
+        // this drawing's, so the board and the panel's tree read one rule: a leaf with a link is a press, and one
+        // without stays the reading it is.
+        const target = member ? linkOf({ address: each.path, member, project: openProject, delivered }) : null;
+        if (target) {
+          return (
+            <Link
+              key={each.path}
+              to={target.href}
+              title={`${each.path}\n${target.label}`}
+              className={cn(
+                box,
+                'pointer-events-auto border border-border/70 bg-card px-1.5 py-0.5 text-foreground/90',
+                'hover:border-accent hover:bg-accent/70',
+              )}
+              style={at}
+            >
+              {each.name}
+            </Link>
           );
         }
         return (
