@@ -12,9 +12,11 @@ import { heldLinks, linkOf, registerHeldLink } from '../src/lib/held-links';
 import type { Standing } from '@ssccsorg/skene-kernel';
 
 const member = { id: 'smoke' } as Standing;
+// The project and the count the frame subscribes to, which a predicate reads rather than the stores.
+const held = { project: 'corpus-bench', delivered: 0 };
 
 test('a place that installs no link leaves a leaf as the address it is', () => {
-  expect(linkOf({ address: 'smoke/nothing-owns-this', member }), 'nothing answers').toBeNull();
+  expect(linkOf({ address: 'smoke/nothing-owns-this', member, ...held }), 'nothing answers').toBeNull();
 });
 
 test('a link that has nowhere to send a row does not take the press from the one after it', () => {
@@ -29,11 +31,11 @@ test('a link that has nowhere to send a row does not take the press from the one
     to: ({ address }) => (address.includes('a-wide-row') ? `/any/${address}` : null),
   });
 
-  expect(linkOf({ address: 'smoke/a-wide-row', member }), 'the narrow one declined').toEqual({
+  expect(linkOf({ address: 'smoke/a-wide-row', member, ...held }), 'the narrow one declined').toEqual({
     href: '/any/smoke/a-wide-row',
     label: 'the wide one',
   });
-  expect(linkOf({ address: 'smoke/a-narrow-row', member }), 'the narrow one answered').toEqual({
+  expect(linkOf({ address: 'smoke/a-narrow-row', member, ...held }), 'the narrow one answered').toEqual({
     href: '/smoke/a-narrow-row',
     label: 'the narrow one',
   });
@@ -51,7 +53,7 @@ test('a link is told whose element it is, which is what makes an address resolva
     },
   });
 
-  linkOf({ address: 'smoke/an-owned-row', member });
+  linkOf({ address: 'smoke/an-owned-row', member, ...held });
   expect(seen, 'the member travels with the address').toEqual(['smoke:smoke/an-owned-row']);
 });
 

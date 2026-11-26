@@ -9,6 +9,8 @@ import { HELD_DEPTH, leafOf } from '../lib/holds';
 import { linkOf } from '../lib/held-links';
 import { askable, type Part, type PartProps } from '../lib/kinds';
 import { useChat } from '../stores/chat';
+import { useRecords } from '../stores/records';
+import { useScenario } from '../stores/scenario';
 import { useSelection } from '../stores/selection';
 import { cn } from '@ssccsorg/skene-ui';
 
@@ -89,6 +91,10 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
   const compose = useChat((state) => state.compose);
   const console = useCapability(CONSOLE);
   const { rows, why, isOpen, toggle, ensure } = useHolds({ member: member.id, at: member.holdsAt });
+  // The record count is subscribed to, not read at the press: a link joins an address to what the space holds, so a tree
+  // drawn before the first record arrived would carry no press at all and stay that way.
+  const project = useScenario((state) => state.projectId);
+  const delivered = useRecords((state) => (state.focus ? (state.volumes[state.focus]?.received.length ?? 0) : 0));
   useEffect(() => {
     ensure(path);
   }, [ensure, path]);
@@ -111,7 +117,7 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
         const folder = each.dir && !bounded;
         // What a leaf leads to, where the deployment says its own path means something the frame can open. A folder is
         // always the tree's own press, because opening a level is what the tree is.
-        const link = folder ? null : linkOf({ address: each.name, member });
+        const link = folder ? null : linkOf({ address: each.name, member, project, delivered });
         const label = (
           <>
             {folder ? (

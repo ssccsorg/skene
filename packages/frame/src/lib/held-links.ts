@@ -11,12 +11,22 @@
 
 import type { PartProps } from './kinds';
 
-/** What a held element is, as a press asks it: where it stands, whose it is, and whether it is a level or a leaf. */
+/** What a held element is, as a press asks it: where it stands, whose it is, and what the frame holds beside it. */
 export interface HeldElement {
   /** The address the room answered with, which leads with the member it belongs to. */
   address: string;
   /** The member the element is held by, which is the name a reader resolves the address through. */
   member: PartProps['member'];
+  /**
+   * The project the row is read in, and how many records it has delivered so far.
+   *
+   * A link joins an address to what the space holds, so it has to be asked again as the space fills: a predicate over
+   * stores read at the moment of the press answers with whatever had arrived when the row was drawn, and a tree drawn
+   * before its project's first record then has no press at all. This is the value the frame is subscribed to, so a row is
+   * read again when the record a press depends on arrives.
+   */
+  project: string | null;
+  delivered: number;
 }
 
 export interface HeldLink {
