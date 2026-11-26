@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { AtSign, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Row } from '../components/Row';
 import { useHolds } from '../hooks/useHolds';
 import { CONSOLE, useCapability } from '../lib/capabilities';
 import { ROW } from '@ssccsorg/skene-ui';
 import { HELD_DEPTH, leafOf } from '../lib/holds';
+import { linkOf } from '../lib/held-links';
 import { askable, type Part, type PartProps } from '../lib/kinds';
 import { useChat } from '../stores/chat';
 import { useSelection } from '../stores/selection';
@@ -107,6 +109,9 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
       {found.map((each) => {
         const open = each.dir && !bounded && isOpen(each.name);
         const folder = each.dir && !bounded;
+        // What a leaf leads to, where the deployment says its own path means something the frame can open. A folder is
+        // always the tree's own press, because opening a level is what the tree is.
+        const link = folder ? null : linkOf({ address: each.name, member });
         const label = (
           <>
             {folder ? (
@@ -131,6 +136,16 @@ function Level({ member, path, depth }: { member: PartProps['member']; path: str
                 >
                   {label}
                 </button>
+              ) : link ? (
+                <Link
+                  to={link.href}
+                  data-region="holds-open"
+                  data-holds={each.name}
+                  title={`${each.name}\n${link.label}`}
+                  className="flex min-w-0 flex-1 items-center gap-1.5 text-left hover:text-foreground"
+                >
+                  {label}
+                </Link>
               ) : (
                 <span className="flex min-w-0 flex-1 items-center gap-1.5" title={each.name}>
                   {label}
